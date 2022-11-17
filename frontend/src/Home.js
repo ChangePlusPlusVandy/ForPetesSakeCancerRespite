@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 export default class HomeScreen extends Component {
 
 	componentDidMount() {
+		this.window.reactNavigation = this.props.navigation;
 		setTimeout(() => {
 			this.props.navigation.navigate("Profile");
 		}, 5000);
