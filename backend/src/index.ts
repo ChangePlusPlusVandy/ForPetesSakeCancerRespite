@@ -1,18 +1,24 @@
-import express from "express";
-import cors from "cors";
-import path from "path";
-import router from "./routes"
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const VerifyToken = require("./middlewares/VerifyToken");
+
+dotenv.config();
 
 const app = express();
 
 const PORT: number = 3000;
+
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public'))); //TODO: fix this line it isnt working 
-app.use(router);
+app.use(express.urlencoded({ extended: true }));
 
-console.log(path.join(__dirname, '../public'));
+app.use("/data", VerifyToken, require("./routes/dataRoute"));
+
+app.get("/", (req, res) => { // Default route: Unprotected
+    res.send("Express Auth Temp!");
+});
 
 app.listen(PORT, () => {
-	console.log(`Listening on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });

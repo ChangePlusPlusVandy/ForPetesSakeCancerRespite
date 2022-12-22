@@ -1,5 +1,12 @@
-import Main from "./src/Main";
+import { BrowserRouter } from "react-router-dom";
+import Router from "./src/Router";
 
-export default function App() {
-	return <Main />;
-}
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
+  );
+};
+
+export default App;
