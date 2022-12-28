@@ -1,8 +1,8 @@
-// Imports the Firebase auth 
-// Splits the authorization header ("Bearer <token>") 
+// Imports the Firebase auth
+// Splits the authorization header ("Bearer <token>")
 // into an array and takes the second element, which is the token
 
-const auth = require("../config/firebase-config");
+import auth from "../config/firebase-config";
 
 const VerifyToken = async (req, res, next) => {
 
@@ -21,4 +21,4 @@ const VerifyToken = async (req, res, next) => {
     }
 };
 
-module.exports = VerifyToken;
+export default VerifyToken;

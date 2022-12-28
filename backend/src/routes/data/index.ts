@@ -5,4 +5,4 @@ dataRoute.get("/", (req, res) => {
     res.send("Test Data Sent From Backend");
 });
 
-module.exports = dataRoute;
+export default dataRoute;

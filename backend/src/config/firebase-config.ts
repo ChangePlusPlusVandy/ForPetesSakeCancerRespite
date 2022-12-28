@@ -9,4 +9,8 @@ const app = initializeApp({
 
 const auth = getAuth(app);
 
-module.exports = auth;
+export default auth;
+
+// export default {
+// 	verifyIdToken: (param1) => {return true}
+// };
