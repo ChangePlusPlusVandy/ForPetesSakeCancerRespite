@@ -5,12 +5,12 @@ import PropTypes from "prop-types"
 import { useAuth } from "../AuthContext";
 
 const Home = () => {
-  const [fact, setFact] = useState("");
+  const [data, setData] = useState("");
   const { currentUser } = useAuth();
 
   
   useEffect(() => {
-    const fetchFact = async () => {
+    const fetchData = async () => {
       console.log("called");
       try {
         const token = await currentUser.getIdToken();
@@ -23,20 +23,21 @@ const Home = () => {
         };
 
         const res = await fetch("http://localhost:3000/data", payloadHeader);
-        setFact(await res.text());
+        setData(await res.text());
       } catch (err) {
         console.log(err);
       }
     };
 
-    fetchFact();
+    fetchData();
   }, [currentUser]);
 
   return (
     <View style={styles.container}>
       <Text>Welcome {currentUser.email}!</Text>
-      <Text>{fact}</Text>
+      <Text>{data}</Text>
       <Link to="/profile">Profile</Link>
+      <Link to="/logout">Logout</Link>
     </View>
   );
 };
@@ -49,9 +50,5 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 });
-
-Home.propTypes = {
-	navigation: PropTypes.any.isRequired
-};
 
 export default Home;

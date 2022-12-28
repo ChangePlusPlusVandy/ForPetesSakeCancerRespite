@@ -5,7 +5,7 @@ import { useAuth } from "../AuthContext";
 export default function PrivateRoute({ component: Component, ...rest }) {
   const { currentUser } = useAuth();
 
-  // If the user is logged in, render the component. Otherwise, redirect to login.
+  // If the user is logged in, render the component. Otherwise, redirect to main account setup page
   return (
     <Route 
       {...rest}
@@ -13,7 +13,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
         return currentUser ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect to="/account-setup" />
         );
       }}
     ></Route>

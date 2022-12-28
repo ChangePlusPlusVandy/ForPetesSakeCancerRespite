@@ -23,8 +23,7 @@ const ForgotPassword = () => {
       });
   };
 
-  return (
-    <div>
+  /*<div>
       <h1>Forgot Password</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -40,7 +39,10 @@ const ForgotPassword = () => {
       <p>
         <Link to="/login">Back to login</Link>
       </p>
-    </div>
+    </div>*/
+
+  return (
+    <Text>Hello World</Text>
   );
 };
 

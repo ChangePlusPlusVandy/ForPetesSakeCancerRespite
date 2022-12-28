@@ -30,8 +30,7 @@ const Register = () => {
     setIsLoading(false);
   };
 
-  return (
-    <div>
+  /*<div>
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -78,7 +77,10 @@ const Register = () => {
       <p>
         Already have an account? <Link to="/login">Login</Link>
       </p>
-    </div>
+    </div>*/
+
+  return (
+    <Text>Hello World</Text>
   );
 };
 

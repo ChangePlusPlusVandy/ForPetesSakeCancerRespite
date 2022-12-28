@@ -23,8 +23,7 @@ const Login = () => {
     setIsLoading(false);
   };
 
-  return (
-    <div>
+  /*<div>
       <h1>Welcome to the For Pete's Sake Cancer Respite Portal</h1>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
@@ -57,7 +56,10 @@ const Login = () => {
       <p>
         Forgot your password? <Link to="/forgot-password">Reset</Link>
       </p>
-    </div>
+    </div>*/
+
+  return (
+    <Text>Hello World</Text>
   );
 };
 

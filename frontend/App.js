@@ -1,11 +1,14 @@
-import { BrowserRouter } from "react-router-dom";
-import Router from "./src/Router";
+import { Router } from "react-router-dom";
+import CustomRouter from "./src/CustomRouter";
+import { createMemoryHistory } from 'history';
+
+const history = createMemoryHistory();
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Router />
-    </BrowserRouter>
+    <Router history={history}>
+      <CustomRouter />
+    </Router>
   );
 };
 

@@ -1,7 +1,4 @@
-// React context allows us to pass/share data through the component tree without having to pass props down manually at every level.
-// AuthContext.js is a React context that stores the authentication data and provides it to the components that need it.
-
-import React, { useContext, useState, useEffect, createContext } from "react";
+import { useContext, useState, useEffect, createContext } from "react";
 import firebase from "./firebase";
 
 const AuthContext = createContext();
@@ -11,12 +8,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState();
-
-  // Initially set to true. When Firebase finishes authentication and updates
-  //  the user, it's set to false. This will prevent the children components 
-  // from rendering while the action is taking place.
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentUserIn, setCurrentUserIn] = useState(null);
 
   function login(email, password) {
     return firebase.auth().signInWithEmailAndPassword(email, password);
@@ -46,15 +38,17 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
-      setIsLoading(false);
+    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(function(user) {
+      if(user) {
+        setCurrentUserIn(user);
+      }  
     });
-    return unsubscribe;
+
+    return () => unregisterAuthObserver();
   }, []);
 
   const value = {
-    currentUser,
+    currentUserIn,
     login,
     register,
     logout,
@@ -64,7 +58,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {!isLoading && children}
+      { children }
     </AuthContext.Provider>
   );
 }

@@ -24,8 +24,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-ProfileScreen.propTypes = {
-	navigation: PropTypes.any.isRequired
-};
-
 export default ProfileScreen;
