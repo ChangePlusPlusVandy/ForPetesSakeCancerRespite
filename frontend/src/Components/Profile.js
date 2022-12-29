@@ -5,7 +5,7 @@ import PropTypes from "prop-types"
 import { useAuth } from "../AuthContext";
 
 const ProfileScreen = () => {
-	const { currentUser } = useAuth();
+	const { currentUserIn } = useAuth();
 
 	return (
 		<View style={styles.container}>

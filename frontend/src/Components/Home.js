@@ -6,14 +6,14 @@ import { useAuth } from "../AuthContext";
 
 const Home = () => {
   const [data, setData] = useState("");
-  const { currentUser } = useAuth();
+  const { currentUserIn } = useAuth();
 
   
   useEffect(() => {
     const fetchData = async () => {
       console.log("called");
       try {
-        const token = await currentUser.getIdToken();
+        const token = await currentUserIn.getIdToken();
 
         const payloadHeader = {
           headers: {
@@ -30,11 +30,11 @@ const Home = () => {
     };
 
     fetchData();
-  }, [currentUser]);
+  }, [currentUserIn]);
 
   return (
     <View style={styles.container}>
-      <Text>Welcome {currentUser.email}!</Text>
+      <Text>Welcome {currentUserIn.email}!</Text>
       <Text>{data}</Text>
       <Link to="/profile">Profile</Link>
       <Link to="/logout">Logout</Link>

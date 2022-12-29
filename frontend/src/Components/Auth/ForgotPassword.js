@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
 import { useAuth } from "../../AuthContext";
 import { Link } from "react-router-dom";
+import Svg, { Path } from "react-native-svg";
 
 const ForgotPassword = () => {
   const { forgotPassword } = useAuth();
@@ -22,24 +24,6 @@ const ForgotPassword = () => {
         setError(error.message);
       });
   };
-
-  /*<div>
-      <h1>Forgot Password</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <button type="submit">Reset Password</button>
-      </form>
-      {message && <div>{message}</div>}
-      {error && <div>{error}</div>}
-      <p>
-        <Link to="/login">Back to login</Link>
-      </p>
-    </div>*/
 
   return (
     <Text>Hello World</Text>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
+import Svg, { Path } from "react-native-svg";
 
 const Register = () => {
   const { register } = useAuth();
@@ -30,58 +32,57 @@ const Register = () => {
     setIsLoading(false);
   };
 
-  /*<div>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="passwordConfirm">Confirm Password</label>
-          <input
-            type="password"
-            id="passwordConfirm"
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-          />
-        </div>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Loading..." : "Register"}
-        </button>
-        {error && <p>{error}</p>}
-      </form>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
-    </div>*/
-
   return (
-    <Text>Hello World</Text>
+    <View style={styles.container}>
+        <View style={styles.svgCurve}>
+            <View style={{ backgroundColor: '#0000ca', height: 160 }}>
+                <Svg
+                height="60%"
+                width="100%"
+                viewBox="0 0 1440 320"
+                style={{ position: 'absolute', top: 130 }}
+                >
+                <Path
+                    fill="#5000ca"
+                    d="M0,96L48,112C96,128,192,160,288,186.7C384
+                    ,213,480,235,576,213.3C672,192,768,128,864,
+                    128C960,128,1056,192,1152,208C1248,224,1344,192,
+                    1392,176L1440,160L1440,0L1392,0C1344,0,1248,0,
+                    1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,
+                    384,0,288,0C192,0,96,0,48,0L0,0Z"
+                />
+                </Svg>
+            </View>
+        </View>
+        <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>For Pete's Sake</Text>
+        </View>
+        <Link to="/login">Loginhello</Link>
+        <Link to="/register">Register</Link>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      backgroundColor: '#fff'
+  },
+  headerContainer: {
+      marginTop: 50,
+      marginHorizontal: 10
+  },
+  headerText: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      color: '#333',
+      textAlign: 'center',
+      marginTop: 35
+  },
+  svgCurve: {
+      position: 'absolute',
+      width: Dimensions.get('window').width
+  },
+});
 
 export default Register;
