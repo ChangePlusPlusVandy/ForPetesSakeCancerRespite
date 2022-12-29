@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
+import { StyleSheet, Text, View, Dimensions, Image, Button, TextInput, TouchableOpacity } from "react-native";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
@@ -25,14 +25,17 @@ const Login = () => {
     setIsLoading(false);
   };
 
+  const forgotPasswordPress = () => {
+    history.push("/forgot-password");
+  };
+
   return (
     <View style={styles.headerContainer}>
         <View>
             <View>
                 <Svg
-                height="60%"
                 width="100%"
-                viewBox="0 0 411 428"
+                viewBox="0 0 411 280"
                 style={{ flex: 1, justifyContent: "flex-end"}}
                 >
                 <Path
@@ -40,12 +43,25 @@ const Login = () => {
                     d="M102.287 -243.938C104.22 -247.286 108.501 -248.433 111.849 -246.5L607.62 39.7335C610.968 41.6665 612.116 45.9476 610.183 49.2957L434.51 353.569C432.416 357.196 426.862 354.957 427.869 350.892C453.249 248.457 364.663 153.871 260.786 172.495L164.754 189.712C70.1604 201.22 -23.5617 162.414 -82.3332 87.4061L-85.8758 82.8848C-86.0595 82.6503 -86.0823 82.3278 -85.9333 82.0698L102.287 -243.938Z"
                 />
                 </Svg>
+
             </View>
         </View>
         <View style={styles.centerContainer}>
-          <Text>Login</Text>
-          <Link to="/login">Loginhello</Link>
-          <Link to="/register">Register</Link>
+          <Text style={styles.loginText}>Login</Text>
+          <Text>Email</Text>
+          <View style={styles.textInput}>
+            <TextInput style={{marginLeft: 10, marginTop: 12}} value={email} onChangeText={(e) => setEmail(e)}/>
+          </View>
+          <Text>Password</Text>
+          <View style={styles.textInput}>
+            <TextInput style={{marginLeft: 10, marginTop: 12}} value={password} onChangeText={(e) => setPassword(e)} />
+          </View>
+          <TouchableOpacity onPress={handleSubmit} style={styles.loginbutton}>
+                <Text style={{color: "white"}}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={forgotPasswordPress}>
+            <Text style={styles.forgot_button}>Forgot Password?</Text> 
+          </TouchableOpacity>
         </View>
         <View style={styles.footer}>
             <Svg
@@ -66,6 +82,32 @@ const Login = () => {
 };
 
 const styles = StyleSheet.create({
+  forgot_button: {
+    height: 30,
+    marginBottom: 30,
+    marginLeft: 200,
+  },
+  textInput: {
+    color: "#ffffff",
+    borderColor: "#5f6566",
+    borderWidth: 1,
+    borderRadius: 15,
+    marginBottom: 20,
+    width: "85%",
+    height: "15%",
+    alignItems: "left",
+    justifyContent: "left",
+  },
+  loginbutton: {
+    backgroundColor: "#088da9",
+    borderRadius: 15,
+    marginTop: 10,
+    marginBottom: 20,
+    width: "85%",
+    height: "15%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   container: {
       flex: 1,
       backgroundColor: '#ffffff',
@@ -88,9 +130,19 @@ const styles = StyleSheet.create({
   },
   centerContainer: {
     backgroundColor: "#ffffff",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "left",
+    justifyContent: "left",
+    marginLeft: 30,
   },
+  loginText: {
+    fontSize: 36,
+    lineHeight: 43,
+    color: "#088da9",
+    marginBottom: 20,
+    fontWeight: "bold",
+    //fontFamily: "Lato",
+    fontStyle: "normal",
+},
 });
 
 export default Login;
