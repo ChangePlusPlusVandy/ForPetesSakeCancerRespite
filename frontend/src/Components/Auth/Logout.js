@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Text } from "react-native";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 

@@ -11,7 +11,6 @@ const Home = () => {
   
   useEffect(() => {
     const fetchData = async () => {
-      console.log("called");
       try {
         const token = await currentUserIn.getIdToken();
 
