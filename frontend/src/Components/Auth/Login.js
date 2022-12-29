@@ -48,19 +48,19 @@ const Login = () => {
         </View>
         <View style={styles.centerContainer}>
           <Text style={styles.loginText}>Login</Text>
-          <Text>Email</Text>
+          <Text style={{color: "#5f6566"}}>Email</Text>
           <View style={styles.textInput}>
             <TextInput style={{marginLeft: 10, marginTop: 12}} value={email} onChangeText={(e) => setEmail(e)}/>
           </View>
-          <Text>Password</Text>
+          <Text style={{color: "#5f6566"}}>Password</Text>
           <View style={styles.textInput}>
-            <TextInput style={{marginLeft: 10, marginTop: 12}} value={password} onChangeText={(e) => setPassword(e)} />
+            <TextInput style={{marginLeft: 10, marginTop: 12}} secureTextEntry={true} value={password} onChangeText={(e) => setPassword(e)} />
           </View>
-          <TouchableOpacity onPress={handleSubmit} style={styles.loginbutton}>
-                <Text style={{color: "white"}}>Login</Text>
-          </TouchableOpacity>
           <TouchableOpacity onPress={forgotPasswordPress}>
             <Text style={styles.forgot_button}>Forgot Password?</Text> 
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSubmit} style={styles.loginbutton}>
+                <Text style={{color: "white"}}>Login</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.footer}>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
     width: "85%",
-    height: "15%",
+    height: "12%",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     //fontFamily: "Lato",
     fontStyle: "normal",
-},
+  },
 });
 
 export default Login;
