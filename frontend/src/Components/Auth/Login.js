@@ -62,6 +62,9 @@ const Login = () => {
           <TouchableOpacity onPress={handleSubmit} style={styles.loginbutton}>
                 <Text style={{color: "white"}}>Login</Text>
           </TouchableOpacity>
+          <View style={{alignContent: "center", justifyContent: "center", margin: 15}}>
+            <Text style={{color: "red"}}>{error}</Text>
+          </View>
         </View>
         <View style={styles.footer}>
             <Svg

@@ -73,6 +73,9 @@ const Register = () => {
           <TouchableOpacity onPress={handleSubmit} style={styles.signupbutton}>
                 <Text style={{color: "black"}}>Sign Up</Text>
           </TouchableOpacity>
+          <View style={{alignContent: "center", justifyContent: "center", margin: 15}}>
+            <Text style={{color: "red"}}>{error}</Text>
+          </View>
         </View>
         <View style={styles.footer}>
             <Svg
