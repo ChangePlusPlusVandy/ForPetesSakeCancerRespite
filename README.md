@@ -77,3 +77,7 @@ Make sure to keep up to keep up the same code structure / styling that already e
 In terms of code-style, make sure to install the `Prettier` Extension on VSCODE and format your code by pressing `Ctrl + shift + P` and typing into the textbox `Format Document`
 
 Also make sure to use thorough documentation, adding at the very least a comment at the top of every file/class detailing what the file does as well as comments on any public / non-obvious functions and even comments through the code itself if you ever do anything confusing. Make the code as readable as possible for anyone else to read it and be able to have a good understanding as to what it does, and don't be afraid to split up code into multiple functions
+
+## Contributing 
+
+Make sure when contributing that you create your own branch and create whatever sprint / feature in that branch. Then after you are finished with that, [create a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request). We will review the pull request and might possibly also ask you to update some code before finally merging it into the main branch. 
