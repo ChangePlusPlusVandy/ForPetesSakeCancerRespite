@@ -2,7 +2,7 @@
 // Splits the authorization header ("Bearer <token>")
 // into an array and takes the second element, which is the token
 
-import auth from "../config/firebase-config";
+import auth from "../firebase";
 
 const VerifyToken = async (req, res, next) => {
 

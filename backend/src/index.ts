@@ -2,16 +2,25 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes";
+import mongoose from "mongoose";
 
 dotenv.config();
 const app = express();
-const PORT: number = 3000;
+const PORT: number = parseInt(process.env.PORT) || 3000;
+const MONGODB_URI: string = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/FPSCR";
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", router);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+async function main() {
+	await mongoose.connect(MONGODB_URI);
+	console.log("Successfully connected to MongoDB")
+
+	app.listen(PORT, () => {
+		console.log(`Server is running on port ${PORT}`);
+	});
+}
+
+main().catch(err => console.log(err));
