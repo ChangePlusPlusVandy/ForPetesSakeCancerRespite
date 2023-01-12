@@ -1,10 +1,8 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import router from "./routes";
 import mongoose from "mongoose";
 
-dotenv.config();
 const app = express();
 const PORT: number = parseInt(process.env.PORT) || 3000;
 const MONGODB_URI: string = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/FPSCR";
