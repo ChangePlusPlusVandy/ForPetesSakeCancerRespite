@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useAuth } from "../AuthContext";
+import CONFIG from "../Config"
 
 const Home = () => {
 	const [data, setData] = useState("");
@@ -20,7 +21,7 @@ const Home = () => {
 					},
 				};
 
-				const res = await fetch("http://localhost:3000/data", payloadHeader);
+				const res = await fetch(CONFIG.URL + "/data", payloadHeader);
 				setData(await res.text());
 			} catch (err) {
 				console.log(err);
