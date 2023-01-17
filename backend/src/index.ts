@@ -4,7 +4,7 @@ import router from "./routes";
 import mongoose from "mongoose";
 
 const app = express();
-const PORT: number = parseInt(process.env.PORT) || 3000;
+const PORT: number = parseInt(process.env.PORT as any) || 3000;
 const MONGODB_URI: string = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/FPSCR";
 
 app.use(cors());
