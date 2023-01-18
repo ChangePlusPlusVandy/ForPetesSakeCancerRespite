@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import { useAuth } from "../AuthContext";
 
 const ProfileScreen = () => {
@@ -13,7 +13,7 @@ const ProfileScreen = () => {
 			<Link to="/">Home</Link>
 		</View>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	container: {

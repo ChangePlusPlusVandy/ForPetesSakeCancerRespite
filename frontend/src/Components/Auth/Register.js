@@ -129,7 +129,7 @@ const Register = () => {
 const styles = StyleSheet.create({
 	textInputLabel: {
 		color: "#5f6566",
-		marginBottom: 3
+		marginBottom: 3,
 	},
 	forgot_button: {
 		height: 30,
