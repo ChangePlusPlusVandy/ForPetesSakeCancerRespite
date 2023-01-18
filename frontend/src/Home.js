@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import PropTypes from "prop-types"
 
 export default class HomeScreen extends Component {
@@ -14,6 +14,8 @@ export default class HomeScreen extends Component {
 		return (
 			<View style={styles.container}>
 				<Text>For Pete's Sake Cancer Respite App</Text>
+				{/* switch to newsletter display */}
+				<Button title="Newsletters" onPress={()=> {this.props.navigation.navigate("Newsletter");}}></Button>
 			</View>
 		);
 	}
