@@ -39,6 +39,7 @@ To get more information on the environment setup, refer to [this doc](https://do
 4. Make sure to create a mongoDB database called `FPSCR`
 5. Make a new file called `Config.ts` in the `backend/src` folder and fill it in the same format as `SampleConfig.ts`
 6. Run the backend by simply typing in `npm run dev` or press f5 on `index.ts` in VSCODE
+	Note: You may need to also install nodemon (`sudo npm i nodemon -g`) and ts-node (`sudo npm i ts-node -g`)
 
 ### Running Application:
 
@@ -57,7 +58,7 @@ If you are on WSL, you may also need to run adb (Android Debugger), do this by r
 
 #### Backend:
 
-Start up the docker daemon with `sudo dockerd` and then to run the mongoDB container run `sudo docker run --name FPSCR_MongoDB -d -p 27017:27017 mongo`
+Start up the docker daemon with `sudo dockerd` and then to run the mongoDB container run `sudo docker run -d -p 27017:27017 mongo`
 
 After that to run the actual project, simply cd into the src directory and type `npm run dev`. You can also run it in the VSCode environment by going to `index.ts` and pressing f5
 
@@ -78,6 +79,6 @@ In terms of code-style, make sure to install the `Prettier` Extension on VSCODE 
 
 Also make sure to use thorough documentation, adding at the very least a comment at the top of every file/class detailing what the file does as well as comments on any public / non-obvious functions and even comments through the code itself if you ever do anything confusing. Make the code as readable as possible for anyone else to read it and be able to have a good understanding as to what it does, and don't be afraid to split up code into multiple functions
 
-## Contributing 
+## Contributing
 
-Make sure when contributing that you create your own branch and create whatever sprint / feature in that branch. Then after you are finished with that, [create a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request). We will review the pull request and might possibly also ask you to update some code before finally merging it into the main branch. 
+Make sure when contributing that you create your own branch and create whatever sprint / feature in that branch. Then after you are finished with that, [create a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request). We will review the pull request and might possibly also ask you to update some code before finally merging it into the main branch.
