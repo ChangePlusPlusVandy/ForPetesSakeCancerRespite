@@ -37,6 +37,7 @@ const Home = () => {
 			<Text>{data}</Text>
 			<Link to="/profile">Profile</Link>
 			<Link to="/logout">Logout</Link>
+			<Link to="/messaging">Messaging</Link>
 		</View>
 	);
 };
