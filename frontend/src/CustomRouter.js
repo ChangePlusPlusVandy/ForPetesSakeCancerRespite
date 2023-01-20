@@ -11,6 +11,7 @@ import Register from "./Components/Auth/Register";
 import AccountSetup from "./Components/Auth/AccountSetup";
 import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
+import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
 
 const CustomRouter = () => {
@@ -25,6 +26,7 @@ const CustomRouter = () => {
         <Route exact path="/register" component={Register} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/forgot-password" component={ForgotPassword} />
+        <Route exact path="/create-post" component={CreatePost} />
         <Route exact path="/messaging" component={Messaging} />
       </Switch>
     </AuthProvider>
