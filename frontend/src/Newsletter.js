@@ -22,7 +22,7 @@ export default class NewsletterScreen extends Component {
     }
 
     getAllNewsLetter = async() => {
-        const promise = await fetch("http://10.20.0.230:3000/api/newsletter/get_newsletters");
+        const promise = await fetch("http://10.76.25.107:3000/api/newsletter/get_newsletters");
         // http://10.76.25.107:3000/api/newsletter/get_newsletters FGH
         // http://10.20.0.230:3000/api/newsletter/get_newsletters  VV
         let data = await promise.json();
@@ -35,6 +35,10 @@ export default class NewsletterScreen extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
+                <View style = {styles.header}>
+                    {/* <Image/> */}
+                    <Text style = {styles.title}>Explore</Text>
+                </View>
                 <FlatList
                  data={this.state.newsletterData}
                  renderItem={({item}) => (
@@ -77,6 +81,14 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
         borderColor:"#34495E "
     },
+    header: {
+        alignSelf:"flex-start",
+    },
+    title:{
+        fontWeight:'bold',
+        color:"#3D96B5",
+        fontSize: '40px',
+    }
 });
 
 NewsletterScreen.propTypes = {
