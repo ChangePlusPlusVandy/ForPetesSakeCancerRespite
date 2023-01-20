@@ -18,10 +18,10 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (password !== passwordConfirm) {
-      setError("Passwords do not match");
-      return;
-    }
+    // if (password !== passwordConfirm) {
+    //   setError("Passwords do not match");
+    //   return;
+    // }
     try {
       setIsLoading(true);
       await register(name, email, password);
