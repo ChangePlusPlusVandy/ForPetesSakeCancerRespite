@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 const dataRoute = express.Router();
 
 dataRoute.get("/", (req, res) => {
