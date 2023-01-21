@@ -30,18 +30,18 @@ const Home = () => {
 
 		fetchData();
 	}, [currentUserIn]);
-
-	return (
-		<View style={styles.container}>
-			<Text>Welcome {currentUserIn.email}!</Text>
-			<Text>{data}</Text>
-			<Link to="/profile">Profile</Link>
-			<Link to="/logout">Logout</Link>
-			<Link to="/messaging">Messaging</Link>
-			<Link to="/explore">Explore</Link>
-			
-		</View>
-	);
+  
+  return (
+    <View style={styles.container}>
+      <Text>Welcome {currentUserIn.email}!</Text>
+      <Text>{data}</Text>
+      <Link to="/profile">Profile</Link>
+      <Link to="/logout">Logout</Link>
+      <Link to="/create-post">Create Post</Link>
+      <Link to="/messaging">Messaging</Link>
+      <Link to="/explore">Explore</Link>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
