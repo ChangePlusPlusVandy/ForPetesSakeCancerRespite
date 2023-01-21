@@ -38,6 +38,8 @@ const Home = () => {
 			<Link to="/profile">Profile</Link>
 			<Link to="/logout">Logout</Link>
 			<Link to="/messaging">Messaging</Link>
+			<Link to="/explore">Explore</Link>
+			
 		</View>
 	);
 };
