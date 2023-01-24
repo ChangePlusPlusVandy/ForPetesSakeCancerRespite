@@ -13,6 +13,7 @@ import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
+import ExploreScreen from "./Components/BlogPosts/Explore";
 
 const CustomRouter = () => {
   // use PrivateRoute for protected routes
@@ -28,6 +29,8 @@ const CustomRouter = () => {
         <Route exact path="/forgot-password" component={ForgotPassword} />
         <Route exact path="/create-post" component={CreatePost} />
         <Route exact path="/messaging" component={Messaging} />
+        <Route exact path="/explore" component={ExploreScreen} />
+        
       </Switch>
     </AuthProvider>
   );
