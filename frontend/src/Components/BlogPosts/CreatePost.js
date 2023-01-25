@@ -1,31 +1,46 @@
-import React, { useState, useEffect} from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   TextInput,
   View,
-  Button,
   TouchableOpacity,
 } from "react-native";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
-import { IconButton, MD3Colors } from "react-native-paper";
+import CONFIG from "../../Config";
+import BottomBar from "../BottomBar";
 
 const CreatePost = () => {
   const { currentUserIn } = useAuth();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
+  const postData = async () => {
+
+    try {
+      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        body: JSON.stringify({title: title, body: body}),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const handleSubmit = async (e) => {
 		e.preventDefault();
-		setIsLoading(true);
-		try {
-			await login(email, password);
-			history.push("/"); // Redirect to home page
-		} catch (error) {
-			setError(error.message);
-		}
-		setIsLoading(false);
+    if(!title || !body){
+      return;
+    } else {
+      postData();
+    }
 	};
 
   return (
@@ -72,7 +87,7 @@ const CreatePost = () => {
         >
           <TouchableOpacity 
           style={styles.postButton}
-          onPres = {handleSubmit}
+          onPress = {handleSubmit}
           >
             <Text
               style={{
@@ -86,26 +101,7 @@ const CreatePost = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.rectangle}>
-        <View style = {styles.homeButtonContainer}>
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <IconButton
-              icon="home"
-              iconColor={"white"}
-              size={50}
-              onPress={() => console.log("Pressed")}
-            />
-          </Link>
-          <Link to="/profile" style={{ textDecoration: 'none' }}>
-            <IconButton
-              icon="account-circle"
-              iconColor={"white"}
-              size={50}
-              onPress={() => console.log("Pressed")}
-            />
-          </Link>
-        </View>
-      </View>
+      <BottomBar></BottomBar>
     </View>
   );
 };
@@ -128,15 +124,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  rectangle: {
-    width: "100%",
-    bottom: 0,
-    position: "absolute",
-    height: "18%",
-    backgroundColor: "#088DA9",
-    flexDirection: "row", 
-    justifyContent: "center"
-  },
   title_input: {
     height: "40%",
     width: "55%",
@@ -149,12 +136,6 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     fontSize: 20,
     color: "#474C4D",
-  },
-  homeButtonContainer: {
-    width: "85%",
-    margin: 10,
-    flexDirection: "row", 
-    justifyContent: "space-between"
   },
   postInput: {
     height: "100%",
