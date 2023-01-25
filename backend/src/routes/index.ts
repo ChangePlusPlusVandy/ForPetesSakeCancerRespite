@@ -1,5 +1,6 @@
 import express from "express";
 import dataRoute from "./data";
+import router_api from "./api";
 import VerifyToken from "../middlewares/VerifyToken";
 
 const router = express.Router();
@@ -9,5 +10,6 @@ router.get("/", async (req, res) => {
 });
 
 router.use("/data", VerifyToken, dataRoute);
+router.use('/api', router_api);
 
 export default router;
