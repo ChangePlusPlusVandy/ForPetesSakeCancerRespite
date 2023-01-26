@@ -27,22 +27,20 @@ router.post("/create_newsletter", async(req, res)=>{
     // Parse through the text in here
     var titleText = req.body.title;
     var bodyText = req.body.body;
-    var author = req.body.author;
-    if(!titleText || !bodyText || !author){
-        res.status(400).send("Bad user input. Inputs required for all fields.");
+    // var author = req.body.author;
+    if(!titleText || !bodyText){
+        res.status(400).send(JSON.stringify("Bad user input. Inputs required for all fields."));
+        return;
     }
-
     console.log('Got a POST request for the homepage for this: ');
-    res.send("Got a post request in postman")
-
     // Create a newsletter item in the database here
     try {
         const newsletterItem = await Newsletter.create({
             title: titleText, // change this based on what the req looks like
             body: bodyText,
-            author: author
+            // author: author
         })
-        // res.send("Successfully added to the database: " + newsletterItem)
+        console.log("Successfully added to the database: " + newsletterItem)
     } catch(e) {
         console.log(e.message)
     }
