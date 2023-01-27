@@ -9,7 +9,6 @@ import {
 	TextInput,
 	TouchableOpacity,
 } from "react-native";
-import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
 

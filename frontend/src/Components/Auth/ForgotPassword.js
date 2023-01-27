@@ -10,8 +10,6 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { useAuth } from "../../AuthContext";
-import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Svg, { Path } from "react-native-svg";
 
 const ForgotPassword = () => {

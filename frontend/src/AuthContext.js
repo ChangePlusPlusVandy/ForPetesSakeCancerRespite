@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect, createContext } from "react";
 import firebase from "./firebase";
+import config from "./Config";
 
 const AuthContext = createContext();
 
@@ -14,7 +15,17 @@ export function AuthProvider({ children }) {
     return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
-  function register(name, email, password) {
+  async function register(name, email, password) {
+    //add user data to mongoDB
+    var url = config["URL"] + "/api/users/signup";
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ "name": name, "email": email, "password": password })
+    };
+
+    await fetch(url, requestOptions);
+
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)

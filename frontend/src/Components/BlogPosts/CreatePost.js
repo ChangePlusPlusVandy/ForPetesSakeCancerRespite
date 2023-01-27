@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-native";
 import PropTypes from "prop-types";
 import { useAuth } from "../../AuthContext";
 // import { Icon } from "@rneui/themed";

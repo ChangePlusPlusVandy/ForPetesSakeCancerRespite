@@ -1,7 +1,9 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { View } from "react-native";
+import { Route, Routes, Redirect } from "react-router-native";
 import { AuthProvider } from "./AuthContext";
-import PrivateRoute from "./Components/PrivateRoute";
+import { useAuth } from "./AuthContext"; 
+//import PrivateRoute from "./Components/PrivateRoute";
 
 // Routes
 import Home from "./Components/Home";
@@ -18,17 +20,17 @@ const CustomRouter = () => {
   // use PrivateRoute for protected routes
   return (
     <AuthProvider>
-      <Switch>
-        <PrivateRoute exact path="/" component={Home} />
-        <Route exact path="/account-setup" component={AccountSetup} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/logout" component={Logout} />
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/profile" component={Profile} />
-        <Route exact path="/forgot-password" component={ForgotPassword} />
-        <Route exact path="/create-post" component={CreatePost} />
-        <Route exact path="/messaging" component={Messaging} />
-      </Switch>
+      <Routes>
+        <Route exact path="/" element={<AccountSetup />} />
+        <Route exact path="/account-setup" element={<AccountSetup />} />
+        <Route exact path="/login" element={<Login />} />
+        <Route exact path="/logout" element={<Logout />} />
+        <Route exact path="/register" element={<Register />} />
+        <Route exact path="/profile" element={<Profile />} />
+        <Route exact path="/forgot-password" element={<ForgotPassword />} />
+        <Route exact path="/create-post" element={<CreatePost />} />
+        <Route exact path="/messaging" element={<Messaging />} />
+      </Routes>
     </AuthProvider>
   );
 };

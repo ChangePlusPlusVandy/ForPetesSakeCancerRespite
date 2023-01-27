@@ -8,15 +8,12 @@ import {
 	Button,
 	TouchableOpacity,
 } from "react-native";
-import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
 
 const AccountSetup = () => {
-	const history = useHistory();
-
 	const loginPress = () => {
-		history.push("/login");
+		this.props.location = "/login";
 	};
 
 	const signupPress = () => {

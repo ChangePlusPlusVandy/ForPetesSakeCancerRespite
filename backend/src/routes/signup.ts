@@ -6,7 +6,9 @@ const router = express.Router();
 router.post(
     "/api/users/signup", 
     async (req: Request, res: Response, next: NextFunction)  => {
-        const { name, email, password } = req.body;
+        const name = req.body.name;
+        const email = req.body.email;
+        const password = req.body.password;
 
         // check if email in use
         const existingUser = await User.findOne({ email });

@@ -1,14 +1,11 @@
-import { Router } from "react-router-dom";
+import { NativeRouter } from "react-router-native";
 import CustomRouter from "./src/CustomRouter";
-import { createMemoryHistory } from 'history';
-
-const history = createMemoryHistory();
 
 const App = () => {
   return (
-    <Router history={history}>
+    <NativeRouter>
       <CustomRouter />
-    </Router>
+    </NativeRouter>
   );
 };
 
