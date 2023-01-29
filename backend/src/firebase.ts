@@ -13,4 +13,4 @@ export default auth;
 
 // export default {
 // 	verifyIdToken: (param1) => {return true}
-// };
+// }

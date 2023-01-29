@@ -1,17 +1,41 @@
 import Messaging from "../models/Messages";
 import { Server } from "socket.io";
 import { Server as HTTPServer } from "http";
+import GroupChats from "../models/Groupchat";
+
 
 class Gateway {
 	socketIO: Server;
 	constructor(http: HTTPServer) {
-		this.socketIO = new Server(http);
+		this.socketIO= new Server(http);
 		console.log("Gateway initialized");
 	}
 
 	init() {
+		this.socketIO.use((socket, next) => {
+			const username = socket.handshake.auth.username;
+			if (!username) {
+			  return next(new Error("invalid username"));
+			}
+			(socket as any).username = username;
+			next();
+		  });
+
+		
+
 		this.socketIO.on("connection", (socket) => {
 			console.log(`SOCKETIO: ${socket.id} user just connected!`);
+			
+			socket.on("send_message", async ({content, group_id, userName})=>{
+				const messageToBeAdded = new Messaging({"message": content, "groupChat": group_id, "user": userName})
+				const added = await messageToBeAdded.save()
+				// emit to all of the ids in the group
+				const groupchat = await GroupChats.findById({"_id":{group_id}})
+				for(let i = 0; i < groupchat.users.length; i++){
+					socket.to(groupchat.users[i]).emit("send_message",{added})
+				}	
+			})
+
 			Messaging.find().then((result) => {
 				socket.emit("output-messages", result);
 			});
@@ -24,6 +48,8 @@ class Gateway {
 		});
 	}
 
+
+
 	messageHandler(socket, msg) {
 		const message = new Messaging({ msg });
 		message.save().then((document) => {
@@ -32,6 +58,13 @@ class Gateway {
 			this.socketIO.emit("message", msg);
 		});
 	}
+
 }
+
+
+
+
+
+
 
 export default Gateway;
