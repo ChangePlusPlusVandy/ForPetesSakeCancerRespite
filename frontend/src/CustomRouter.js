@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import { Route, Routes, Redirect } from "react-router-native";
 import { AuthProvider } from "./AuthContext";
 import { useAuth } from "./AuthContext"; 
+import { createStackNavigator } from '@react-navigation/stack';
 //import PrivateRoute from "./Components/PrivateRoute";
 
 // Routes
@@ -17,20 +17,21 @@ import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
 
 const CustomRouter = () => {
+  const Stack = createStackNavigator();
   // use PrivateRoute for protected routes
   return (
     <AuthProvider>
-      <Routes>
-        <Route exact path="/" element={<AccountSetup />} />
-        <Route exact path="/account-setup" element={<AccountSetup />} />
-        <Route exact path="/login" element={<Login />} />
-        <Route exact path="/logout" element={<Logout />} />
-        <Route exact path="/register" element={<Register />} />
-        <Route exact path="/profile" element={<Profile />} />
-        <Route exact path="/forgot-password" element={<ForgotPassword />} />
-        <Route exact path="/create-post" element={<CreatePost />} />
-        <Route exact path="/messaging" element={<Messaging />} />
-      </Routes>
+      <Stack.Navigator>
+        { /*<Stack.Screen name="AccountSetup" component={<AccountSetup />} />*/ }
+        <Stack.Screen name="AccountSetup" component={AccountSetup} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Logout" component={Logout} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="CreatePost" component={CreatePost} />
+        <Stack.Screen name="Messaging" component={Messaging} />
+      </Stack.Navigator>
     </AuthProvider>
   );
 };
