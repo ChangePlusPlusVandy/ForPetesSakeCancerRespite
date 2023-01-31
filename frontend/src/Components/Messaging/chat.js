@@ -43,11 +43,6 @@ class Chat extends Component {
 
   render() {
     return (
-      
-
-
-
-
       <View style={styles.messagingscreen}>
         <View style={styles.chatbody}>
           <FlatList

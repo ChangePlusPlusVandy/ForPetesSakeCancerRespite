@@ -6,10 +6,10 @@ import VerifyToken from "../middlewares/VerifyToken";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-	res.send("Hello World!");
+  res.send("Hello World!");
 });
 
 router.use("/data", VerifyToken, dataRoute);
-router.use('/api', router_api);
+router.use("/api", router_api);
 
 export default router;

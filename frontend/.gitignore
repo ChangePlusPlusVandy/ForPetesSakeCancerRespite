@@ -11,6 +11,6 @@ npm-debug.*
 web-build/
 /src/Config.js
 env.json
-
+**/.expo
 # macOS
 .DS_Store
