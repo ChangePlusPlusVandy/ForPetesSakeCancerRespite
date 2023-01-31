@@ -13,7 +13,7 @@ import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
-import ExploreScreen from "./Components/BlogPosts/Explore";
+import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
 
 const CustomRouter = () => {
   // use PrivateRoute for protected routes

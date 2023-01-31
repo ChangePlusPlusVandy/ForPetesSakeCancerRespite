@@ -2,22 +2,30 @@ import React, { Component } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PropTypes from "prop-types";
 import Config from "../../Config";
+import { Link } from "react-router-dom";
 
 
 class NewsItem extends Component {
     render() {
         return (
-            <View style={StyleSheet.newsLetter}>
-                <Text>{this.props.title}</Text>
-                <Text>{this.props.body}</Text>
-                <Text>{this.props.author}</Text>
-            </View> 
+            <View style={styles.newsItem}>
+                <View style={styles.newsHeader}>
+                    <View style={{flex:1}}><Text>Profile Pic</Text></View>
+                    <Text style={{flex:8, marginLeft:'19px'}}>{this.props.author}</Text>    
+                </View> 
+                <View style={styles.newsTitle}>
+                    <Text style={{fontWeight:'bold', marginLeft:'19px', fontSize:'26px'}}>{this.props.title}</Text>
+                </View>
+                <TouchableOpacity style={{alignSelf:'center', flex:1, alignItems:'stretch'}}>
+                    <Text>Read More ...</Text>
+                </TouchableOpacity>
+            </View>
         );
     } 
 }
 
 
-export default class ExploreScreen extends Component {
+export default class ExploreScreenOld extends Component {
     state = {
         newsletterData : [{title:"Waiting for Data, Please Hit Refresh ..."}]
     }
@@ -34,28 +42,43 @@ export default class ExploreScreen extends Component {
 		return (
 			<View style={styles.container}>
                 <View style = {styles.header}>
-                    {/* <Image/> */}
+                    <View style={styles.profile}></View>
                     <Text style = {styles.title}>Explore</Text>
+                    <View style={styles.headeroptions}>
+                        <TouchableOpacity style={{ width:'50%',height:'100%', alignItems:'flex-start', paddingLeft:'30px'}}>
+                            <Text style = {styles.optionText}>Following</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{width:'50%',height:'100%', alignItems:'flex-end', paddingRight:'30px'}}>
+                            <Text style={styles.optionText}> Sort By</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <FlatList
-                 data={this.state.newsletterData}
-                 renderItem={({item}) => (
-                    <View>
-                        <Text>{item.title}</Text>
-                        <Text>{item.body}</Text>
-                        <Text>{item.author}</Text>
-                    </View> 
-                 )}
-                 >
-                </FlatList>
+                <View style={styles.newsLetter}>
+                    <FlatList
+                    data={this.state.newsletterData}
+                    renderItem={({item}) => (
+                        <NewsItem title={item.title} body={item.body} author={item.author}></NewsItem>
+                    )}
+                    >
+                    </FlatList>
+                </View>
+    
+                <View style={styles.footer}>
+                    <TouchableOpacity 
+                    style={styles.button}
+                    onPress={this.getAllNewsLetter}
+                    >
+                        <Text style = {styles.navText}>Refresh</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity 
-                 style={styles.button}
-                 onPress={this.getAllNewsLetter}
-                >
-                    <Text>Refresh</Text>
-                </TouchableOpacity>
-
+                    <TouchableOpacity
+                        style={styles.button}>
+                        <Text style = {styles.navText}> 
+                              Home
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 			</View>
 		);
 	}
@@ -65,27 +88,78 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#fff",
-		alignItems: "center",
 		justifyContent: "flex-start",
 	},
     button: {
         alignItems: 'center',
-        backgroundColor: '#DDDDDD',
         padding: 10,
-        marginBottom: 10
+        marginBottom: 0,
+        width:'50%',
+        height:'100%',
     },
     newsLetter: {
-        alignItems: "center",
+        flex:8,
+        backgroundColor:'#FFFFFF',
 		justifyContent: "flex-start",
-        borderColor:"#34495E "
+        borderColor:"#C4C4C4"
+    },
+    newsItem:{
+        backgroundColor:'#E5E5E5',
+        borderWidth:'1px',
+        borderColor:"#C4C4C4",
+        height:'183px',
+    },
+    newsHeader:{
+        flex:1,
+        justifyContent:'flex-start',
+        flexDirection:'row',
+    },
+    newsTitle:{
+        flex:2
     },
     header: {
-        alignSelf:"flex-start",
+        flex:3,
+        borderBottomColor:'#C4C4C4',
+        borderBottomWidth:'1px',
     },
     title:{
+        flex:2,
         fontWeight:'bold',
-        color:"#3D96B5",
+        color:"#088DA9",
         fontSize: '40px',
+        alignSelf:"flex-start",
+        marginLeft:'24px'
+    },
+    profile:{
+        flex:2,
+
+    },
+    headeroptions:{
+        flex:1,
+        flexDirection: 'row',
+        justifyContent:'space-evenly',
+        width:'100%',
+        paddingBottom:'0px',
+        marginBottom:'0px',
+    },
+    optionText:{
+        fontWeight:'500',
+        fontSize:'15px',
+    },
+    footer:{
+        flex:1,
+        flexDirection: 'row',
+        justifyContent:'space-evenly',
+        width:'100%',
+        backgroundColor:'#088DA9',
+        // borderWidth:'1px',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    navText:{
+        fontWeight:'500',
+        fontSize:'20px',
+        color:'#EEEEEE',
     }
 });
 
