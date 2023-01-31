@@ -15,14 +15,23 @@ import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
+//import PrivateRoute from "./Components/PrivateRoute";
 
 const CustomRouter = () => {
   const Stack = createStackNavigator();
-  // use PrivateRoute for protected routes
+  
   return (
     <AuthProvider>
       <Stack.Navigator>
-        { /*<Stack.Screen name="AccountSetup" component={<AccountSetup />} />*/ }
+        <Stack.Screen name="Home" component={() => {
+          const { currentUserIn } = useAuth();
+          if(currentUserIn) {
+            return <Home />
+          } else {
+            return <AccountSetup />
+          }
+        }
+        } />
         <Stack.Screen name="AccountSetup" component={AccountSetup} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Logout" component={Logout} />

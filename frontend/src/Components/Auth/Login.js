@@ -11,10 +11,12 @@ import {
 } from "react-native";
 import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
+import { useNavigation } from "@react-navigation/native";
 
-const Login = () => {
+function Login() {
 	const { login } = useAuth();
-	const history = useHistory();
+
+	const navigation = useNavigation();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -26,15 +28,12 @@ const Login = () => {
 		setIsLoading(true);
 		try {
 			await login(email, password);
-			history.push("/"); // Redirect to home page
+			const navigation = useNavigation();
+			navigation.navigate("Home");
 		} catch (error) {
 			setError(error.message);
 		}
 		setIsLoading(false);
-	};
-
-	const forgotPasswordPress = () => {
-		history.push("/forgot-password");
 	};
 
 	return (
@@ -71,7 +70,7 @@ const Login = () => {
 						onChangeText={(e) => setPassword(e)}
 					/>
 				</View>
-				<TouchableOpacity onPress={forgotPasswordPress}>
+				<TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
 					<Text style={styles.forgot_button}>Forgot Password?</Text>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={handleSubmit} style={styles.loginbutton}>
@@ -116,8 +115,8 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		width: "85%",
 		height: "15%",
-		alignItems: "left",
-		justifyContent: "left",
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
 	},
 	loginbutton: {
 		backgroundColor: "#088da9",
@@ -151,8 +150,9 @@ const styles = StyleSheet.create({
 	},
 	centerContainer: {
 		backgroundColor: "#ffffff",
-		alignItems: "left",
-		justifyContent: "left",
+		flex: 1,
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
 		marginLeft: 30,
 	},
 	loginText: {

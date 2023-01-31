@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Link } from "react-router-native";
 import PropTypes from "prop-types";
 import { useAuth } from "../AuthContext";
 import CONFIG from "../Config"
+import { useNavigation, Link } from "@react-navigation/native";
 
-const Home = () => {
+function Home() {
 	const [data, setData] = useState("");
 	const { currentUserIn } = useAuth();
+
+	const navigation = useNavigation();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -31,16 +33,16 @@ const Home = () => {
 		fetchData();
 	}, [currentUserIn]);
 
-  return (
-    <View style={styles.container}>
-      <Text>Welcome {currentUserIn.email}!</Text>
-      <Text>{data}</Text>
-      <Link to="/profile">Profile</Link>
-      <Link to="/logout">Logout</Link>
-      <Link to="/create-post">Create Post</Link>
-      <Link to="/messaging">Messaging</Link>
-    </View>
-  );
+	return (
+		<View style={styles.container}>
+		<Text>Welcome {currentUserIn.email}!</Text>
+		<Text>{data}</Text>
+		<Link to={{screen: "Profile"}}>Profile</Link>
+		<Link to={{screen: "Logout"}}>Logout</Link>
+		<Link to={{screen: "CreatePost"}}>Create Post</Link>
+		<Link to={{screen: "Messaging"}}>Messaging</Link>
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({

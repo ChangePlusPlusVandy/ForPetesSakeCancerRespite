@@ -5,15 +5,18 @@
 
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
-import { Link } from "react-router-native";
 import PropTypes from "prop-types";
 import { useAuth } from "../../AuthContext";
+import { useNavigation, Link } from "@react-navigation/native";
+
 // import { Icon } from "@rneui/themed";
 
 const CreatePost = () => {
   const { currentUserIn } = useAuth();
   const [title, setTitle] = useState("");
 
+  const navigation = useNavigation();
+  
   return (
     <View style={styles.container}>
       <View style = {{flexDirection: "row"}}>
@@ -35,7 +38,7 @@ const CreatePost = () => {
         <View>
           {/* <Icon name="home" /> */}
           <Button style = {styles.homeButton}></Button>
-          <Link to="/">Home</Link>
+          <Link to={{screen: "Home"}}>Home</Link>
         </View>
       </View>
     </View>
