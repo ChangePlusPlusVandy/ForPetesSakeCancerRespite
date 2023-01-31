@@ -12,16 +12,34 @@ export function AuthProvider({ children }) {
   const [currentUserIn, setCurrentUserIn] = useState(null);
 
   function login(email, password) {
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+    const userData =  firebase.auth().signInWithEmailAndPassword(email, password);
+
+    //sync data to mongoDB
+    if(userData.user) {
+      var url = config["URL"] + "/api/users/login";
+      var name = userData.user.displayName;
+      var email = userData.user.email;
+      var password = userData.user.password;
+      var token = userData.user.getIdToken();
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ "name": name, "email": email, "password": password, "token": token })
+      };
+      fetch(url, requestOptions);
+    }
+
+    return userData;
   }
 
   async function register(name, email, password) {
     //add user data to mongoDB
     var url = config["URL"] + "/api/users/signup";
+    var token = await firebase.auth().currentUser.getIdToken();
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "name": name, "email": email, "password": password })
+      body: JSON.stringify({ "name": name, "email": email, "password": password, "token": token })
     };
 
     await fetch(url, requestOptions);

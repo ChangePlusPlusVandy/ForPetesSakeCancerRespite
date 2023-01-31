@@ -4,7 +4,7 @@ const router = express.Router();
 
 // add new user data to the mongoDB database
 router.post(
-    "/api/users/signup", 
+    "/api/users/login", 
     async (req: Request, res: Response, next: NextFunction)  => {
         const name = req.body.name;
         const email = req.body.email;
@@ -14,17 +14,19 @@ router.post(
         // check if email in use
         const existingUser = await User.findOne({ email });
         if(existingUser) {
-            return next(new Error('Email in use'));
+            //check if user tokens match else update tokens
+            if(existingUser.password === password && existingUser.token === token) {
+                return next({"message": "User exists"});
+            }
+            else {
+                existingUser.token = token;
+                await existingUser.save();
+                return next({"message": "User token updated"});
+            }
         }
-
-        const user = User.build({
-            name,
-            email,
-            password,
-            token
-        });
-        await user.save();
-        res.send({ user });
+        else {
+            return next({"message": "User does not exist"});
+        }
 });
 
 export default router;

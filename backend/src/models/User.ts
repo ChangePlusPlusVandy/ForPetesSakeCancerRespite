@@ -5,7 +5,8 @@ const { scryptSync, randomBytes } = require("crypto")
 interface UserAttrs {
 	name: String,
     email: String,
-    password: String
+    password: String,
+    token: String
 }
 
 // describe user model interface
@@ -17,13 +18,15 @@ interface UserModel extends mongoose.Model<UserDoc> {
 interface UserDoc extends mongoose.Document {
 	name: String,
     email: String,
-    password: String
+    password: String,
+    token: String
 }
 
 const userSchema = new mongoose.Schema({
 	  name: String,
 	  email: String,
 	  password: String,
+      token: String
 });
 
 // hash password on save
