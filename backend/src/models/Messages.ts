@@ -1,21 +1,21 @@
-import mongoose from "mongoose"
-import user from "../types/user";
+import mongoose from "mongoose";
+import GroupChats from "./Groupchat";
+import User from "./User";
 
-// CHANGE TO USER TYPE LATER
 const msgSchema = new mongoose.Schema({
-    message:{
-        type: String,
-        required: true
-    },
-    user:{
-        type: String,
-        required: true
-    },
-    groupchat:{
-        type: Object,
-        required: true
-    }
-})
+  message: {
+    type: String,
+    required: true,
+  },
+  user: {
+    type: User,
+    required: true,
+  },
+  groupchat: {
+    type: GroupChats,
+    required: true,
+  },
+});
 
 const Messaging = mongoose.model("msg", msgSchema);
 
