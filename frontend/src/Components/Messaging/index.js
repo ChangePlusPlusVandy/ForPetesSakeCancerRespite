@@ -1,113 +1,93 @@
 import React, { Component, useEffect } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Pressable,
-  FlatList,
+ View,
+ FlatList,
 } from "react-native";
 import Message from "./Message";
-import io from "socket.io-client";
-import CONFIG from "../../Config";
+import MessagesPanel from './MessagesPanel';
+import Groupchat from "./Groupchat";
+import { Link } from "react-router-dom";
 
-const socket = io(CONFIG.URL, {
-  transports: ["websocket", "polling", "flashsocket"],
-});
+
 class ChatApp extends Component {
-  constructor(props) {
-    super(props);
-    this.submitChatMessage.bind(this);
-    this.state = {
-      chatMessage: "",
-      messages: [],
-    };
-  }
+ constructor(props) {
+   super(props);
+   //this.submitChatMessage.bind(this);
+   this.state = {
+     groupchats: []
+   };
+ }
 
-  componentDidMount() {
-    socket.on("output-messages", (data) => {
-      data.forEach((message) => {
-        this.setState({ messages: [...this.state.messages, message.msg] });
-      });
-    });
 
-    socket.on("message", (data) =>
-      this.setState({ messages: [...this.state.messages, data] })
-    );
-  }
+ componentDidMount() {
+   //loading channels
+   this.getGroupchats();
+ }
 
-  submitChatMessage() {
-    socket.emit("message", this.state.chatMessage);
-    this.setState({ chatMessage: "" });
-  }
 
-  render() {
-    return (
-      <View style={styles.messagingscreen}>
-        <View style={styles.chatbody}>
-          <FlatList
-            data={this.state.messages}
-            renderItem={({ item }) => <Message item={item} />}
-          />
-        </View>
+ getGroupchats = async () => {
+   //api request to get all the users
+   /*
+   fetch(CONFIG.URL + "/get_groupchats").then(async response => {
+       let data = await response.json();
+       this.setState({ groupchats: data });
+   })
+   */
+   let data = [
+     {
+       "_id" : "mongodbid",
+       "last_message" : {
+         "_id": "mongoid",
+         "user": "userid",
+         "username" : "aryan_garg123",
+         "message": "Hello Guys!",
+         "timestamp": 1234234234234
+       },
+       "name": "gc name",
+       "messages": ["m1", "m2"]
+     },
+     {
+       "_id" : "mongodbid",
+       "last_message" : {
+         "_id": "mongoid",
+         "user": "userid",
+         "username" : "aryan_garg123",
+         "message": "Hello Guys!",
+         "timestamp": 1234234234234
+       },
+       "name": "gc name",
+       "messages": ["m3", "m4"]
+     }
+   ];
+   this.setState({ groupchats: data });
+ }
 
-        <View style={styles.messaginginputContainer}>
-          <TextInput
-            style={styles.messaginginput}
-            value={this.state.chatMessage}
-            placeholder="Write a message..."
-            onChangeText={(text) => {
-              this.setState({ chatMessage: text });
-            }}
-            onSubmitEditing={() => this.submitChatMessage()}
-          ></TextInput>
-          <Pressable
-            style={styles.messagingbuttonContainer}
-            onPress={() => this.submitChatMessage()}
-          >
-            <View>
-              <Text style={{ color: "#f2f0f1", fontSize: 20 }}>SEND</Text>
-            </View>
-          </Pressable>
-        </View>
-      </View>
-    );
-  }
+
+ enterChat = (_id) => {
+
+
+ }
+
+
+ render() {
+
+
+   //navigate to messaging panel
+   return (
+       <View>
+           <View>
+         <FlatList
+           data={this.state.groupchats}
+           renderItem={({ item }) =>
+            <Link to={"/messaging"} state={item}>
+             <Groupchat item={item}/>
+             </Link>}
+         />
+       </View>
+       </View>
+   );
+ }
 }
 
-const styles = StyleSheet.create({
-  messagingscreen: {
-    flex: 1,
-  },
-  chatbody: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-  },
-  messaginginputContainer: {
-    width: "100%",
-    minHeight: 100,
-    backgroundColor: "white",
-    paddingVertical: 30,
-    paddingHorizontal: 15,
-    justifyContent: "center",
-    flexDirection: "row",
-  },
-  messaginginput: {
-    borderWidth: 1,
-    padding: 15,
-    flex: 1,
-    marginRight: 10,
-    borderRadius: 20,
-  },
-  messagingbuttonContainer: {
-    width: "30%",
-    backgroundColor: "green",
-    borderRadius: 3,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-  },
-});
 
 export default ChatApp;

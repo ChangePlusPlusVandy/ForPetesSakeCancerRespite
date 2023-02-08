@@ -12,6 +12,7 @@ import AccountSetup from "./Components/Auth/AccountSetup";
 import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import Messaging from "./Components/Messaging";
+import Chat from "./Components/Messaging/MessagesPanel"
 
 const CustomRouter = () => {
   // use PrivateRoute for protected routes
@@ -26,6 +27,7 @@ const CustomRouter = () => {
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/forgot-password" component={ForgotPassword} />
         <Route exact path="/messaging" component={Messaging} />
+        <Route exact path="/chat" component={Chat} />
       </Switch>
     </AuthProvider>
   );
