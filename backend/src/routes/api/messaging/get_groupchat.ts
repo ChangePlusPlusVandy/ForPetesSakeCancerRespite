@@ -20,13 +20,14 @@ async function getGroupChatByID(req: Request, res: Response) {
       };
       // add messages to the thing
       for (let i = 0; i < groupChat.messages.length; ++i) {
-        const message = await Messaging.findById({
+        const message: any = await Messaging.findById({
           _id: groupChat.messages[i]._id,
         });
         expandedGroupChat.messages.push({
           _id: message._id,
-          user: message.user,
+          user: message.user._id,
           message: message.message,
+          timestamp: message.timestamp
         });
       }
       for (let i = 0; i < groupChat.users.length; ++i) {

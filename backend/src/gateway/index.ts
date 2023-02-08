@@ -39,10 +39,12 @@ class Gateway {
 
   async onSendMessage(socket, content, group_id, userName) {
     try {
+      const date = Date.now()
       const messageToBeAdded = new Messaging({
         message: content,
         groupChat: group_id,
         user: userName,
+        timestamp: date
       });
       const added = await messageToBeAdded.save();
       // emit to all of the ids in the group

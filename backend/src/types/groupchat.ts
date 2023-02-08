@@ -2,6 +2,6 @@ import {Document} from 'mongoose'
 
 export default interface groupchat extends Document{
     name: String,
-    messages: [],
+    messages: [Mees],
     users: []
 }

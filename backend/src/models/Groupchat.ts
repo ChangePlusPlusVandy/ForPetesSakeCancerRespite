@@ -3,11 +3,16 @@ import User from "./User";
 import Messaging from "./Messages";
 
 const groupChatSchema = new mongoose.Schema({
-  name: String,
-  messages: [Messaging],
-  users: [User],
+  name: {
+    type: String,
+    required: true
+  },
+  messages:{
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Messaging'}]
+  } ,
+  users:{
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  },
 });
 
-const GroupChats = mongoose.model("groupchat", groupChatSchema);
-
-export default GroupChats;
+export default mongoose.model("GroupChats", groupChatSchema);
