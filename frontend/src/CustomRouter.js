@@ -23,16 +23,8 @@ const CustomRouter = () => {
   return (
     <AuthProvider>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={() => {
-          const { currentUserIn } = useAuth();
-          if(currentUserIn) {
-            return <Home />
-          } else {
-            return <AccountSetup />
-          }
-        }
-        } />
         <Stack.Screen name="AccountSetup" component={AccountSetup} />
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Logout" component={Logout} />
         <Stack.Screen name="Register" component={Register} />

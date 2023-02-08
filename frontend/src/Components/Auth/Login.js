@@ -13,7 +13,7 @@ import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
 
-function Login() {
+const Login = () => {
 	const { login } = useAuth();
 
 	const navigation = useNavigation();
@@ -28,7 +28,6 @@ function Login() {
 		setIsLoading(true);
 		try {
 			await login(email, password);
-			const navigation = useNavigation();
 			navigation.navigate("Home");
 		} catch (error) {
 			setError(error.message);

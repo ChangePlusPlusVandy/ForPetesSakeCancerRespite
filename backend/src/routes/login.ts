@@ -1,4 +1,5 @@
 import express, {Request, Response, NextFunction} from "express";
+import auth from "../firebase";
 import { User } from "../models/User"
 const router = express.Router();
 
@@ -8,24 +9,27 @@ router.post(
     async (req: Request, res: Response, next: NextFunction)  => {
         const name = req.body.name;
         const email = req.body.email;
-        const password = req.body.password;
-        const token = req.body.token;
 
         // check if email in use
         const existingUser = await User.findOne({ email });
         if(existingUser) {
-            //check if user tokens match else update tokens
-            if(existingUser.password === password && existingUser.token === token) {
-                return next({"message": "User exists"});
-            }
-            else {
-                existingUser.token = token;
-                await existingUser.save();
-                return next({"message": "User token updated"});
-            }
+            return next({"message": "User exists"});
         }
         else {
-            return next({"message": "User does not exist"});
+            // create new mongoDB user but first check if firebase user exists
+            auth.getUserByEmail(email)
+            .then(async (userRecord) => {
+                const user = User.build({
+                    name,
+                    email,
+                });
+                await user.save();
+                res.send({ user });
+            })
+            // if firebase user does not exist, do not create mongodb user
+            .catch((error) => {
+                return next(new Error('Firebase user not found'));
+            });
         }
 });
 

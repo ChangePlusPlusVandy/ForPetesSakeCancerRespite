@@ -12,7 +12,7 @@ import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
 
-function AccountSetup() {
+const AccountSetup = () => {
 	const navigation = useNavigation();
 
 	return (

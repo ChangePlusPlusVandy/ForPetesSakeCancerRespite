@@ -25,6 +25,7 @@
     "docker": "^1.0.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "firebase": "^9.16.0",
     "firebase-admin": "^11.2.0",
     "mongoose": "^6.7.2",
     "socket.io": "^4.5.4"

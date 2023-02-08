@@ -5,7 +5,7 @@ import { useAuth } from "../AuthContext";
 import CONFIG from "../Config"
 import { useNavigation, Link } from "@react-navigation/native";
 
-function Home() {
+const Home = () => {
 	const [data, setData] = useState("");
 	const { currentUserIn } = useAuth();
 

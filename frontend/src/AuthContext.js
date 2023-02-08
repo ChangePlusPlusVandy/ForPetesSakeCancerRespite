@@ -5,89 +5,87 @@ import config from "./Config";
 const AuthContext = createContext();
 
 export function useAuth() {
-  return useContext(AuthContext);
+	return useContext(AuthContext);
 }
 
 export function AuthProvider({ children }) {
-  const [currentUserIn, setCurrentUserIn] = useState(null);
+	const [currentUserIn, setCurrentUserIn] = useState(null);
 
-  function login(email, password) {
-    const userData =  firebase.auth().signInWithEmailAndPassword(email, password);
+	function login(email, password) {
+		return firebase.auth().signInWithEmailAndPassword(email, password);
 
-    //sync data to mongoDB
-    if(userData.user) {
-      var url = config["URL"] + "/api/users/login";
-      var name = userData.user.displayName;
-      var email = userData.user.email;
-      var password = userData.user.password;
-      var token = userData.user.getIdToken();
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "name": name, "email": email, "password": password, "token": token })
-      };
-      fetch(url, requestOptions);
-    }
+		//sync data to mongoDB
+		if (userData.user) {
+			var url = config["URL"] + "/api/users/login";
+			var name = userData.user.displayName;
+			var email = userData.user.email;
+			var password = userData.user.password;
+			const requestOptions = {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ name: name, email: email }),
+			};
+			fetch(url, requestOptions);
+		}
 
-    return userData;
-  }
+		return userData;
+	}
 
-  async function register(name, email, password) {
-    //add user data to mongoDB
-    var url = config["URL"] + "/api/users/signup";
-    var token = await firebase.auth().currentUser.getIdToken();
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "name": name, "email": email, "password": password, "token": token })
-    };
+	async function register(name, email, password) {
+		const userData = await firebase
+			.auth()
+			.createUserWithEmailAndPassword(email, password)
+			.then((cred) => {
+				return cred.user.updateProfile({
+					displayName: name,
+				});
+			});
 
-    await fetch(url, requestOptions);
+		//add user data to mongoDB
+		var url = config["URL"] + "/api/users/signup";
+		const requestOptions = {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ name: name, email: email }),
+		};
 
-    return firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((cred) => {
-        return cred.user.updateProfile({
-          displayName: name,
-        });
-      });
-  }
+		await fetch(url, requestOptions);
 
-  function logout() {
-    return firebase.auth().signOut();
-  }
+		return userData;
+	}
 
-  function getUser() {
-    return firebase.auth().currentUser;
-  }
+	function logout() {
+		return firebase.auth().signOut();
+	}
 
-  function forgotPassword(email) {
-    return firebase.auth().sendPasswordResetEmail(email);
-  }
+	function getUser() {
+		return firebase.auth().currentUser;
+	}
 
-  useEffect(() => {
-    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(function(user) {
-      if(user) {
-        setCurrentUserIn(user);
-      }  
-    });
+	function forgotPassword(email) {
+		return firebase.auth().sendPasswordResetEmail(email);
+	}
 
-    return () => unregisterAuthObserver();
-  }, []);
+	useEffect(() => {
+		const unregisterAuthObserver = firebase
+			.auth()
+			.onAuthStateChanged(function (user) {
+				if (user) {
+					setCurrentUserIn(user);
+				}
+			});
 
-  const value = {
-    currentUserIn,
-    login,
-    register,
-    logout,
-    getUser,
-    forgotPassword,
-  };
+		return () => unregisterAuthObserver();
+	}, []);
 
-  return (
-    <AuthContext.Provider value={value}>
-      { children }
-    </AuthContext.Provider>
-  );
+	const value = {
+		currentUserIn,
+		login,
+		register,
+		logout,
+		getUser,
+		forgotPassword,
+	};
+
+	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

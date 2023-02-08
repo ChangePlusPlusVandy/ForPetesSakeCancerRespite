@@ -3,7 +3,7 @@ import { Text } from "react-native";
 import { useAuth } from "../../AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
-function Logout() {
+const Logout = () => {
 	const { logout } = useAuth();
 	const navigation = useNavigation();
 

@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import { useAuth } from "../AuthContext";
 import { useNavigation, Link } from "@react-navigation/native";
 
-function ProfileScreen() {
+const ProfileScreen = () => {
 	const { currentUserIn } = useAuth();
 
 	const navigation = useNavigation();

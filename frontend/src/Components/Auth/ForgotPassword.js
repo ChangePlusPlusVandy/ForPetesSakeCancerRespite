@@ -13,7 +13,7 @@ import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
 
-function ForgotPassword() {
+const ForgotPassword = () => {
 	const { forgotPassword } = useAuth();
 
 	const [email, setEmail] = useState("");
