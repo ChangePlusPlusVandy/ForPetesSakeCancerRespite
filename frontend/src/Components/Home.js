@@ -35,12 +35,13 @@ const Home = () => {
 
 	return (
 		<View style={styles.container}>
-		<Text>Welcome {currentUserIn.email}!</Text>
-		<Text>{data}</Text>
-		<Link to={{screen: "Profile"}}>Profile</Link>
-		<Link to={{screen: "Logout"}}>Logout</Link>
-		<Link to={{screen: "CreatePost"}}>Create Post</Link>
-		<Link to={{screen: "Messaging"}}>Messaging</Link>
+			<Text>Welcome {currentUserIn.email}!</Text>
+			<Text>{data}</Text>
+			<Link to={{screen: "Profile"}}>Profile</Link>
+			<Link to={{screen: "Logout"}}>Logout</Link>
+			<Link to={{screen: "CreatePost"}}>Create Post</Link>
+			<Link to={{screen: "Messaging"}}>Messaging</Link>
+			<Link to={{screen: "Explore"}}>Explore</Link>
 		</View>
 	);
 };

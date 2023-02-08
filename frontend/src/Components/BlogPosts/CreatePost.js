@@ -1,46 +1,110 @@
-// import * as React from "react";
-// import { Pressable, Alert, View, Text, TextInput } from "react-native";
-// import { Component } from "react";
-// import { StyleSheet } from "react-native";
-
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, TextInput, View, Button } from "react-native";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { useAuth } from "../../AuthContext";
+import CONFIG from "../../Config";
+import BottomBar from "../BottomBar";
 import { useNavigation, Link } from "@react-navigation/native";
-
-// import { Icon } from "@rneui/themed";
 
 const CreatePost = () => {
   const { currentUserIn } = useAuth();
   const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
+  const postData = async () => {
+
+    try {
+      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        body: JSON.stringify({title: title, body: body}),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const handleSubmit = async (e) => {
+		e.preventDefault();
+    if(!title || !body){
+      return;
+    } else {
+      postData();
+    }
+	};
 
   const navigation = useNavigation();
   
   return (
-    <View style={styles.container}>
-      <View style = {{flexDirection: "row"}}>
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>Create post</Text>
         <TextInput
           style={styles.title_input}
-          placeholder="Title your post"
-          onChangeText={(newText) => setTitle(newText)}
-          defaultValue={title}
+          placeholder="Subject"
+          placeholderTextColor="#474C4D"
+          onChangeText={(e) => setTitle(e)}
         />
-        <Button
-          title = "Post your post">
-        </Button>
       </View>
-      <View style = {{height: 500, borderColor: "black"}}>
-        <TextInput placeholder="Here is where you would create a post" />
-      </View>
-
-      <View style={styles.rectangle}>
-        <View>
-          {/* <Icon name="home" /> */}
-          <Button style = {styles.homeButton}></Button>
-          <Link to={{screen: "Home"}}>Home</Link>
+      <View style={styles.container}>
+        <View
+          style={{
+            height: "58%",
+            width: "85%",
+          }}
+        >
+          <TextInput
+            multiline
+            allowFontScaling
+            enablesReturnKeyAutomatically="true"
+            placeholderTextColor="#474C4D"
+            style={styles.postInput}
+            textAlign={"center"}
+            placeholder="Write here..."
+            onChangeText={(e) => setBody(e)}
+          />
+        </View>
+        <View
+          style={{
+            justifyContent: "flex-end",
+            flexDirection: "row",
+            width: "100%",
+            height: "8%",
+          }}
+        >
+          <TouchableOpacity 
+          style={styles.postButton}
+          onPress = {handleSubmit}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontWeight: 400,
+                fontSize: 16,
+              }}
+            >
+              Publish
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
+      <BottomBar></BottomBar>
     </View>
   );
 };
@@ -49,73 +113,59 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+  },
+  postButton: {
+    backgroundColor: "#088DA9",
+    borderRadius: 15,
+    marginBottom: 20,
+    marginRight: "10%",
+    width: "25%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "column", 
-  },
-  bottombar: {
-    position: "absolute",
-    width: 411,
-    height: 375,
-    left: 0,
-    top: 734,
-    backgroundColor: "#088DA9",
-  },
-  rectangle: {
-    width: 411,
-    position: "absolute",
-    bottom: 0,
-    height: 100,
-    backgroundColor: "#088DA9",
   },
   title_input: {
-    height: "5%",
-    width: "50%",
-    // color: "#ffffff",
-    borderColor: "#5f6566",
-    // borderWidth: 1,
-    // alignItems: "left",
-    // justifyContent: "left",
+    height: "40%",
+    width: "55%",
+    alignItems: "left",
+    justifyContent: "left",
     borderRadius: 15,
-    marginTop: 10,
-    marginBottom: 10,
-    // marginBottom: 20,
+    padding: 10,
+    backgroundColor: "#d9d9d959",
+    borderColor: "#5f6566",
+    fontWeight: 700,
+    fontSize: 20,
+    color: "#474C4D",
   },
-
-  homeButton: {
-    /* Vector */
-    position: "absolute",
-    left: "15.09%", 
-    right: "77.62%", 
-    top: "92.83%", 
-    bottom: "3.52%",
-
-    background: "#F8F8F8",
+  postInput: {
+    height: "100%",
+    borderRadius: 15,
+    borderColor: "#5f6566",
+    width: "100%",
+    backgroundColor: "#d9d9d959",
+    padding: 15,
+    marginBottom: 20,
+    fontWeight: 500,
+    fontSize: 20,
+    color: "#474C4D",
+  },
+  titleContainer: {
+    height: "20%",
+    width: "100%",
+    alignItems: "left",
+    justifyContent: "space-evenly",
+    marginLeft: "8%",
+    marginTop: "20%",
+  },
+  titleText: {
+    fontWeight: "bold",
+    fontSize: 36,
+    color: "#088DA9",
+    fontStyle: "normal",
   },
 });
 
 export default CreatePost;
-
-// class CreatePost extends Component {
-//   render() {
-//     return (
-//     <View>
-//         Hello!
-//         <View style = {styles.bottombar} ></View>
-//     </View>
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//     bottombar: {
-//         position: 'absolute',
-//         width: 411,
-//         height: 375,
-//         left: 0,
-//         top: 734,
-//         background: '#088DA9',
-//     }
-// })
-
-// export default CreatePost;
