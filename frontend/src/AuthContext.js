@@ -20,9 +20,10 @@ export function AuthProvider({ children }) {
 			var name = userData.user.displayName;
 			var email = userData.user.email;
 			var password = userData.user.password;
+			var token = await userData.user.getIdToken();
 			const requestOptions = {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
+				headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
 				body: JSON.stringify({ name: name, email: email }),
 			};
 			await fetch(url, requestOptions);
@@ -43,9 +44,10 @@ export function AuthProvider({ children }) {
 
 		//add user data to mongoDB
 		var url = config["URL"] + "/api/users/signup";
+		var token = await userData.user.getIdToken();
 		const requestOptions = {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
+			headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
 			body: JSON.stringify({ name: name, email: email }),
 		};
 

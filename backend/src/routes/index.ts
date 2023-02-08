@@ -1,7 +1,5 @@
 import express from "express";
 import dataRoute from "./data";
-import loginRoute from "./login";
-import signupRoute from "./signup";
 import router_api from "./api";
 import VerifyToken from "../middlewares/VerifyToken";
 
@@ -12,5 +10,7 @@ router.get("/", async (req, res) => {
 });
 
 router.use("/data", VerifyToken, dataRoute);
+
+router.use("/api", VerifyToken, router_api);
 
 export default router;

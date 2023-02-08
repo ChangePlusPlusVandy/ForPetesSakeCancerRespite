@@ -1,12 +1,12 @@
 import express, {Request, Response, NextFunction} from "express";
-import auth from "../firebase";
-import VerifyToken from "../middlewares/VerifyToken";
-import { User } from "../models/User"
+import auth from "../../../firebase";
+import VerifyToken from "../../../middlewares/VerifyToken";
+import { User } from "../../../models/User"
 const router = express.Router();
 
 // add new user data to the mongoDB database
 router.post(
-    "/api/users/signup", VerifyToken,
+    "/signup", VerifyToken,
     async (req: any, res: Response, next: NextFunction)  => {
         const name = req.body.name;
         const email = req.body.email;
