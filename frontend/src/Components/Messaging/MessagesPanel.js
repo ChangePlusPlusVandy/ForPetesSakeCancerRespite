@@ -1,6 +1,6 @@
-import React from 'react';
-import {View, Text} from "react-native";
-import { Message } from './Message';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet} from "react-native";
+import Message from './Message';
 import io from "socket.io-client";
 import CONFIG from "../../Config";
 
@@ -8,7 +8,7 @@ const socket = io(CONFIG.URL, {
   transports: ["websocket", "polling", "flashsocket"],
 });
 
-export class MessagesPanel extends Component {
+class MessagesPanel extends Component {
 
   constructor(props) {
     super(props);
@@ -23,7 +23,9 @@ export class MessagesPanel extends Component {
 
 
   submitChatMessage = (msg, id) => {
+    /*
     socket.emit('send-message', {msg, id});
+    */
   }
 
     render(){
@@ -31,9 +33,9 @@ export class MessagesPanel extends Component {
         return (
           <View style={styles.messagingscreen}>
             <View style={styles.chatbody}>
-              <FlatList
+            <FlatList
                 data={this.state.messages}
-                renderItem={({ m }) => <Message key={m.id} id={m.id} senderName={m.senderName} text={m.text} />}
+                renderItem={({ m }) =><Message message={m} />}
               />
             </View>
     
@@ -96,4 +98,4 @@ export class MessagesPanel extends Component {
       },
     });
 
-  export default MessagesPanel;
+    export default MessagesPanel;

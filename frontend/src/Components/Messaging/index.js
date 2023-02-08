@@ -79,7 +79,7 @@ class ChatApp extends Component {
          <FlatList
            data={this.state.groupchats}
            renderItem={({ item }) =>
-            <Link to={"/messaging"} state={item}>
+             <Link to={"/messaging"} state={item}>
              <Groupchat item={item}/>
              </Link>}
          />
