@@ -28,6 +28,7 @@ router.post(
             })
             // if firebase user does not exist, do not create mongodb user
             .catch((error) => {
+                console.log(error);
                 return next(new Error('Firebase user not found'));
             });
         }

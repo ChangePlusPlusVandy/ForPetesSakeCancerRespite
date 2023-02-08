@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
 	const [currentUserIn, setCurrentUserIn] = useState(null);
 
 	async function login(email, password) {
-		userData = await firebase.auth().signInWithEmailAndPassword(email, password);
+		const userData = await firebase.auth().signInWithEmailAndPassword(email, password);
 
 		//sync data to mongoDB
 		if (userData.user) {
