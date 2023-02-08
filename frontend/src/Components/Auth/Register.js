@@ -92,9 +92,6 @@ const Register = () => {
 						onChangeText={(e) => setPasswordConfirm(e)}
 					/>
 				</View>
-				<TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-					<Text style={styles.forgot_button}>Forgot Password?</Text>
-				</TouchableOpacity>
 				<TouchableOpacity onPress={handleSubmit} style={styles.signupbutton}>
 					<Text style={{ color: "black" }}>Sign Up</Text>
 				</TouchableOpacity>
