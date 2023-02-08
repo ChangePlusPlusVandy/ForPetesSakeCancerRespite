@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "react-native";
-import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 const Logout = () => {
 	const { logout } = useAuth();
+	const navigation = useNavigation();
 
 	useEffect(() => {
 		logout();
-		localStorage.clear();
-		window.location.href = "/";
+		navigation.navigate("AccountSetup")
 	}, [logout]);
 
 	return <Text>Logging out...</Text>;
