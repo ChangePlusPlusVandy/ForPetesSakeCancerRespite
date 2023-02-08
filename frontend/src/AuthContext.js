@@ -11,8 +11,8 @@ export function useAuth() {
 export function AuthProvider({ children }) {
 	const [currentUserIn, setCurrentUserIn] = useState(null);
 
-	function login(email, password) {
-		userData = firebase.auth().signInWithEmailAndPassword(email, password);
+	async function login(email, password) {
+		userData = await firebase.auth().signInWithEmailAndPassword(email, password);
 
 		//sync data to mongoDB
 		if (userData.user) {
@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ name: name, email: email }),
 			};
-			fetch(url, requestOptions);
+			await fetch(url, requestOptions);
 		}
 
 		return userData;

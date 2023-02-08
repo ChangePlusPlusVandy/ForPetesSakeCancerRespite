@@ -30,6 +30,7 @@ const Login = () => {
 			await login(email, password);
 			navigation.navigate("Home");
 		} catch (error) {
+			console.log(error.message);
 			setError(error.message);
 		}
 		setIsLoading(false);

@@ -36,6 +36,7 @@ const Register = () => {
 			await register(name, email, password);
 			navigation.navigate("Home");
 		} catch (error) {
+			console.log(error.message);
 			setError(error.message);
 		}
 		setIsLoading(false);
