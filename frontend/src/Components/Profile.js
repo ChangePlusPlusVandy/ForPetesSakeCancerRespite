@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types"
 import { useAuth } from "../AuthContext";
+import { useNavigation, Link } from "@react-navigation/native";
 
 const ProfileScreen = () => {
 	const { currentUserIn } = useAuth();
 
+	const navigation = useNavigation();
+
 	return (
 		<View style={styles.container}>
 			<Text>Profile Page</Text>
-			<Link to="/">Home</Link>
+			<Link to={{screen: "Home"}}>Home</Link>
 		</View>
 	);
 }

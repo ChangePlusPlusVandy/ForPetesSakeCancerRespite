@@ -10,6 +10,7 @@ router.get("/", async (req, res) => {
 });
 
 router.use("/data", VerifyToken, dataRoute);
-router.use('/api', router_api);
+
+router.use("/api", VerifyToken, router_api);
 
 export default router;
