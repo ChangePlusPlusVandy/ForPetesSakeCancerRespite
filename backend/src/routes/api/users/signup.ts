@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import {
 	auth,
-	getToken,
+	getTokenFromReq,
 	getFirebaseUser,
 	getUserFromToken,
 	getFromUserTokenAndAddIfNotFound,
@@ -15,7 +15,7 @@ router.post(
 	"/signup",
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			let user = await getFromUserTokenAndAddIfNotFound(getToken(req));
+			let user = await getFromUserTokenAndAddIfNotFound(getTokenFromReq(req));
 			return res.json(user);
 		} catch (e) {
 			console.error(e);

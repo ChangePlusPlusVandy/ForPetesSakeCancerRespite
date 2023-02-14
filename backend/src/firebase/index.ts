@@ -10,7 +10,7 @@ const app = initializeApp({
 
 const auth = getAuth(app);
 
-const getToken = (req: Request) => {
+const getTokenFromReq = (req: Request) => {
 	return req.headers.authorization.split(" ")[1];
 };
 
@@ -61,7 +61,7 @@ const getFromUserTokenAndAddIfNotFound = async (token: string) => {
 export {
 	auth,
 	getUserFromToken,
-	getToken,
+	getTokenFromReq,
 	getFromUserTokenAndAddIfNotFound,
 	getFirebaseUser,
 };

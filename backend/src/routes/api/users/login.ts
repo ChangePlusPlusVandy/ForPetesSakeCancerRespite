@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import {
 	auth,
-	getToken,
+	getTokenFromReq,
 	getFromUserTokenAndAddIfNotFound,
 } from "../../../firebase";
 const router = express.Router();
@@ -11,7 +11,7 @@ router.post(
 	"/login",
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			let user = await getFromUserTokenAndAddIfNotFound(getToken(req));
+			let user = await getFromUserTokenAndAddIfNotFound(getTokenFromReq(req));
 			return res.json(user);
 		} catch (e) {
 			console.error(e);

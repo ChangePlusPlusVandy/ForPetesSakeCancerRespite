@@ -9,7 +9,23 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-	const [currentUserIn, setCurrentUserIn] = useState(null);
+	const [currentUser, setCurrentUser] = useState(null);
+
+	async function updateCurrentUser()
+	{
+		var url = config["URL"] + "/api/users/self";
+		var headers = await getAuthHeader();
+		const requestOptions = {
+			method: "GET",
+			headers,
+		};
+
+		const response = await fetch(url, requestOptions);
+		const data = await response.json();
+
+		setCurrentUser(data);
+		return data;
+	}
 
 	async function login(email, password) {
 		const userData = await firebase.auth().signInWithEmailAndPassword(email, password);
@@ -88,22 +104,25 @@ export function AuthProvider({ children }) {
 	useEffect(() => {
 		const unregisterAuthObserver = firebase
 			.auth()
-			.onAuthStateChanged(function (user) {
+			.onAuthStateChanged((async function (user) {
 				if (user) {
-					setCurrentUserIn(user);
+					await updateCurrentUser();
 				}
-			});
+			}));
 
 		return () => unregisterAuthObserver();
 	}, []);
 
 	const value = {
-		currentUserIn,
+		currentUser,
 		login,
 		register,
 		logout,
 		getUser,
 		forgotPassword,
+		updateCurrentUser,
+		getToken,
+		getAuthHeader,
 	};
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
