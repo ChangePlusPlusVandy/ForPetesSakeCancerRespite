@@ -17,19 +17,22 @@ export function AuthProvider({ children }) {
 		//sync data to mongoDB
 		if (userData.user) {
 			var url = config["URL"] + "/api/users/login";
-			var name = userData.user.displayName;
-			var email = userData.user.email;
-			var password = userData.user.password;
-			var token = await userData.user.getIdToken();
+			var headers = await getAuthHeader();
+			headers["Content-Type"] = "application/json";
 			const requestOptions = {
 				method: "POST",
-				headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
-				body: JSON.stringify({ name: name, email: email }),
+				headers,
 			};
 			await fetch(url, requestOptions);
 		}
 
 		return userData;
+	}
+
+	async function getAuthHeader()
+	{
+		const token = await getToken();
+		return { Authorization: `Bearer ${token}`, };
 	}
 
 	async function register(name, email, password) {
@@ -44,16 +47,30 @@ export function AuthProvider({ children }) {
 
 		//add user data to mongoDB
 		var url = config["URL"] + "/api/users/signup";
-		var token = await userData.user.getIdToken();
+		var headers = await getAuthHeader();
+		headers["Content-Type"] = "application/json";
+
 		const requestOptions = {
 			method: "POST",
-			headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, },
-			body: JSON.stringify({ name: name, email: email }),
+			headers,
 		};
 
 		await fetch(url, requestOptions);
 
 		return userData;
+	}
+
+	async function getToken()
+	{
+		let currUser = getUser();
+
+		if (currUser == null)
+		{
+			throw new Error("User is not logged in");
+		}
+
+		const token = currUser.getIdToken();
+		return token;
 	}
 
 	function logout() {
