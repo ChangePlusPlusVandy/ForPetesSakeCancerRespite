@@ -9,6 +9,7 @@ import {
 import { useAuth } from "../../AuthContext";
 import CONFIG from "../../Config";
 import BottomBar from "../BottomBar";
+import { useNavigation, Link } from "@react-navigation/native";
 
 const CreatePost = () => {
   const { currentUserIn } = useAuth();
@@ -43,6 +44,8 @@ const CreatePost = () => {
     }
 	};
 
+  const navigation = useNavigation();
+  
   return (
     <View
       style={{

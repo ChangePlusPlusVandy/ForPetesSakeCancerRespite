@@ -1,13 +1,15 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
-import { Link } from "react-router-dom";
+import { useNavigation, Link } from "@react-navigation/native";
 
 const BottomBar = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.rectangle}>
       <View style={styles.homeButtonContainer}>
-        <Link to="/" style={{ textDecoration: "none" }}>
+        <Link to={{ screen: "Home" }} style={{ textDecoration: "none" }}>
           <IconButton
             icon="home"
             iconColor={"white"}
@@ -15,7 +17,7 @@ const BottomBar = () => {
             onPress={() => console.log("Pressed")}
           />
         </Link>
-        <Link to="/messaging" style={{ textDecoration: "none" }}>
+        <Link to={{ screen: "Messaging" }} style={{ textDecoration: "none" }}>
           <IconButton
             icon="chat"
             iconColor={"white"}
@@ -23,7 +25,7 @@ const BottomBar = () => {
             onPress={() => console.log("Pressed")}
           />
         </Link>
-        <Link to="/profile" style={{ textDecoration: "none" }}>
+        <Link to={{ screen: "Profile" }} style={{ textDecoration: "none" }}>
           <IconButton
             icon="account-circle"
             iconColor={"white"}

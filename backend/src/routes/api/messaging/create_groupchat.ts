@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import GroupChats from "../../../models/Groupchat";
 import groupchat from "../../../types/groupchat";
 import Messaging from "../../../models/Messages";
-import User from "../../../models/User";
+import {User} from "../../../models/User";
 import user from "../../../types/user";
+
+// MAKE RANDOM USER OBJECTS
 
 async function createGroupChat(req: Request, res: Response) {
 	try {
@@ -13,7 +15,7 @@ async function createGroupChat(req: Request, res: Response) {
 		};
 		if (body.users.length <= 0 || body.name.length() <= 0) {
 			res
-				.status(404)
+				.status(400)
 				.json({ message: "ERROR", error: "INVALID NAME OR EMPTY ARRAY" });
 		} else {
 			// add to User, groupchat
@@ -23,7 +25,7 @@ async function createGroupChat(req: Request, res: Response) {
 					body.users[i]._id,
 					(err, val) => {
 						if (err || val === null) {
-							res.status(404).json({ message: "ERROR", error: err });
+							res.status(400).json({ message: "ERROR", error: err });
 						}
 					}
 				);

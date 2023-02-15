@@ -1,20 +1,36 @@
 import mongoose from "mongoose";
-import GroupChats from "./Groupchat";
+import Groupchats from "./Groupchat";
+const { scryptSync, randomBytes } = require("crypto")
+// required properties to create new user
+interface UserAttrs {
+	name: String,
+    email: String,
+	groupchats: []
+}
 
-const UserSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true,
-	},
-	email: { 
-		type: String, 
-		required: true },
-	password: { 
-		type: String, 
-		required: true },
-	groupchats: {
+// describe user model interface
+interface UserModel extends mongoose.Model<UserDoc> {
+    build(attrs: UserAttrs): UserDoc
+}
+
+// describe user properties interface
+interface UserDoc extends mongoose.Document {
+	name: String,
+    email: String,
+	groupchats: []
+}
+
+const userSchema = new mongoose.Schema({
+	  name: String,
+	  email: String,
+	  groupchats: {
 		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChats' }]
-	},
+	}
 });
 
-export default mongoose.model("User", UserSchema);
+userSchema.statics.build = (attrs: UserAttrs) => {
+    return new User(attrs)
+};
+
+const User = mongoose.model<UserDoc, UserModel>('User', userSchema);
+export { User };
