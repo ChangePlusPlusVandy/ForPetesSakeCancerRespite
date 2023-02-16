@@ -2,46 +2,27 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import PropTypes from "prop-types";
 import { useAuth } from "../AuthContext";
-import CONFIG from "../Config"
+import CONFIG from "../Config";
 import { useNavigation, Link } from "@react-navigation/native";
 
 const Home = () => {
-	const [data, setData] = useState("");
-	const { currentUserIn } = useAuth();
-
+	const authObj = useAuth();
 	const navigation = useNavigation();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const token = await currentUserIn.getIdToken();
-
-				const payloadHeader = {
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				};
-
-				const res = await fetch(CONFIG.URL + "/data", payloadHeader);
-				setData(await res.text());
-			} catch (err) {
-				console.log(err);
-			}
-		};
-
-		fetchData();
-	}, [currentUserIn]);
-
+	let userDisplayObject = authObj.currentUser;
+	// userDisplayObject.firebase = JSON.stringify(authObj.currentUser.firebase);
+	userDisplayObject.firebase = "Field Removed for condensed display";
 	return (
 		<View style={styles.container}>
-			<Text>Welcome {currentUserIn.email}!</Text>
-			<Text>{data}</Text>
-			<Link to={{screen: "Profile"}}>Profile</Link>
-			<Link to={{screen: "Logout"}}>Logout</Link>
-			<Link to={{screen: "CreatePost"}}>Create Post</Link>
-			<Link to={{screen: "Messaging"}}>Messaging</Link>
-			<Link to={{screen: "Explore"}}>Explore</Link>
+			<Text>Welcome {authObj.currentUser.name}!</Text>
+			<Text>
+				Current User JSON Data: {JSON.stringify(userDisplayObject, null, 4)}
+			</Text>
+			<Link to={{ screen: "Profile" }}>Profile</Link>
+			<Link to={{ screen: "Logout" }}>Logout</Link>
+			<Link to={{ screen: "CreatePost" }}>Create Post</Link>
+			<Link to={{ screen: "Messaging" }}>Messaging</Link>
+			<Link to={{ screen: "Explore" }}>Explore</Link>
 		</View>
 	);
 };
