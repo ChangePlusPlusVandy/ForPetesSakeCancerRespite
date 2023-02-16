@@ -6,7 +6,7 @@ import users from "./users";
 
 router.use("/newsletter", router_newsletter);
 router.use("/messaging", router_messaging);
-router.use('/users', users);
+router.use("/users", users);
 // router.use('/', require('./users'));
 
 export default router;

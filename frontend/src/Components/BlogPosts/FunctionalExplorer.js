@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet,Text,View, TouchableOpacity, FlatList, Image} from "react-native";
 import Config from "../../Config";
-import { useHistory } from "react-router-dom";
 
 const NewsItem = (props) => {
     return (
          <View style={styles.newsItem}>
             <View style={styles.newsHeader}>
                 <Image style={{flex:1, height:'100%', width:-1, borderRadius:'50%'}} source={require('../../../public/defaultProfile.png')}/>
-                <Text style={{flex:4, alignSelf:'center',marginLeft:'19px'}}>{props.author}</Text>    
+                <Text style={{flex:4, alignSelf:'center',marginLeft:'19px'}}>{props.author}</Text>
                 <Text style={{flex:4, alignSelf:'center'}}>Posted:1/11/202</Text>
-            </View> 
+            </View>
             <View style={styles.newsTitle}>
                 <Text style={{fontWeight:'bold', fontSize:'26px'}}>{props.title}</Text>
             </View>
@@ -23,7 +22,6 @@ const NewsItem = (props) => {
 
 const ExploreScreen = () => {
     const [newsletterData, setNewsletterData]= useState([{title:"Waiting for Data, Please Hit Refresh ..."}]);
-    const navigate = useHistory();
 
     const getAllNewsLetter = async() => {
         const promise = await fetch(Config.URL+"/api/newsletter/get_newsletters");
@@ -41,7 +39,7 @@ const ExploreScreen = () => {
                 <View style={styles.profile}>
                     <Image style={{height:'100%',width:undefined,aspectRatio:1}} source={require('../../../public/defaultProfile.png')}/>
                 </View>
-                
+
                 <Text style = {styles.title}>Explore</Text>
                 <View style={styles.headeroptions}>
                     <TouchableOpacity style={{ width:'50%',height:'100%', alignItems:'center',flexDirection:'row'}}>
@@ -65,7 +63,7 @@ const ExploreScreen = () => {
             </View>
 
             <View style={styles.footer}>
-                <TouchableOpacity 
+                <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigate.push("/")}
                 >

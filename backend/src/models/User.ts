@@ -5,7 +5,7 @@ const { scryptSync, randomBytes } = require("crypto")
 interface UserAttrs {
 	name: String,
     email: String,
-	groupchats: []
+	groupchats?: []
 }
 
 // describe user model interface
@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.build = (attrs: UserAttrs) => {
+	if(!attrs.groupchats)
+	{
+		attrs.groupchats = [];
+	}
     return new User(attrs)
 };
 

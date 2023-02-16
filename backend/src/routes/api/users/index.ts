@@ -1,9 +1,14 @@
 import express from "express";
+import VerifyToken from "../../../middlewares/VerifyToken";
 import login from "./login";
 import signup from "./signup";
-const dataRoute = express.Router();
+const router = express.Router();
 
-dataRoute.use(login);
-dataRoute.use(signup);
+router.get("/self", VerifyToken, (req, res) => {
+	res.json((req as any).user);
+});
 
-export default dataRoute;
+router.use(login);
+router.use(signup);
+
+export default router;
