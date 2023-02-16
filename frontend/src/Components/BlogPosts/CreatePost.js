@@ -51,6 +51,7 @@ const CreatePost = () => {
       style={{
         width: "100%",
         height: "100%",
+        backgroundColor: "white"
       }}
     >
       <View style={styles.titleContainer}>
