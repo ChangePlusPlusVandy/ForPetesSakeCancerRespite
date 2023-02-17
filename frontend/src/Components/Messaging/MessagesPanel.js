@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from "react-native";
+import {View, Text, StyleSheet, FlatList, TextInput, Pressable} from "react-native";
 import Message from './Message';
 import io from "socket.io-client";
 import CONFIG from "../../Config";
@@ -12,30 +12,41 @@ class MessagesPanel extends Component {
 
   constructor(props) {
     super(props);
+    debugger
     this.submitChatMessage.bind(this);
     this.state = {
-      chatMessage: '', 
-      messages: [this.props.item.messages],
-      id: this.props.item._id
+      chatMessage: '',
+      messages: []
     };
   }
 
-
-
-  submitChatMessage = (msg, id) => {
-    /*
-    socket.emit('send-message', {msg, id});
-    */
+  componentDidMount(){
+    this.getMessages();
   }
 
+  getMessages = async () => {
+    //api request
+    fetch(CONFIG.URL + "/get_groupchat?id=" + this.props.route.params.item._id).then(async response => {
+        let data = await response.json();
+        this.setState({ messages: data.messages });
+    })
+
+  }
+
+
+  submitChatMessage = socket.emit('message', this.state.chatMessage);
+  
+
     render(){
-      
+      debugger
         return (
           <View style={styles.messagingscreen}>
             <View style={styles.chatbody}>
             <FlatList
                 data={this.state.messages}
-                renderItem={({ m }) =><Message message={m} />}
+                renderItem={({ m }) =>
+                <Message message={m} />
+              }
               />
             </View>
     

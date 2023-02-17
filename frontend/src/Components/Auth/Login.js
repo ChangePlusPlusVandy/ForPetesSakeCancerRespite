@@ -9,13 +9,14 @@ import {
 	TextInput,
 	TouchableOpacity,
 } from "react-native";
-import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
+import { useNavigation } from "@react-navigation/native";
 
 const Login = () => {
 	const { login } = useAuth();
-	const history = useHistory();
+
+	const navigation = useNavigation();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -27,15 +28,12 @@ const Login = () => {
 		setIsLoading(true);
 		try {
 			await login(email, password);
-			history.push("/"); // Redirect to home page
+			navigation.navigate("Home");
 		} catch (error) {
+			console.log(error.message);
 			setError(error.message);
 		}
 		setIsLoading(false);
-	};
-
-	const forgotPasswordPress = () => {
-		history.push("/forgot-password");
 	};
 
 	return (
@@ -72,7 +70,7 @@ const Login = () => {
 						onChangeText={(e) => setPassword(e)}
 					/>
 				</View>
-				<TouchableOpacity onPress={forgotPasswordPress}>
+				<TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
 					<Text style={styles.forgot_button}>Forgot Password?</Text>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={handleSubmit} style={styles.loginbutton}>
@@ -87,7 +85,7 @@ const Login = () => {
 					<Text style={{ color: "red" }}>{error}</Text>
 				</View>
 			</View>
-			<View style={styles.footer}>
+			{/* <View style={styles.footer}>
 				<Svg
 					width="100%"
 					height="60%"
@@ -98,7 +96,7 @@ const Login = () => {
 						d="M520.047 349.5C519.769 353.356 516.418 356.256 512.562 355.978L-35.0181 316.52C-38.8741 316.243 -41.7748 312.891 -41.4969 309.035L-19.9302 9.74317C-19.6484 5.83188 -14.0912 5.36214 -13.1568 9.17063V9.17063C9.54297 101.694 116.659 144.268 196.68 92.5706L281.766 37.6008V37.6008C359.222 -6.64413 453.094 -11.45 534.663 24.6533L542.688 28.2052C542.985 28.3368 543.168 28.641 543.144 28.9653L520.047 349.5Z"
 					/>
 				</Svg>
-			</View>
+			</View> */}
 		</View>
 	);
 };
@@ -117,8 +115,8 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		width: "85%",
 		height: "15%",
-		alignItems: "left",
-		justifyContent: "left",
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
 	},
 	loginbutton: {
 		backgroundColor: "#088da9",
@@ -152,8 +150,9 @@ const styles = StyleSheet.create({
 	},
 	centerContainer: {
 		backgroundColor: "#ffffff",
-		alignItems: "left",
-		justifyContent: "left",
+		flex: 1,
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
 		marginLeft: 30,
 	},
 	loginText: {

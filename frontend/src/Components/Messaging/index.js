@@ -2,17 +2,18 @@ import React, { Component, useEffect } from "react";
 import {
  View,
  FlatList,
+ Text
 } from "react-native";
 import Message from "./Message";
 import MessagesPanel from './MessagesPanel';
 import Groupchat from "./Groupchat";
-import { Link } from "react-router-dom";
+import { useNavigation, Link } from "@react-navigation/native";
+import CONFIG from "../../Config";
 
 
 class ChatApp extends Component {
  constructor(props) {
    super(props);
-   //this.submitChatMessage.bind(this);
    this.state = {
      groupchats: []
    };
@@ -27,44 +28,10 @@ class ChatApp extends Component {
 
  getGroupchats = async () => {
    //api request to get all the users
-   /*
    fetch(CONFIG.URL + "/get_groupchats").then(async response => {
        let data = await response.json();
        this.setState({ groupchats: data });
    })
-   */
-   let data = [
-     {
-       "_id" : "mongodbid",
-       "last_message" : {
-         "_id": "mongoid",
-         "user": "userid",
-         "username" : "aryan_garg123",
-         "message": "Hello Guys!",
-         "timestamp": 1234234234234
-       },
-       "name": "gc name",
-       "messages": ["m1", "m2"]
-     },
-     {
-       "_id" : "mongodbid",
-       "last_message" : {
-         "_id": "mongoid",
-         "user": "userid",
-         "username" : "aryan_garg123",
-         "message": "Hello Guys!",
-         "timestamp": 1234234234234
-       },
-       "name": "gc name",
-       "messages": ["m3", "m4"]
-     }
-   ];
-   this.setState({ groupchats: data });
- }
-
-
- enterChat = (_id) => {
-
 
  }
 
@@ -79,7 +46,7 @@ class ChatApp extends Component {
          <FlatList
            data={this.state.groupchats}
            renderItem={({ item }) =>
-             <Link to={"/messaging"} state={item}>
+             <Link to={{screen: "Chat", params: {item}}}>
              <Groupchat item={item}/>
              </Link>}
          />
@@ -89,5 +56,8 @@ class ChatApp extends Component {
  }
 }
 
+const styles = StyleSheet.create({
+
+})
 
 export default ChatApp;

@@ -8,7 +8,9 @@ export class Message extends Component {
         <View style={styles.messageWrapper}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View style={styles.message}>
-              <Text>{this.props.message}</Text>
+              <Text>{this.props.m.message}</Text>
+              <Text>{this.props.m.user}</Text>
+              <Text>{this.props.m.timestamp}</Text>
             </View>
           </View>
         </View>

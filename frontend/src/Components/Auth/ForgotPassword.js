@@ -10,14 +10,11 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { useAuth } from "../../AuthContext";
-import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Svg, { Path } from "react-native-svg";
+import { useNavigation } from "@react-navigation/native";
 
 const ForgotPassword = () => {
 	const { forgotPassword } = useAuth();
-
-	const history = useHistory();
 
 	const [email, setEmail] = useState("");
 	const [error, setError] = useState("");
@@ -37,9 +34,7 @@ const ForgotPassword = () => {
 			});
 	};
 
-	const backToLoginPress = () => {
-		history.push("/login");
-	};
+	const navigation = useNavigation();
 
 	return (
 		<View style={styles.headerContainer}>
@@ -66,7 +61,7 @@ const ForgotPassword = () => {
 						onChangeText={(e) => setEmail(e)}
 					/>
 				</View>
-				<TouchableOpacity onPress={backToLoginPress}>
+				<TouchableOpacity onPress={() => navigation.navigate("Login")}>
 					<Text style={styles.forgot_button}>Back To Login</Text>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={handleSubmit} style={styles.resetbutton}>
@@ -107,8 +102,8 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		width: "85%",
 		height: "15%",
-		alignItems: "left",
-		justifyContent: "left",
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
 	},
 	resetbutton: {
 		backgroundColor: "#088da9",
@@ -142,8 +137,8 @@ const styles = StyleSheet.create({
 	},
 	centerContainer: {
 		backgroundColor: "#ffffff",
-		alignItems: "left",
-		justifyContent: "left",
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
 		marginLeft: 30,
 	},
 	loginText: {
