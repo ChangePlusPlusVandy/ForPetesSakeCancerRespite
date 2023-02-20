@@ -5,7 +5,7 @@ import { useAuth } from "../AuthContext";
 import { useNavigation, Link } from "@react-navigation/native";
 
 const ProfileScreen = () => {
-	const { currentUserIn } = useAuth();
+	const { currentUser } = useAuth();
 
 	const navigation = useNavigation();
 
