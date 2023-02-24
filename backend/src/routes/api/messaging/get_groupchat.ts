@@ -10,13 +10,13 @@ async function getGroupChatByID(req: Request, res: Response) {
 
 		const gcID = req.query.id;
 		// check if groupchat id exists
-		if (gcID === undefined) {
+		if (!gcID) {
 			res.status(400).json({ message: "GROUPCHAT ID NOT PROVIDED" });
 			return;
 		}
 
 		const groupChat = await GroupChats.findById({ _id: gcID });
-		if (groupChat === null) {
+		if (!groupChat) {
 			res.status(404).json({ message: "GROUPCHAT DOES NOT EXIST" });
 			return;
 		}
