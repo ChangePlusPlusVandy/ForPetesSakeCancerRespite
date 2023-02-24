@@ -13,6 +13,6 @@ web-build/
 env.json
 yarn.lock
 package-lock.json
-
+**/.expo
 # macOS
 .DS_Store

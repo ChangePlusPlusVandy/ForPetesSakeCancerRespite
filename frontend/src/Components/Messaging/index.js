@@ -47,6 +47,20 @@ class ChatApp extends Component {
 	}
 }
 
+function User({ user }) {
+	console.log("USER");
+	console.log(user);
+	return (
+		<div>
+			<h1>
+				{user.username} {user.self ? "(yourself)" : ""}
+			</h1>
+			{user.connected ? <p>online</p> : <p>offline</p>}
+			<p></p>
+		</div>
+	);
+}
+
 const styles = StyleSheet.create({});
 
 export default ChatApp;

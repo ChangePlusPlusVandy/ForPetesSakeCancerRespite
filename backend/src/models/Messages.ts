@@ -1,11 +1,23 @@
-import mongoose from "mongoose"
-const msgSchema = new mongoose.Schema({
-    msg:{
-        type: String,
-        required: true
-    }
-})
+import mongoose from "mongoose";
 
-const Messaging = mongoose.model("msg", msgSchema);
+const MessagingSchema = new mongoose.Schema({
+	message: {
+		type: String,
+		required: true,
+	},
+	user: {
+		type: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+	},
+	
+	groupchat: {
+		type: { type: mongoose.Schema.Types.ObjectId, ref: 'GroupChats'}
+	},
+	
+	timestamp:{
+		type: Number,
+		required: true
+	}
+});
 
-export default Messaging;
+
+export default mongoose.model("Messaging", MessagingSchema);
