@@ -15,25 +15,12 @@ class Gateway {
 		console.log("Gateway initialized");
 	}
 
-  init() {
-    // TODO: Update Auth and make better messaging system
-    this.socketIO.use((socket, next) => {
-      const username = socket.handshake.auth.username;
-      if (!username) {
-        return next(new Error("invalid username"));
-      }
-      (socket as any).username = username;
-      next();
-    });
-
-    this.socketIO.on("connection", (socket) => {
-      console.log(`SOCKETIO: ${socket.id} user just connected!`);
-
-      socket.on("send_message", this.onSendMessage.bind(this, socket));
-
-      Messaging.find().then((result) => {
-        socket.emit("output-messages", result);
-      });
+	init() {
+		this.socketIO.on("connection", (socket) => {
+			console.log(`SOCKETIO: ${socket.id} user just connected!`);
+			Messaging.find().then((result) => {
+				socket.emit("output-messages", result);
+			});
 
 			socket.on("message", this.messageHandler.bind(this, socket));
 			//TODO: Rename this event because "message" is a reserved event name for SOCKETIO
