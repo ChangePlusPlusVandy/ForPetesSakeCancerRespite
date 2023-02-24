@@ -30,8 +30,9 @@ class _MessagesPanel extends Component {
 
 	getMessages = async () => {
 		//api request
+		var headers = await this.auth.getAuthHeader();
 		fetch(
-			CONFIG.URL + "/get_groupchat?id=" + this.props.route.params.item._id
+			CONFIG.URL + "/api/messaging/get_groupchat?id=" + this.props.route.params.item._id, {headers}
 		).then(async (response) => {
 			let data = await response.json();
 			this.setState({ messages: data.messages });
