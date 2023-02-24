@@ -2,6 +2,7 @@ import Messaging from "../models/Messages";
 import { Server } from "socket.io";
 import { Server as HTTPServer } from "http";
 import GroupChats from "../models/Groupchat";
+import VerifyToken from "../middlewares/VerifyToken";
 
 class Gateway {
   socketIO: Server;
@@ -11,6 +12,7 @@ class Gateway {
   }
 
   init() {
+    // TODO: Update Auth and make better messaging system
     this.socketIO.use((socket, next) => {
       const username = socket.handshake.auth.username;
       if (!username) {

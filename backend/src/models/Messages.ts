@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import GroupChats from "./Groupchat";
-import {User} from "./User";
 
 const MessagingSchema = new mongoose.Schema({
 	message: {

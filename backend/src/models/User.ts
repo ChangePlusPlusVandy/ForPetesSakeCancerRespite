@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Groupchats from "./Groupchat";
 const { scryptSync, randomBytes } = require("crypto")
 // required properties to create new user
 interface UserAttrs {
