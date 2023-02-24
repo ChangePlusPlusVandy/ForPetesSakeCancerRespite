@@ -5,13 +5,17 @@ import MessagesPanel from "./MessagesPanel";
 import Groupchat from "./Groupchat";
 import { useNavigation, Link } from "@react-navigation/native";
 import CONFIG from "../../Config";
+import {getAuthHeader, useAuth} from "../../AuthContext"
+import { useGateway } from "../../Gateway";
 
-class ChatApp extends Component {
+class _ChatApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			groupchats: [],
 		};
+		this.socket = props.socket;
+		this.auth = props.auth;
 	}
 
 	componentDidMount() {
@@ -21,7 +25,8 @@ class ChatApp extends Component {
 
 	getGroupchats = async () => {
 		//api request to get all the users
-		fetch(CONFIG.URL + "/get_groupchats").then(async (response) => {
+		var headers = await this.auth.getAuthHeader();
+		fetch(CONFIG.URL + "/api/messaging/get_groupchats", {headers}).then(async (response) => {
 			let data = await response.json();
 			this.setState({ groupchats: data });
 		});
@@ -63,4 +68,10 @@ function User({ user }) {
 
 const styles = StyleSheet.create({});
 
-export default ChatApp;
+export default function ChatApp (props) {
+	const { socket } = useGateway();
+	const auth = useAuth();
+	return <_ChatApp {...props} socket={socket} auth={auth} />;
+};
+
+// export default _ChatApp;

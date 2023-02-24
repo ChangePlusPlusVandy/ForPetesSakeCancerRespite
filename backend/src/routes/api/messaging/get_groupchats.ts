@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import GroupChats from "../../../models/Groupchat";
 import VerifyToken from "../../../middlewares/VerifyToken";
-import Messaging from "../../../models/Messages";
+import {Messaging} from "../../../models/Messages";
 import {User} from "../../../models/User";
 
 async function getGroupsChats(req: Request, res: Response) {

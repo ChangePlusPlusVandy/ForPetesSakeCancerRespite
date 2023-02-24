@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import GroupChats from "../../../models/Groupchat";
-import Messaging from "../../../models/Messages";
+import {Messaging} from "../../../models/Messages";
 import { User } from "../../../models/User";
 import VerifyToken from "../../../middlewares/VerifyToken";
 
