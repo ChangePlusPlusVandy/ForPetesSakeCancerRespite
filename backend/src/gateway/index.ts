@@ -1,15 +1,19 @@
 import Messaging from "../models/Messages";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Server as HTTPServer } from "http";
-import GroupChats from "../models/Groupchat";
-import VerifyToken from "../middlewares/VerifyToken";
+import { getUserFromToken } from "../firebase";
+import { addOnlineUser, removeOnlineUser } from "./OnlineUsersManager";
 
 class Gateway {
-  socketIO: Server;
-  constructor(http: HTTPServer) {
-    this.socketIO = new Server(http);
-    console.log("Gateway initialized");
-  }
+	socketIO: Server;
+	constructor(http: HTTPServer) {
+		this.socketIO = new Server(http, {
+			cors: {
+				origin: "*",
+			},
+		});
+		console.log("Gateway initialized");
+	}
 
   init() {
     // TODO: Update Auth and make better messaging system
@@ -31,43 +35,44 @@ class Gateway {
         socket.emit("output-messages", result);
       });
 
-      socket.on("message", this.messageHandler.bind(this, socket));
+			socket.on("message", this.messageHandler.bind(this, socket));
+			//TODO: Rename this event because "message" is a reserved event name for SOCKETIO
 
-      socket.on("disconnect", () => {
-        console.log(`${socket.id} user disconnected`);
-      });
-    });
-  }
+			socket.on("authentication", this.authHandler.bind(this, socket));
 
-  async onSendMessage(socket, content, group_id, userName) {
-    try {
-      const date = Date.now()
-      const messageToBeAdded = new Messaging({
-        message: content,
-        groupChat: group_id,
-        user: userName,
-        timestamp: date
-      });
-      const added = await messageToBeAdded.save();
-      // emit to all of the ids in the group
-      const groupchat = await GroupChats.findById({ _id: { group_id } });
-      for (let i = 0; i < groupchat.users.length; i++) {
-        socket.to(groupchat.users[i]).emit("send_message", { added });
-      }
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
+			socket.on("disconnect", () => {
+				let userDisconnected = removeOnlineUser(socket.id);
 
-  messageHandler(socket, msg) {
-    const message = new Messaging({ msg });
-    message.save().then((document) => {
-      console.log(document);
-      console.log('SAVING MESSAGE "' + msg + '" from user ' + socket.id);
-      this.socketIO.emit("message", msg);
-    });
-  }
+				if (userDisconnected) {
+					console.log(
+						`SOCKETIO: ${socket.id} user disconnected as ${userDisconnected}`
+					);
+				} else {
+					console.log(`${socket.id} user disconnected`);
+				}
+			});
+		});
+	}
+
+	messageHandler(socket, msg) {
+		const message = new Messaging({ msg });
+		message.save().then((document) => {
+			console.log(document);
+			console.log('SAVING MESSAGE "' + msg + '" from user ' + socket.id);
+			this.socketIO.emit("message", msg);
+		});
+	}
+
+	async authHandler(socket: Socket, token: string) {
+		try {
+			let user = await getUserFromToken(token);
+			addOnlineUser(socket.id, user._id);
+			console.log(`SOCKETIO: ${socket.id} user authenticated as ${user.email}`);
+		} catch (e) {
+			console.error(e);
+			socket.emit("error", "Invalid token");
+		}
+	}
 }
 
 export default Gateway;

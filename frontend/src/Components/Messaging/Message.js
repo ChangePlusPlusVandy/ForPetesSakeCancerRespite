@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-class Message extends Component {
+export class Message extends Component {
   render() {
     return (
       <View>
         <View style={styles.messageWrapper}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View style={styles.message}>
-              <Text>{this.props.item}</Text>
+              <Text>{this.props.m.message}</Text>
+              <Text>{this.props.m.user}</Text>
+              <Text>{this.props.m.timestamp}</Text>
             </View>
           </View>
         </View>
