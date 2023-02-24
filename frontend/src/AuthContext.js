@@ -11,6 +11,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
 	const [currentUser, setCurrentUser] = useState(null);
 
+
 	async function updateCurrentUser()
 	{
 		var url = config["URL"] + "/api/users/self";
@@ -82,7 +83,9 @@ export function AuthProvider({ children }) {
 
 		if (currUser == null)
 		{
-			throw new Error("User is not logged in");
+			// throw new Error("User is not logged in");
+			console.error("User is not logged in but trying to get token");
+			return null;
 		}
 
 		const token = currUser.getIdToken();
@@ -101,12 +104,18 @@ export function AuthProvider({ children }) {
 		return firebase.auth().sendPasswordResetEmail(email);
 	}
 
+
 	useEffect(() => {
 		const unregisterAuthObserver = firebase
 			.auth()
 			.onAuthStateChanged((async function (user) {
 				if (user) {
+					setCurrentUser(user);
 					await updateCurrentUser();
+				}
+				else
+				{
+					setCurrentUser(null);
 				}
 			}));
 
