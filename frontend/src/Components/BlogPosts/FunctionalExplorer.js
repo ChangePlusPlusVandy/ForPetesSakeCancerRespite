@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet,Text,View, TouchableOpacity, FlatList, Image} from "react-native";
 import BlogDisplay from "./BlogDisplay"
 import Config from "../../Config";
+import BottomBar from "../BottomBar";
 
 const ExploreScreen = () => {
 
@@ -27,21 +28,7 @@ const ExploreScreen = () => {
 
             <BlogDisplay></BlogDisplay>
 
-            <View style={styles.footer}>
-                <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigate.push("/")}
-                >
-                    <Image style={{height:'35px',width:undefined, aspectRatio:1,}} source={require('../../../public/newsletter/Home.png')}></Image>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigate.push("/profile")}
-                    >
-                        <Image style={{height:'35px',width:undefined, aspectRatio:1.8,}} source={require('../../../public/newsletter/ProfileButton.png')}></Image>
-                </TouchableOpacity>
-            </View>
+            <BottomBar></BottomBar>
         </View>
     );
 };
@@ -53,14 +40,6 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
         alignItems:"stretch",
 	},
-    button: {
-        alignItems: 'center',
-        justifyContent:'center',
-        padding: 10,
-        marginBottom: 0,
-        width:'50%',
-        height:'100%',
-    },
     header: {
         flex:2.5,
         borderBottomColor:'#C4C4C4',
@@ -93,21 +72,6 @@ const styles = StyleSheet.create({
         fontWeight:'500',
         fontSize:'16px',
     },
-    footer:{
-        flex:1,
-        flexDirection: 'row',
-        justifyContent:'space-evenly',
-        alignItems:'center',
-        width:'100%',
-        backgroundColor:'#088DA9',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-    },
-    navText:{
-        fontWeight:'500',
-        fontSize:'20px',
-        color:'#EEEEEE',
-    }
 });
 
 export default ExploreScreen;

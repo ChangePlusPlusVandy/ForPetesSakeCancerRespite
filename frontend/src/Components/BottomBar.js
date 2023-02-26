@@ -1,58 +1,47 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { IconButton } from "react-native-paper";
-import { useNavigation, Link } from "@react-navigation/native";
+import { StyleSheet, View, TouchableOpacity,Image} from "react-native";
+import { useNavigation} from "@react-navigation/native";
 
 const BottomBar = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.rectangle}>
-      <View style={styles.homeButtonContainer}>
-        <Link to={{ screen: "Home" }} style={{ textDecoration: "none" }}>
-          <IconButton
-            icon="home"
-            iconColor={"white"}
-            size={50}
-            onPress={() => console.log("Pressed")}
-          />
-        </Link>
-        <Link to={{ screen: "Messaging" }} style={{ textDecoration: "none" }}>
-          <IconButton
-            icon="chat"
-            iconColor={"white"}
-            size={50}
-            onPress={() => console.log("Pressed")}
-          />
-        </Link>
-        <Link to={{ screen: "Profile" }} style={{ textDecoration: "none" }}>
-          <IconButton
-            icon="account-circle"
-            iconColor={"white"}
-            size={50}
-            onPress={() => console.log("Pressed")}
-          />
-        </Link>
-      </View>
+    <View style={styles.footer}>
+      <TouchableOpacity
+      style={styles.button}
+      onPress={() => navigation.navigate("Home")}
+      >
+          <Image style={{height:'35px',width:undefined, aspectRatio:1,}} source={require('../../public/newsletter/Home.png')}></Image>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Profile")}
+          >
+              <Image style={{height:'35px',width:undefined, aspectRatio:1.8,}} source={require('../../public/newsletter/ProfileButton.png')}></Image>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  rectangle: {
-    width: "100%",
-    bottom: 0,
-    position: "absolute",
-    height: "18%",
-    backgroundColor: "#088DA9",
-    flexDirection: "row",
-    justifyContent: "center",
+  button: {
+    alignItems: 'center',
+    justifyContent:'center',
+    padding: 10,
+    marginBottom: 0,
+    width:'50%',
+    height:'100%',
   },
-  homeButtonContainer: {
-    width: "85%",
-    margin: 10,
-    flexDirection: "row", 
-    justifyContent: "space-between"
+  footer:{
+    flex:1,
+    flexDirection: 'row',
+    justifyContent:'space-evenly',
+    alignItems:'center',
+    width:'100%',
+    backgroundColor:'#088DA9',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
 
