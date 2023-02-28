@@ -28,7 +28,7 @@ const ExploreScreen = () => {
 
             <BlogDisplay></BlogDisplay>
 
-            <BottomBar></BottomBar>
+            <BottomBar postEnabled={true} ></BottomBar>
         </View>
     );
 };
