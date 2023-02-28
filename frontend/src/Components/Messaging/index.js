@@ -1,113 +1,77 @@
 import React, { Component, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Pressable,
-  FlatList,
-} from "react-native";
+import { View, FlatList, Text, StyleSheet } from "react-native";
 import Message from "./Message";
-import io from "socket.io-client";
+import MessagesPanel from "./MessagesPanel";
+import Groupchat from "./Groupchat";
+import { useNavigation, Link } from "@react-navigation/native";
 import CONFIG from "../../Config";
+import {getAuthHeader, useAuth} from "../../AuthContext"
+import { useGateway } from "../../Gateway";
 
-const socket = io(CONFIG.URL, {
-  transports: ["websocket", "polling", "flashsocket"],
-});
-class ChatApp extends Component {
-  constructor(props) {
-    super(props);
-    this.submitChatMessage.bind(this);
-    this.state = {
-      chatMessage: "",
-      messages: [],
-    };
-  }
+class _ChatApp extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			groupchats: [],
+		};
+		this.socket = props.socket;
+		this.auth = props.auth;
+	}
 
-  componentDidMount() {
-    socket.on("output-messages", (data) => {
-      data.forEach((message) => {
-        this.setState({ messages: [...this.state.messages, message.msg] });
-      });
-    });
+	componentDidMount() {
+		//loading channels
+		this.getGroupchats();
+	}
 
-    socket.on("message", (data) =>
-      this.setState({ messages: [...this.state.messages, data] })
-    );
-  }
+	getGroupchats = async () => {
+		//api request to get all the users
+		var headers = await this.auth.getAuthHeader();
+		fetch(CONFIG.URL + "/api/messaging/get_groupchats", {headers}).then(async (response) => {
+			let data = await response.json();
+			this.setState({ groupchats: data });
+		});
+	};
 
-  submitChatMessage() {
-    socket.emit("message", this.state.chatMessage);
-    this.setState({ chatMessage: "" });
-  }
-
-  render() {
-    return (
-      <View style={styles.messagingscreen}>
-        <View style={styles.chatbody}>
-          <FlatList
-            data={this.state.messages}
-            renderItem={({ item }) => <Message item={item} />}
-          />
-        </View>
-
-        <View style={styles.messaginginputContainer}>
-          <TextInput
-            style={styles.messaginginput}
-            value={this.state.chatMessage}
-            placeholder="Write a message..."
-            onChangeText={(text) => {
-              this.setState({ chatMessage: text });
-            }}
-            onSubmitEditing={() => this.submitChatMessage()}
-          ></TextInput>
-          <Pressable
-            style={styles.messagingbuttonContainer}
-            onPress={() => this.submitChatMessage()}
-          >
-            <View>
-              <Text style={{ color: "#f2f0f1", fontSize: 20 }}>SEND</Text>
-            </View>
-          </Pressable>
-        </View>
-      </View>
-    );
-  }
+	render() {
+		//navigate to messaging panel
+		return (
+			<View>
+				<View>
+					{/* <MessagesPanel /> */}
+					<FlatList
+						data={this.state.groupchats}
+						renderItem={({ item }) => (
+							<Link to={{ screen: "Chat", params: { item } }}>
+								<Groupchat item={item} />
+							</Link>
+						)}
+					/>
+				</View>
+			</View>
+		);
+	}
 }
 
-const styles = StyleSheet.create({
-  messagingscreen: {
-    flex: 1,
-  },
-  chatbody: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-  },
-  messaginginputContainer: {
-    width: "100%",
-    minHeight: 100,
-    backgroundColor: "white",
-    paddingVertical: 30,
-    paddingHorizontal: 15,
-    justifyContent: "center",
-    flexDirection: "row",
-  },
-  messaginginput: {
-    borderWidth: 1,
-    padding: 15,
-    flex: 1,
-    marginRight: 10,
-    borderRadius: 20,
-  },
-  messagingbuttonContainer: {
-    width: "30%",
-    backgroundColor: "green",
-    borderRadius: 3,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-  },
-});
+function User({ user }) {
+	console.log("USER");
+	console.log(user);
+	return (
+		<div>
+			<h1>
+				{user.username} {user.self ? "(yourself)" : ""}
+			</h1>
+			{user.connected ? <p>online</p> : <p>offline</p>}
+			<p></p>
+		</div>
+	);
+}
 
-export default ChatApp;
+const styles = StyleSheet.create({});
+
+export default function ChatApp (props) {
+	const { socket } = useGateway();
+	const auth = useAuth();
+	return <_ChatApp {...props} socket={socket} auth={auth} />;
+};
+
+// export default _ChatApp;

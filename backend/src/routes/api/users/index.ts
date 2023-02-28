@@ -5,7 +5,7 @@ import signup from "./signup";
 const router = express.Router();
 
 router.get("/self", VerifyToken, (req, res) => {
-    res.json((req as any).user);
+	res.json((req as any).user);
 });
 
 router.use(login);
