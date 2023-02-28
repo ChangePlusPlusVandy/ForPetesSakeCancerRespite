@@ -3,10 +3,11 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 import { useAuth } from "../AuthContext";
 import { useNavigation, Link } from "@react-navigation/native";
+import BlogDisplay from "./BlogPosts/BlogDisplay";
 
 const ProfileScreen = () => {
-	const { currentUser } = useAuth();
-
+  const authObj = useAuth();
+  let userDisplayObject = authObj.currentUser;
   const navigation = useNavigation();
 
   return (
@@ -34,9 +35,13 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
-		<View style={styles.bioContainer}>
-			<Text>Bio here</Text>
-		</View>
+		{/* Display user's name here */}
+        <View style={styles.bioContainer}> 
+          <Text style={{ fontWeight: 700, fontSize: 20, marginBottom: 4 }}>
+            {authObj.currentUser.name} 
+          </Text>
+          <Text style={{fontSize: 15, marginBottom: -5}}>Bio here</Text>
+        </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.followButton}>
             <Text style={styles.buttonTextStyle}>Follow</Text>
@@ -46,7 +51,9 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View></View>
+      <View style={styles.blogDisplayContainer}>
+        <BlogDisplay></BlogDisplay>
+      </View>
     </View>
   );
 };
@@ -131,10 +138,13 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   bioContainer: {
-	alignItems: "flex-start",
-	marginLeft: "7%",
-	marginTop: "2%"
-  }
+    alignItems: "flex-start",
+    marginLeft: "7%",
+    marginTop: "2%",
+  },
+  blogDisplayContainer: {
+    width: "100%",
+  },
 });
 
 export default ProfileScreen;

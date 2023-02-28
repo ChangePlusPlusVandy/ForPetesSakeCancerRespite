@@ -17,6 +17,7 @@ import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
 //import PrivateRoute from "./Components/PrivateRoute";
 import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
+import EditProfile from "./Components/EditProfile";
 
 const CustomRouter = () => {
   const Stack = createStackNavigator();
@@ -30,6 +31,7 @@ const CustomRouter = () => {
         <Stack.Screen name="Logout" component={Logout} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="CreatePost" component={CreatePost} />
         <Stack.Screen name="Messaging" component={Messaging} />
