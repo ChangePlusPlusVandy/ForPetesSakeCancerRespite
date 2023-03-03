@@ -14,6 +14,7 @@ const VerifyToken = async (req, res, next) => {
 		req.user = await getUserFromToken(token);
 		return next();
 	} catch (e) {
+		console.error(e);
 		return res
 			.status(401)
 			.json({ message: "Unauthorized/invalid credentials" });

@@ -17,4 +17,6 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
+window.firebase = firebase;
+
 export default firebase;

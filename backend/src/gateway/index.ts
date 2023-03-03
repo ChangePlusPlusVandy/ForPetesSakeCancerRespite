@@ -1,4 +1,4 @@
-import Messaging from "../models/Messages";
+import {Messaging, verifyMessage} from "../models/Messages";
 import { Server, Socket } from "socket.io";
 import { Server as HTTPServer } from "http";
 import { getUserFromToken } from "../firebase";
@@ -22,8 +22,9 @@ class Gateway {
 				socket.emit("output-messages", result);
 			});
 
-			socket.on("message", this.messageHandler.bind(this, socket));
-			//TODO: Rename this event because "message" is a reserved event name for SOCKETIO
+			socket.on("message", this.onMessage.bind(this, socket));
+
+			socket.on("send_groupchat_message", this.groupchatMessage.bind(this, socket));
 
 			socket.on("authentication", this.authHandler.bind(this, socket));
 
@@ -41,8 +42,19 @@ class Gateway {
 		});
 	}
 
-	messageHandler(socket, msg) {
-		const message = new Messaging({ msg });
+	onMessage(socket, msg) {
+		console.log(`USER ${socket.id} SENT ${msg}`);
+	}
+
+	groupchatMessage(socket, msg, callback) {
+		const message = new Messaging({ msg });	
+		if(!verifyMessage(message)){
+			callback({
+				error: "INVALID MESSAGE"
+			})
+			console.error("USER " + socket.id + " SENT INVALID MESSAGE")
+			return;
+		}
 		message.save().then((document) => {
 			console.log(document);
 			console.log('SAVING MESSAGE "' + msg + '" from user ' + socket.id);
