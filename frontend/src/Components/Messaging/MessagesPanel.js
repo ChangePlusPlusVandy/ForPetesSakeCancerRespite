@@ -15,10 +15,11 @@ import { useAuth } from "../../AuthContext";
 class _MessagesPanel extends Component {
 	constructor(props) {
 		super(props);
-		// this.submitChatMessage.bind(this);
+		this.submitChatMessage.bind(this);
 		this.state = {
 			chatMessage: "",
 			messages: [],
+			groupid: ""
 		};
 		this.socket = props.socket;
 		this.auth = props.auth;
@@ -35,14 +36,15 @@ class _MessagesPanel extends Component {
 			CONFIG.URL + "/api/messaging/get_groupchat?id=" + this.props.route.params.item._id, {headers}
 		).then(async (response) => {
 			let data = await response.json();
-			this.setState({ messages: data.messages });
+			this.setState({ messages: data.messages, groupid: data._id });
 		});
 	};
 
-	// not totally sure what this is / why this is just floating here in a class component
-	// maybe move this in the constuctor? also is this suppoused to be a function?
-	//  something like submitChatMessage = () => {this.socket.emit(...)}
-	// submitChatMessage = this.socket.emit("message", this.state.chatMessage);
+	submitChatMessage() {
+		if(this.state.chatMessage){
+			this.socket.emit("send_groupchat_message", {message: this.state.chatMessage, groupchat: this.state.groupid, timestamp: Date.now()});
+		}
+	}
 
 	render() {
 
@@ -66,7 +68,7 @@ class _MessagesPanel extends Component {
 							this.setState({ chatMessage: text });
 						}}
 						onSubmitEditing={() =>
-							this.submitChatMessage(this.state.chatMessage, this.state.id)
+							this.submitChatMessage()
 						}></TextInput>
 					<Pressable
 						style={styles.messagingbuttonContainer}

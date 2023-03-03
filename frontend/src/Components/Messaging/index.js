@@ -24,11 +24,11 @@ class _ChatApp extends Component {
 	}
 
 	getGroupchats = async () => {
-		//api request to get all the users
+		//api request to get the groupchats
 		var headers = await this.auth.getAuthHeader();
 		fetch(CONFIG.URL + "/api/messaging/get_groupchats", {headers}).then(async (response) => {
 			let data = await response.json();
-			this.setState({ groupchats: data });
+			this.setState({ groupchats: data.groupchats });
 		});
 	};
 
@@ -37,7 +37,6 @@ class _ChatApp extends Component {
 		return (
 			<View>
 				<View>
-					{/* <MessagesPanel /> */}
 					<FlatList
 						data={this.state.groupchats}
 						renderItem={({ item }) => (
