@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from "react";
-import { View, FlatList, Text, StyleSheet } from "react-native";
+import { View, FlatList, Text, StyleSheet, TextInput, Pressable } from "react-native";
 import Message from "./Message";
 import MessagesPanel from "./MessagesPanel";
 import Groupchat from "./Groupchat";
@@ -7,12 +7,15 @@ import { useNavigation, Link } from "@react-navigation/native";
 import CONFIG from "../../Config";
 import {getAuthHeader, useAuth} from "../../AuthContext"
 import { useGateway } from "../../Gateway";
+import { AntDesign, Ionicons } from '@expo/vector-icons'; 
 
 class _ChatApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			groupchats: [],
+			createChatUsername: "",
+			createChatMessage: ""
 		};
 		this.socket = props.socket;
 		this.auth = props.auth;
@@ -32,11 +35,24 @@ class _ChatApp extends Component {
 		});
 	};
 
+	createChat = async () => {
+		if(this.state.createChatUsername && this.state.createChatMessage){
+			fetch(CONFIG.URL + "/api/messaging/create_groupchat", {method: "POST", body: {users: [this.state.createChatUsername], name: this.state.createChatMessage}}).then(response => response.json());
+
+				
+		}
+	}
+
 	render() {
 		//navigate to messaging panel
 		return (
-			<View>
-				<View>
+			<View style={styles.container}>
+				<View style={styles.chatTop}>
+        			<Text style={styles.recentChats}>Recent Chats</Text>
+        			<AntDesign name="search1" size={24} color="black" />
+      			</View>
+
+				<View style={styles.chats}>
 					<FlatList
 						data={this.state.groupchats}
 						renderItem={({ item }) => (
@@ -46,6 +62,25 @@ class _ChatApp extends Component {
 						)}
 					/>
 				</View>
+
+				<TextInput 
+				style={{paddingTop: "85%"}} 
+				value={this.state.createChatUsername}
+				placeholder="Enter the username..." 
+				onChangeText={(text) => {
+					this.setState({ createChatUsername: text });
+				}}
+				></TextInput>
+      			<TextInput 
+				value={this.state.createChatMessage}
+				placeholder="Enter the message..."
+				onChangeText={(text) => {
+					this.setState({ createChatMessage: text });
+				}}
+				></TextInput>
+      			<Pressable style={styles.newChat} onPress={() => this.createChat()}>
+       				<AntDesign name="pluscircle" size={24} color="black" />
+      			</Pressable>
 			</View>
 		);
 	}
@@ -65,7 +100,31 @@ function User({ user }) {
 	);
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#E5E5E5',
+	  },
+	  chatTop: {
+		top: 29,
+		left: 15,
+		paddingRight: 40,
+		justifyContent: "space-between",
+		flexDirection: "row",
+	  },
+	  recentChats: {
+		color: "#088DA9",
+		fontWeight: "bold",
+		fontSize: 32,
+	  },
+	  chats: {
+		marginTop: 60,
+		backgroundColor: "#BDBDBD",
+	  },
+	  newChat: {
+		paddingLeft: "50%",
+	  }
+});
 
 export default function ChatApp (props) {
 	const { socket } = useGateway();

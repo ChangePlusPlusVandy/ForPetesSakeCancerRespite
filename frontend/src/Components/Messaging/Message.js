@@ -6,13 +6,9 @@ export class Message extends Component {
     return (
       <View>
         <View style={styles.messageWrapper}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View style={styles.message}>
               <Text>{this.props.m.message}</Text>
-              <Text>{this.props.m.user}</Text>
-              <Text>{this.props.m.timestamp}</Text>
             </View>
-          </View>
         </View>
       </View>
     );
@@ -26,10 +22,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   message: {
-    maxWidth: "100%",
-    backgroundColor: "#f5ccc2",
-    padding: 15,
     borderRadius: 10,
+    maxWidth: "100%",
+    backgroundColor: "#2F80ED",
+    padding: 15,
     marginBottom: 2,
   },
 });
