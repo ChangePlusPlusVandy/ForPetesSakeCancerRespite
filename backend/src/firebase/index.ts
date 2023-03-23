@@ -47,9 +47,13 @@ const getFromUserTokenAndAddIfNotFound = async (token: string) => {
 	if (!mongoDBUser) {
 		const name = decodedValue.name;
 		const email = decodedValue.email;
+		const username = decodedValue.username;
+		const phone = decodedValue.phone;
 		const user = User.build({
 			name,
 			email,
+			username,
+			phone,
 		});
 		await user.save();
 		return getUserFromToken(token);
