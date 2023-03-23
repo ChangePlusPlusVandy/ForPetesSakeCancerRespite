@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet,Text,View, TouchableOpacity, FlatList, Image} from "react-native";
 import Config from "../../Config";
+import { useAuth } from "../../AuthContext";
 
 const NewsItem = (props) => {
     return (
@@ -8,7 +9,7 @@ const NewsItem = (props) => {
             <View style={styles.newsHeader}>
                 <Image style={{flex:1, height:'100%', width:-1, borderRadius:'50%'}} source={require('../../../public/defaultProfile.png')}/>
                 <Text style={{flex:4, alignSelf:'center',marginLeft:'19px'}}>{props.author}</Text>
-                <Text style={{flex:4, alignSelf:'center'}}>Posted:1/11/202</Text>
+                <Text style={{flex:4, alignSelf:'center'}}>Posted:1/11/2022</Text>
             </View>
             <View style={styles.newsTitle}>
                 <Text style={{fontWeight:'bold', fontSize:'26px'}}>{props.title}</Text>
@@ -20,11 +21,18 @@ const NewsItem = (props) => {
     );
 };
 
+// const authObj = useAuth();
+// var header = await authObj.getAuthHeader();
+
 const BlogDisplay = () => {
+    const authObj = useAuth();
+
     const [newsletterData, setNewsletterData]= useState([{title:"Waiting for Data, Please Hit Refresh ..."}]);
 
     const getAllNewsLetter = async() => {
-        const promise = await fetch(Config.URL+"/api/newsletter/get_newsletters");
+
+        var header= await authObj.getAuthHeader();
+        const promise = await fetch(Config.URL+"/api/newsletter/get_newsletters", {headers : header});
         let data = await promise.json();
         setNewsletterData(data);
     };

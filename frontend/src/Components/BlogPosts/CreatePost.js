@@ -9,15 +9,17 @@ import {
 import { useAuth } from "../../AuthContext";
 import CONFIG from "../../Config";
 import BottomBar from "../BottomBar";
-import { useNavigation, Link } from "@react-navigation/native";
+import { useNavigation} from "@react-navigation/native";
+
 
 const CreatePost = () => {
   const { currentUserIn } = useAuth();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
-  const postData = async () => {
+  const navigation = useNavigation();
 
+  const postData = async () => {
     try {
       const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -30,6 +32,10 @@ const CreatePost = () => {
         credentials: 'same-origin', // include, *same-origin, omit
         body: JSON.stringify({title: title, body: body}),
       });
+      // How to check log for request      
+      // console.log(response.json())
+      // navigation.navigate("Explore")
+      
     } catch (err) {
       console.log(err);
     }
@@ -41,17 +47,18 @@ const CreatePost = () => {
       return;
     } else {
       postData();
+      navigation.navigate("Explore");
     }
 	};
 
-  const navigation = useNavigation();
+  
   
   return (
     <View
       style={{
         width: "100%",
         height: "100%",
-        backgroundColor: "white"
+        backgroundColor:"#FFFFFF",
       }}
     >
       <View style={styles.titleContainer}>
@@ -105,6 +112,8 @@ const CreatePost = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+
       <BottomBar></BottomBar>
     </View>
   );
@@ -113,7 +122,6 @@ const CreatePost = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
