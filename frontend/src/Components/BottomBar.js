@@ -31,14 +31,14 @@ const BottomBar = (props) => {
         style={styles.button}
         onPress={() => navigation.navigate("Home")}
         >
-            <Image style={{height:'35px',width:undefined, aspectRatio:1,}} source={require('../../public/newsletter/Home.png')}></Image>
+            <Image style={{height:'35px',width:undefined, aspectRatio:1,marginTop:'5px'}} source={require('../../public/newsletter/Home.png')}></Image>
         </TouchableOpacity>
 
         <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("Profile")}
             >
-                <Image style={{height:'35px',width:undefined, aspectRatio:1.8,}} source={require('../../public/newsletter/ProfileButton.png')}></Image>
+                <Image style={{height:'35px',width:undefined, aspectRatio:1.85,marginTop:'2px'}} source={require('../../public/newsletter/ProfileButton.png')}></Image>
         </TouchableOpacity>
       </View>
     </View>

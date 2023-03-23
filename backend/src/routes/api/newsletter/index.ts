@@ -24,7 +24,10 @@ router.get("/get_newsletters", VerifyToken, async(req, res)=>{
 });
 
 
-router.post("/create_newsletter", async(req, res)=>{
+router.post("/create_newsletter", VerifyToken, async(req, res)=>{
+    // console.log('user token:  ' + req.body.userToken)
+    let user = (req as any).user;
+    console.log(user);
     // Parse through the text in here
     var titleText = req.body.title;
     var bodyText = req.body.body;
@@ -39,7 +42,8 @@ router.post("/create_newsletter", async(req, res)=>{
         const newsletterItem = await Newsletter.create({
             title: titleText, // change this based on what the req looks like
             body: bodyText,
-            // author: author
+            author: user.name,
+            timePosted: Date()   
         })
         console.log("Successfully added to the database: " + newsletterItem)
     } catch(e) {
