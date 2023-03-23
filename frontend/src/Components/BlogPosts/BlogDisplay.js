@@ -9,7 +9,7 @@ const NewsItem = (props) => {
             <View style={styles.newsHeader}>
                 <Image style={{flex:1, height:'100%', width:-1, borderRadius:'50%'}} source={require('../../../public/defaultProfile.png')}/>
                 <Text style={{flex:4, alignSelf:'center',marginLeft:'19px'}}>{props.author}</Text>
-                <Text style={{flex:4, alignSelf:'center'}}>Posted:1/11/2022</Text>
+                <Text style={{flex:4, alignSelf:'center'}}>Posted: {props.timePosted}</Text>
             </View>
             <View style={styles.newsTitle}>
                 <Text style={{fontWeight:'bold', fontSize:'26px'}}>{props.title}</Text>
@@ -35,6 +35,7 @@ const BlogDisplay = () => {
         const promise = await fetch(Config.URL+"/api/newsletter/get_newsletters", {headers : header});
         let data = await promise.json();
         setNewsletterData(data);
+        // console.log("newsletters loaded")
     };
 
     useEffect(()=>{
@@ -46,7 +47,7 @@ const BlogDisplay = () => {
             <FlatList
             data={newsletterData}
             renderItem={({item}) => (
-                <NewsItem title={item.title} body={item.body} author={item.author}></NewsItem>
+                <NewsItem title={item.title} body={item.body} author={item.author} timePosted= {item.timePosted ? item.timePosted.substring(4,16) : ''}></NewsItem>
             )}
             >
             </FlatList>
