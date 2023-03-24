@@ -45,7 +45,6 @@ class _MessagesPanel extends Component {
 
 	submitChatMessage() {
 		if(this.state.chatMessage){
-			debugger
 			this.socket.emit("send_groupchat_message", {message: this.state.chatMessage, groupchat: this.state.groupid, timestamp: Date.now()});
 		}
 	}
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
 	  },
 	  messaginginput: {
 		  borderWidth: 0,
-	  padding: 15,
+	  	  padding: 15,
 		  flex: 1,
 		  marginRight: 10,
 		  borderRadius: 20

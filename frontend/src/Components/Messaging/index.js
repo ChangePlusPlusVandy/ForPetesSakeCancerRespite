@@ -1,13 +1,20 @@
 import React, { Component, useEffect } from "react";
-import { View, FlatList, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import {
+	View,
+	FlatList,
+	Text,
+	StyleSheet,
+	TextInput,
+	Pressable,
+} from "react-native";
 import Message from "./Message";
 import MessagesPanel from "./MessagesPanel";
 import Groupchat from "./Groupchat";
 import { useNavigation, Link } from "@react-navigation/native";
 import CONFIG from "../../Config";
-import {getAuthHeader, useAuth} from "../../AuthContext"
+import { getAuthHeader, useAuth } from "../../AuthContext";
 import { useGateway } from "../../Gateway";
-import { AntDesign, Ionicons } from '@expo/vector-icons'; 
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 class _ChatApp extends Component {
 	constructor(props) {
@@ -15,7 +22,7 @@ class _ChatApp extends Component {
 		this.state = {
 			groupchats: [],
 			createChatUsername: "",
-			createChatMessage: ""
+			createChatMessage: "",
 		};
 		this.socket = props.socket;
 		this.auth = props.auth;
@@ -26,31 +33,29 @@ class _ChatApp extends Component {
 		this.getGroupchats();
 	}
 
+	componentDidUpdate() {
+		this.getGroupchats();
+	}
+
 	getGroupchats = async () => {
 		//api request to get the groupchats
 		var headers = await this.auth.getAuthHeader();
-		fetch(CONFIG.URL + "/api/messaging/get_groupchats", {headers}).then(async (response) => {
-			let data = await response.json();
-			this.setState({ groupchats: data.groupchats });
-		});
+		fetch(CONFIG.URL + "/api/messaging/get_groupchats", { headers }).then(
+			async (response) => {
+				let data = await response.json();
+				this.setState({ groupchats: data.groupchats });
+			}
+		);
 	};
-
-	createChat = async () => {
-		if(this.state.createChatUsername && this.state.createChatMessage){
-			fetch(CONFIG.URL + "/api/messaging/create_groupchat", {method: "POST", body: {users: [this.state.createChatUsername], name: this.state.createChatMessage}}).then(response => response.json());
-
-				
-		}
-	}
 
 	render() {
 		//navigate to messaging panel
 		return (
 			<View style={styles.container}>
 				<View style={styles.chatTop}>
-        			<Text style={styles.recentChats}>Recent Chats</Text>
-        			<AntDesign name="search1" size={24} color="black" />
-      			</View>
+					<Text style={styles.recentChats}>Recent Chats</Text>
+					<AntDesign name="search1" size={24} color="black" />
+				</View>
 
 				<View style={styles.chats}>
 					<FlatList
@@ -62,26 +67,16 @@ class _ChatApp extends Component {
 						)}
 					/>
 				</View>
+					<View style={styles.createContainer}>
+						<View style={styles.createButtonContainer}>
+						<Link to={{screen: "CreateChat"}}>
+						<Text style={{ color: "#FFFFFF", fontSize: 15 }}>Create Group</Text>
+						</Link>
+						</View>
+					</View>
 
-				<TextInput 
-				style={{paddingTop: "85%"}} 
-				value={this.state.createChatUsername}
-				placeholder="Enter the username..." 
-				onChangeText={(text) => {
-					this.setState({ createChatUsername: text });
-				}}
-				></TextInput>
-      			<TextInput 
-				value={this.state.createChatMessage}
-				placeholder="Enter the message..."
-				onChangeText={(text) => {
-					this.setState({ createChatMessage: text });
-				}}
-				></TextInput>
-      			<Pressable style={styles.newChat} onPress={() => this.createChat()}>
-       				<AntDesign name="pluscircle" size={24} color="black" />
-      			</Pressable>
 			</View>
+			
 		);
 	}
 }
@@ -103,33 +98,46 @@ function User({ user }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#E5E5E5',
-	  },
-	  chatTop: {
+		backgroundColor: "#E5E5E5",
+	},
+	chatTop: {
 		top: 29,
 		left: 15,
 		paddingRight: 40,
 		justifyContent: "space-between",
 		flexDirection: "row",
-	  },
-	  recentChats: {
+	},
+	recentChats: {
 		color: "#088DA9",
 		fontWeight: "bold",
 		fontSize: 32,
-	  },
-	  chats: {
+	},
+	chats: {
 		marginTop: 60,
 		backgroundColor: "#BDBDBD",
-	  },
-	  newChat: {
+	},
+	newChat: {
 		paddingLeft: "50%",
-	  }
+	},
+	createContainer: {
+		paddingTop: 20,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	createButtonContainer: {
+		width: "30%",
+		height: "150%",
+		backgroundColor: "#2F80ED",
+		borderRadius: 20,
+		alignItems: "center",
+		justifyContent: "center",
+	},
 });
 
-export default function ChatApp (props) {
+export default function ChatApp(props) {
 	const { socket } = useGateway();
 	const auth = useAuth();
 	return <_ChatApp {...props} socket={socket} auth={auth} />;
-};
+}
 
 // export default _ChatApp;

@@ -21,6 +21,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 15,
   },
+  messageWrapper2: {
+    width: "100%",
+    alignItems: "flex-end",
+    marginBottom: 15,
+  },
   message: {
     borderRadius: 10,
     maxWidth: "100%",
