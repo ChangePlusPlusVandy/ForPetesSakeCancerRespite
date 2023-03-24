@@ -5,116 +5,212 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  Alert,
+  Image,
+  ScrollView,
 } from "react-native";
 import { useAuth } from "../../AuthContext";
 import CONFIG from "../../Config";
-import BottomBar from "../BottomBar";
-import { useNavigation} from "@react-navigation/native";
-
+import { useNavigation } from "@react-navigation/native";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import { IconButton, Colors } from "react-native-paper";
 
 const CreatePost = () => {
   const { currentUserIn } = useAuth();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-
-  const navigation = useNavigation();
+  const [success, setSuccess] = useState(false);
+  const [failure, setFailure] = useState(false);
+  const [uri_array, setUriArray] = useState([]);
 
   const postData = async () => {
-    try {
-      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        body: JSON.stringify({title: title, body: body}),
+    await fetch(CONFIG.URL + "/api/newsletter/create_newsletter", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      body: JSON.stringify({ title: title, body: body }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        setSuccess(true);
+      })
+      .catch((error) => {
+        console.log("There has been a problem uploading this post", error);
+        setFailure(true);
       });
-      // How to check log for request      
-      // console.log(response.json())
-      // navigation.navigate("Explore")
-      
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  };
 
   const handleSubmit = async (e) => {
-		e.preventDefault();
-    if(!title || !body){
+    e.preventDefault();
+    if (!title || !body) {
       return;
     } else {
       postData();
-      navigation.navigate("Explore");
     }
-	};
+  };
 
-  
-  
+  const handleTakePhoto = async () => {
+    const result = await launchCamera();
+    if (result.didCancel) return;
+    else if (result.errorCode == "camera_unavailable") {
+      Alert.alert("Camera unavailable", "Your device may not have a camera.", {
+        text: "OK",
+        onPress: () => console.log("OK Pressed"),
+      });
+    } else if (result.errorCode == "permission") {
+      Alert.alert(
+        "Permission error",
+        "Please allow permissions to your camera in your settings",
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      );
+    } else if (result.errorCode == "others") {
+      Alert.alert("Unkown error occurred", {
+        text: "OK",
+        onPress: () => console.log("OK Pressed"),
+      });
+    } else {
+      var assets = result.assets;
+      var temp_array = [];
+      for (var i = 0; i < assets.length; i++) {
+        temp_array.push(assets[i].uri);
+      }
+      setUriArray([...uri_array, ...temp_array]);
+    }
+  };
+
+  const handleUploadPhoto = async () => {
+    const result = await launchImageLibrary();
+    if (result.didCancel) return;
+    if (result.errorCode == "permission") {
+      Alert.alert(
+        "Permission error",
+        "Please allow permissions to your photo library in your settings",
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      );
+    } else if (result.errorCode == "others") {
+      Alert.alert("Unkown error occurred", {
+        text: "OK",
+        onPress: () => console.log("OK Pressed"),
+      });
+    } else {
+      var assets = result.assets;
+      var temp_array = [];
+      for (var i = 0; i < assets.length; i++) {
+        temp_array.push(assets[i].uri);
+      }
+      setUriArray([...uri_array, ...temp_array]);
+    }
+  };
+
+  const navigation = useNavigation();
+
   return (
     <View
       style={{
         width: "100%",
         height: "100%",
-        backgroundColor:"#FFFFFF",
+        backgroundColor: "white",
       }}
     >
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Create post</Text>
-        <TextInput
-          style={styles.title_input}
-          placeholder="Subject"
-          placeholderTextColor="#474C4D"
-          onChangeText={(e) => setTitle(e)}
-        />
       </View>
       <View style={styles.container}>
-        <View
-          style={{
-            height: "58%",
-            width: "85%",
-          }}
-        >
+        <View style={styles.bigInputContainer}>
           <TextInput
-            multiline
-            allowFontScaling
-            enablesReturnKeyAutomatically="true"
+            style={styles.title_input}
+            placeholder="Title your post"
             placeholderTextColor="#474C4D"
-            style={styles.postInput}
-            textAlign={"center"}
-            placeholder="Write here..."
-            onChangeText={(e) => setBody(e)}
+            onChangeText={(e) => setTitle(e)}
+          />
+          {(() => {
+            var current_style;
+            var image_container_style;
+            if (uri_array.length == 0) {
+              current_style = styles.postInputNoImages;
+              image_container_style = styles.imageContainerNoImages;
+            } else {
+              // has images attached
+              current_style = styles.postInput;
+              image_container_style = styles.imageContainer;
+            }
+            return (
+              <>
+                <TextInput
+                  multiline
+                  allowFontScaling
+                  enablesReturnKeyAutomatically="true"
+                  placeholderTextColor="#474C4D"
+                  style={current_style}
+                  textAlign={"center"}
+                  placeholder="Write here..."
+                  onChangeText={(e) => setBody(e)}
+                />
+                <ScrollView style={styles.image_container_style}>
+                  {uri_array.map((uri_i, i) => {
+                    return (
+                      <Image
+                        style={styles.attachedImages}
+                        source={{
+                          uri: uri_i,
+                        }}
+                        key={i}
+                      />
+                    );
+                  })}
+                </ScrollView>
+              </>
+            );
+          })()}
+          <IconButton
+            icon="image"
+            color="black"
+            size={25}
+            onPress={() => handleUploadPhoto()}
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+              right: 30,
+            }}
+          />
+          <IconButton
+            icon="camera"
+            color="black"
+            size={25}
+            onPress={() => handleTakePhoto()}
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+              right: 0,
+            }}
           />
         </View>
-        <View
-          style={{
-            justifyContent: "flex-end",
-            flexDirection: "row",
-            width: "100%",
-            height: "8%",
-          }}
-        >
-          <TouchableOpacity 
-          style={styles.postButton}
-          onPress = {handleSubmit}
-          >
+        <View style={styles.postButtonContainer}>
+          <TouchableOpacity style={styles.postButton} onPress={handleSubmit}>
             <Text
               style={{
                 color: "white",
-                fontWeight: 400,
-                fontSize: 16,
+                fontWeight: 500,
+                fontSize: 20,
               }}
             >
-              Publish
+              Post!
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-
-
-      <BottomBar></BottomBar>
+      {!!success && <Text style={styles.successText}>Success!</Text>}
+      {!!failure && (
+        <Text style={styles.failureText}>
+          Failed to update user information.
+        </Text>
+      )}
     </View>
   );
 };
@@ -122,9 +218,16 @@ const CreatePost = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
+    backgroundColor: "#fff",
     alignItems: "center",
     width: "100%",
+  },
+  bigInputContainer: {
+    height: "85%",
+    width: "85%",
+    backgroundColor: "#d9d9d959",
+    borderRadius: 15,
+    borderColor: "#5f6566",
   },
   postButton: {
     backgroundColor: "#088DA9",
@@ -136,44 +239,95 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  imageContainer: {
+    marginTop: 3,
+    height: "35%",
+    width: "100%",
+    flexDirection: "row",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    horizontal: "true",
+    directionalLockEnabled: "true",
+    contentInset: { top: 10, left: 10, bottom: 10, right: 10 },
+  },
+  imageContainerNoImages:{
+    height: 0
+  },
+  attachedImages: {
+    width: 125,
+    height: 125,
+    marginLeft: 5,
+    marginBottom: 5,
+    marginTop: 5,
+  },
+  postButtonContainer: {
+    justifyContent: "flex-end",
+    flexDirection: "row",
+    width: "100%",
+    height: "7%",
+    marginTop: 15,
+  },
   title_input: {
-    height: "40%",
-    width: "55%",
+    height: "10%",
+    width: "75%",
     alignItems: "left",
     justifyContent: "left",
-    borderRadius: 15,
-    padding: 10,
-    backgroundColor: "#d9d9d959",
-    borderColor: "#5f6566",
     fontWeight: 700,
     fontSize: 20,
-    color: "#474C4D",
+    padding: 10,
+    borderTopLeftRadius: 15,
+    borderRightWidth: 3,
+    borderColor: "#d9d9d959",
   },
   postInput: {
-    height: "100%",
-    borderRadius: 15,
-    borderColor: "#5f6566",
+    height: "65%",
     width: "100%",
-    backgroundColor: "#d9d9d959",
-    padding: 15,
-    marginBottom: 20,
+    padding: 10,
+    borderTopWidth: 3,
+    borderColor: "#d9d9d959",
+    fontSize: 15,
     fontWeight: 500,
-    fontSize: 20,
-    color: "#474C4D",
+    borderBottomWidth: 3,
+  },
+  postInputNoImages: {
+    height: "90%",
+    width: "100%",
+    padding: 10,
+    borderTopWidth: 3,
+    borderColor: "#d9d9d959",
+    fontSize: 15,
+    fontWeight: 500,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   titleContainer: {
-    height: "20%",
+    height: "10%",
     width: "100%",
-    alignItems: "left",
+    marginLeft: "7.5%",
     justifyContent: "space-evenly",
-    marginLeft: "8%",
-    marginTop: "20%",
+    marginTop: 10,
   },
   titleText: {
-    fontWeight: "bold",
+    fontWeight: "700",
     fontSize: 36,
     color: "#088DA9",
     fontStyle: "normal",
+  },
+  successText: {
+    marginTop: 10,
+    alignSelf: "center",
+    color: "green",
+    size: 25,
+    fontWeight: 600,
+    textAlign: "center",
+  },
+  failureText: {
+    marginTop: 10,
+    alignSelf: "center",
+    color: "red",
+    size: 25,
+    fontWeight: 600,
+    textAlign: "center",
   },
 });
 

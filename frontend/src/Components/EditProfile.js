@@ -12,43 +12,74 @@ import { useAuth } from "../AuthContext";
 import { useNavigation, Link } from "@react-navigation/native";
 import BlogDisplay from "./BlogPosts/BlogDisplay";
 import { IconButton } from "react-native-paper";
+import CONFIG from "../Config";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 const EditProfileScreen = () => {
   const authObj = useAuth();
-  const [username, setUsername] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
+
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  let userDisplayObject = authObj.currentUser;
+  const [name, setName] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [failure, setFailure] = useState(false);
   const navigation = useNavigation();
+  let userDisplayObject = authObj.currentUser;
+
+  const updateUser = async () => {
+    // try {
+    var url = CONFIG.URL + "/api/users/update_user";
+    var headers = await authObj.getAuthHeader();
+    headers["Content-Type"] = "application/json";
+
+    const requestOptions = {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ name: name, number: phoneNumber }),
+    };
+
+    await fetch(url, requestOptions)
+      .then((res) => res.json())
+      .then(() => {
+        setSuccess(true);
+      })
+      .catch((error) => {
+        console.log("There has been a problem updating the user: ", error);
+        setFailure(true);
+      });
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.topPart}>
-        <Text style = {{color: "white", alignSelf: "center"}}>Edit Profile</Text>
+        <Text style={styles.welcomeText}>
+          Welcome, {authObj.currentUser.name}!
+        </Text>
+      </View>
+      <Image
+        style={styles.profilePicture}
+        source={require("../../public/defaultProfile.png")}
+      />
+      <View style={styles.bottomPart}>
         <IconButton
           icon="square-edit-outline"
-          iconColor={"white"}
+          iconColor={"black"}
           size={30}
-          onPress={() => console.log("Pressed")}
-          style = {styles.iconButton}
+          onPress={() => launchImageLibrary()}
+          style={styles.iconButton}
         />
-      </View>
-
-      <View style={styles.bottomPart}>
-        <Text style={styles.textStyle}> Username </Text>
+        <Text style={styles.textStyle}> Name </Text>
         <TextInput
           style={styles.textInputs}
-          placeholder="Username"
+          placeholder={authObj.currentUser.name}
           placeholderTextColor="#474C4D"
-          onChangeText={(e) => setUsername(e)}
+          onChangeText={(e) => setName(e)}
         />
         <Text style={styles.textStyle}> Email Address </Text>
         <TextInput
           style={styles.textInputs}
-          placeholder="Email Address"
+          placeholder={authObj.currentUser.email}
           placeholderTextColor="#474C4D"
-          onChangeText={(e) => setEmailAddress(e)}
+          editable={false}
         />
         <Text style={styles.textStyle}> Phone Number </Text>
         <TextInput
@@ -60,14 +91,30 @@ const EditProfileScreen = () => {
         <Text style={styles.textStyle}> Password </Text>
         <TextInput
           style={styles.textInputs}
-          placeholder="Username"
+          placeholder="Password"
           placeholderTextColor="#474C4D"
+          editable={false}
           onChangeText={(e) => setPassword(e)}
         />
+        <TouchableOpacity
+          style={{ alignSelf: "center", marginBottom: 10 }}
+          onPress={() => navigation.navigate("ForgotPassword")}
+        >
+          <Text style={styles.forgot_button}>Forgot Password?</Text>
+        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.editButton}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => updateUser()}
+        >
           <Text style={styles.buttonTextStyle}>Update</Text>
         </TouchableOpacity>
+        {!!success && <Text style={styles.successText}>Success!</Text>}
+        {!!failure && (
+          <Text style={styles.failureText}>
+            Failed to update user information.
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -83,14 +130,14 @@ const styles = StyleSheet.create({
   },
   topPart: {
     backgroundColor: "#088DA9",
-    height: "30%",
+    height: "25%",
     width: "100%",
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
   },
   bottomPart: {
     backgroundColor: "##fff",
-    margin: 10,
+    marginTop: "14%",
     height: "80%",
     width: "70%",
     justifyContent: "flex-start",
@@ -105,8 +152,9 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: "5%",
   },
-  iconButton:{
+  iconButton: {
     alignSelf: "center",
+    marginBottom: -3,
   },
   textStyle: {
     fontStyle: "normal",
@@ -114,7 +162,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 17,
     marginBottom: 5,
-    marginTop: 5,
+    marginTop: 3,
   },
   buttonTextStyle: {
     fontWeight: 700,
@@ -131,80 +179,41 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 5,
   },
-  //   feed: {},
-  //   followButton: {
-  //     borderRadius: "5px",
-  //     backgroundColor: "#4192EF",
-  //     width: "40%",
-  //     height: "100%",
-  //     padding: 8,
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //   },
-  //   messageButton: {
-  //     borderRadius: "5px",
-  //     backgroundColor: "#000000",
-  //     width: "40%",
-  //     height: "100%",
-  //     padding: 8,
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //   },
-  //   buttonTextStyle: {
-  //     color: "#fff",
-  //     fontWeight: 400,
-  //     fontSize: 16,
-  //     fontWeight: 500,
-  //     lineHeight: "100%",
-  //   },
-  //   buttonsContainer: {
-  //     flexDirection: "row",
-  //     width: "60%",
-  //     justifyContent: "space-evenly",
-  //     marginLeft: 10,
-  //     marginTop: "3%",
-  //   },
-  //   statsContainer: {
-  //     width: "70%",
-  //     height: "60%",
-  //     flexDirection: "row",
-  //     justifyContent: "space-evenly",
-  //     alignSelf: "flex-end",
-  //   },
-  //   followersNumber: {
-  //     justifyContent: "center",
-  //     marginBottom: "10%",
-  //     alignItems: "center",
-  //   },
-  //   postsNumber: {
-  //     justifyContent: "center",
-  //     marginBottom: "10%",
-  //     alignItems: "center",
-  //   },
-  //   followingNumber: {
-  //     justifyContent: "center",
-  //     marginBottom: "10%",
-  //     alignItems: "center",
-  //   },
-  //   profilePicture: {
-  //     width: 60,
-  //     height: 60,
-  //     marginLeft: "5%",
-  //     alignSelf: "center",
-  //   },
-  //   topOfTopPart: {
-  //     flexDirection: "row",
-  //     justifyContent: "space-between",
-  //     margin: 10,
-  //   },
-  //   bioContainer: {
-  //     alignItems: "flex-start",
-  //     marginLeft: "7%",
-  //     marginTop: "2%",
-  //   },
-  //   blogDisplayContainer: {
-  //     width: "100%",
-  //   },
+  profilePicture: {
+    height: 120,
+    width: 120,
+    borderRadius: 120 / 2,
+    overflow: "hidden",
+    borderWidth: 3,
+    position: "absolute",
+    top: "18%",
+    borderColor: "black",
+  },
+  welcomeText: {
+    color: "white",
+    alignSelf: "center",
+    fontSize: 25,
+    lineHeight: 35,
+    fontWeight: 600,
+    fontStyle: "normal",
+    textTransform: "capitalize",
+  },
+  successText: {
+    marginTop: 10,
+    alignSelf: "center",
+    color: "green",
+    size: 25,
+    fontWeight: 600,
+    textAlign: "center",
+  },
+  failureText: {
+    marginTop: 10,
+    alignSelf: "center",
+    color: "red",
+    size: 25,
+    fontWeight: 600,
+    textAlign: "center",
+  },
 });
 
 export default EditProfileScreen;

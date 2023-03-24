@@ -23,28 +23,33 @@ router.get("/get_newsletters", VerifyToken, async(req, res)=>{
     }
 });
 
-
-router.post("/create_newsletter", async(req, res)=>{
-    // Parse through the text in here
-    var titleText = req.body.title;
-    var bodyText = req.body.body;
-    // var author = req.body.author;
-    if(!titleText || !bodyText){
-        res.status(400).send(JSON.stringify("Bad user input. Inputs required for all fields."));
-        return;
-    }
-    console.log('Got a POST request for the homepage for this: ');
-    // Create a newsletter item in the database here
-    try {
-        const newsletterItem = await Newsletter.create({
-            title: titleText, // change this based on what the req looks like
-            body: bodyText,
-            // author: author
-        })
-        console.log("Successfully added to the database: " + newsletterItem)
-    } catch(e) {
-        console.log(e.message)
-    }
+router.post("/create_newsletter", async (req, res) => {
+  // Parse through the text in here
+  var titleText = req.body.title;
+  var bodyText = req.body.body;
+  // var author = req.body.author;
+  if (!titleText || !bodyText) {
+    res
+      .status(400)
+      .send(JSON.stringify("Bad user input. Inputs required for all fields."));
+    return;
+  }
+  console.log("Got a POST request for the homepage for this: ");
+  // Create a newsletter item in the database here
+  try {
+    const newsletterItem = await Newsletter.create({
+      title: titleText, // change this based on what the req looks like
+      body: bodyText,
+      // author: author
+    });
+    res.status(200).send({
+      message: `Successfully added to the database: ${newsletterItem}`
+    });
+  } catch (e) {
+    res.status(400).send({
+      message: `Failed to add this post to the database. ${e}`
+    });
+  }
 });
 
 router.delete('/delete_newsletter', async(req, res)=>{
@@ -68,6 +73,5 @@ router.delete('/delete_newsletter', async(req, res)=>{
  router.get("/", async(req, res) => {
 	res.send("Hello World!"); // THIS WORKS! when you do localhost:3000/api/newsletter/ in postman
 });
-
 
 export default router;

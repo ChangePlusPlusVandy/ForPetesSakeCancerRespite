@@ -4,7 +4,7 @@ const { scryptSync, randomBytes } = require("crypto")
 interface UserAttrs {
 	name: String,
     email: String,
-	groupchats?: []
+	groupchats?: [],
 }
 
 // describe user model interface
