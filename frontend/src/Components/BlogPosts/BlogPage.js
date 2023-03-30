@@ -3,6 +3,24 @@ import { StyleSheet,Text,View, TouchableOpacity, FlatList, Image} from "react-na
 import Config from "../../Config";
 import { useAuth } from "../../AuthContext";
 import BottomBar from "../BottomBar";
+import ImageCarousel from "./imageCarousel";
+
+
+    // placeholder images
+const images = [
+    { id: '1', uri: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80' },
+    { id: '2', uri: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' },
+    { id: '3', uri: 'https://cdn.shopify.com/s/files/1/0070/7032/files/best-free-stock-photo-websites.jpg?v=1619036042&width=1024' },
+    // Add more images here
+  ]
+
+// const PostUtility = () => {
+
+//     return (
+
+//     )
+// }
+
 
 const BlogPage = ({route, navigation}) => {
     const {blogId} = route.params;
@@ -61,7 +79,7 @@ const BlogPage = ({route, navigation}) => {
             
             <View style={styles.newsItem}>
                 <View style={styles.newsHeader}>
-                    <Image style={{flex:1, height:'100%', width:-1, borderRadius:'50%'}} source={require('../../../public/defaultProfile.png')}/>
+                    <Image style={{flex:1.5, height:'100%', width:-1, borderRadius:'50%'}} source={require('../../../public/defaultProfile.png')}/>
                     <Text style={{flex:4, alignSelf:'center',marginLeft:'19px'}}>{newsLetter.author}</Text>
                     <Text style={{flex:4, alignSelf:'center'}}>Posted: {timePosted}</Text>
                 </View>
@@ -69,13 +87,18 @@ const BlogPage = ({route, navigation}) => {
                     <Text style={{fontWeight:'bold', fontSize:'26px'}}>{newsLetter.title}</Text>
                 </View>
 
-                <TouchableOpacity 
-                    style={{alignSelf:'stretch', flex:1, alignItems:'center',padding:'5px'}}
-                    onPress={() => likePost()}>
-                    
-                    <Image style={{flex:1, height:'100%', width:-1, aspectRatio:1}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
+                {/* actually contnt */}
+                <View style={styles.newsContent}>
+                    <ImageCarousel></ImageCarousel>
+                </View>
+            </View>
+
+            <View style={styles.utilityContainer}>
+                <Text style={{margin:'15px'}}>{likeNumber}</Text>
+                <TouchableOpacity onPress={() => likePost()} >
+                    <Image style={{flex:1, height:'45px', width:'45px', aspectRatio:1, marginTop:'5px'}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
                 </TouchableOpacity>
-                <Text>{likeNumber}</Text>
+                <TouchableOpacity></TouchableOpacity>
             </View>
 
             <BottomBar></BottomBar>
@@ -85,6 +108,17 @@ const BlogPage = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create ({
+    utilityContainer: {
+        flex:1,
+        width:'100%',
+        height:'20%',
+        justifyContent:'flex-start',
+        alignItems:'flex-start',
+        flexDirection:'row',
+        // marginLeft:'10px',
+        // marginTop:'10px',
+        backgroundColor: "#fff",
+    },
     container: {
 		flex: 1,
 		backgroundColor: "#fff",
@@ -95,10 +129,13 @@ const styles = StyleSheet.create ({
         backgroundColor:'#E5E5E550',
         borderWidth:'1px',
         borderColor:"#C4C4C470",
-        height:'183px',
+        height:'660px',
         paddingLeft:'19px',
         paddingTop:'10px',
         justifyContent:'flex-start'
+    },
+    newsContent:{
+        flex:7
     },
     newsHeader:{
         flex:1,
