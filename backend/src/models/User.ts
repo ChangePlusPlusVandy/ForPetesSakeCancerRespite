@@ -24,7 +24,13 @@ const userSchema = new mongoose.Schema({
 	  email: String,
 	  groupchats: {
 		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChats' }]
-	}
+	  },
+	  follower: {
+		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+	  },
+	  following: {
+		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+	  }
 });
 
 userSchema.statics.build = (attrs: UserAttrs) => {
