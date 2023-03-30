@@ -28,7 +28,7 @@ const Messaging = mongoose.model("Messaging", MessagingSchema)
 
 async function verifyMessage(msg){
 	if(msg.message && msg.user && msg.groupchat && msg.timestamp){
-		if(msg.message.length() <= 0){
+		if(msg.message.length <= 0){
 			return false;
 		}
 		const user = await User.findById({_id: msg.user})

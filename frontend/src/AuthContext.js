@@ -52,13 +52,15 @@ export function AuthProvider({ children }) {
 		return { Authorization: `Bearer ${token}`, };
 	}
 
-	async function register(name, email, password) {
+	async function register(name, email, username, phone, password) {
 		const userData = await firebase
 			.auth()
 			.createUserWithEmailAndPassword(email, password)
 			.then((cred) => {
 				return cred.user.updateProfile({
 					displayName: name,
+					phone: phone,
+					username: username,
 				});
 			});
 

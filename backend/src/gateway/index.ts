@@ -3,6 +3,7 @@ import { Server, Socket } from "socket.io";
 import { Server as HTTPServer } from "http";
 import { getUserFromToken } from "../firebase";
 import { addOnlineUser, removeOnlineUser } from "./OnlineUsersManager";
+import { mongo } from "mongoose";
 
 class Gateway {
 	socketIO: Server;
@@ -47,7 +48,8 @@ class Gateway {
 	}
 
 	groupchatMessage(socket, msg, callback) {
-		const message = new Messaging({ msg });	
+		msg.groupchat = new mongo.ObjectId(msg.groupChat);
+		const message = new Messaging(msg);	
 		if(!verifyMessage(message)){
 			callback({
 				error: "INVALID MESSAGE"

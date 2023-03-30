@@ -49,6 +49,8 @@ class _MessagesPanel extends Component {
 		}
 	}
 
+	//this.auth.currentUser._id
+
 	render() {
 
 		// this.socket.send("hello world!");
