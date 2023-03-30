@@ -6,44 +6,46 @@ import VerifyToken from "../../../middlewares/VerifyToken";
 
 async function getGroupChatByID(req: Request, res: Response) {
 	try {
-		let user = (req as any).user;
 
+		// Gets the User Information from Verfiy Token
+		let user = (req as any).user;
+		// Gets the GroupChat ID from the request
 		const gcID = req.query.id;
-		// check if groupchat id exists
+
+		// Checks if groupchat id exists
 		if (!gcID) {
 			res.status(400).json({ message: "GROUPCHAT ID NOT PROVIDED" });
 			return;
 		}
-
+		// Checks if the GroupChat Exists
 		const groupChat = await GroupChats.findById({ _id: gcID });
 		if (!groupChat) {
 			res.status(404).json({ message: "GROUPCHAT DOES NOT EXIST" });
 			return;
 		}
-
+		// Create the object to return
 		let expandedGroupChat = {
 			_id: groupChat._id,
 			name: groupChat.name,
 			messages: [],
 			users: [],
 		};
-		// add messages to the thing
-    	// formatting is not working
 		
+		// Loop to get get Messages in the GroupChat
 		for (let i = 0; i < groupChat.messages.length; ++i) {
 			const message: any = await Messaging.findById({
 				_id: groupChat.messages[i]._id,
 			});
 			expandedGroupChat.messages.push({
 				_id: message._id,
-				user: message.user._id,
+				user: message.user[0]._id,
 				message: message.message,
 				timestamp: message.timestamp,
 			});
 		}
 		// make sure that user is in groupchat
 		let userInGroupChat = false;
-
+		// Loop to get Users in the GroupChat and check if user in groupchat
 		for (let i = 0; i < groupChat.users.length; ++i) {
 			const userFromArray = await User.findById({
 				_id: groupChat.users[i]._id,
@@ -56,7 +58,7 @@ async function getGroupChatByID(req: Request, res: Response) {
 				name: userFromArray.name,
 			});
 		}
-
+		// Check if user is in GroupChat
 		if (!userInGroupChat) {
 			res.status(403).json({ message: "USER NOT IN GROUPCHAT" });
 			return;
