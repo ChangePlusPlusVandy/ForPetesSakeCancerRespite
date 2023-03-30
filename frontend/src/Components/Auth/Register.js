@@ -17,6 +17,8 @@ const Register = () => {
 
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
+	const [username, setUsername] = useState("");
+	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordConfirm, setPasswordConfirm] = useState("");
 	const [error, setError] = useState("");
@@ -33,7 +35,7 @@ const Register = () => {
 		}
 		try {
 			setIsLoading(true);
-			await register(name, email, password);
+			await register(name, email, username, phone, password);
 			navigation.navigate("Home");
 		} catch (error) {
 			console.log(error.message);
@@ -73,6 +75,22 @@ const Register = () => {
 						style={{ marginLeft: 10, marginTop: 12 }}
 						value={email}
 						onChangeText={(e) => setEmail(e)}
+					/>
+				</View>
+				<Text style={styles.textInputLabel}>Username</Text>
+				<View style={styles.textInput}>
+					<TextInput
+						style={{ marginLeft: 10, marginTop: 12 }}
+						value={username}
+						onChangeText={(e) => setUsername(e)}
+					/>
+				</View>
+				<Text style={styles.textInputLabel}>Phone</Text>
+				<View style={styles.textInput}>
+					<TextInput
+						style={{ marginLeft: 10, marginTop: 12 }}
+						value={phone}
+						onChangeText={(e) => setPhone(e)}
 					/>
 				</View>
 				<Text style={styles.textInputLabel}>Password</Text>
