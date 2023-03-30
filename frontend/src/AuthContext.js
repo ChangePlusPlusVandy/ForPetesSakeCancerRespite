@@ -53,6 +53,13 @@ export function AuthProvider({ children }) {
 	}
 
 	async function register(name, email, username, phone, password) {
+		// check firebase if username exists
+		const userRef = firebase.firestore().collection("users");
+		const snapshot = await userRef.where("username", "==", username).get();
+		if (!snapshot.empty) {
+			throw new Error("Username already exists");
+		}
+
 		const userData = await firebase
 			.auth()
 			.createUserWithEmailAndPassword(email, password)

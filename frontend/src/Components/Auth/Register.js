@@ -45,26 +45,27 @@ const Register = () => {
 	};
 
 	return (
-		<View style={styles.headerContainer}>
-			<View>
+		<View style={styles.mainContainer}>
+			{/* <View style={styles.headerContainer}>
 				<View>
-					<Svg
-						width="100%"
-						viewBox="0 0 411 240"
-						>
-						<Path
-							fill="#088da9"
-							d="M102.287 -243.938C104.22 -247.286 108.501 -248.433 111.849 -246.5L607.62 39.7335C610.968 41.6665 612.116 45.9476 610.183 49.2957L434.51 353.569C432.416 357.196 426.862 354.957 427.869 350.892C453.249 248.457 364.663 153.871 260.786 172.495L164.754 189.712C70.1604 201.22 -23.5617 162.414 -82.3332 87.4061L-85.8758 82.8848C-86.0595 82.6503 -86.0823 82.3278 -85.9333 82.0698L102.287 -243.938Z"
-						/>
-					</Svg>
-				</View>
-			</View>
+					<View>
+						<Svg
+							width="100%"
+							viewBox="0 0 411 240"
+							>
+							<Path
+								fill="#088da9"
+								d="M102.287 -243.938C104.22 -247.286 108.501 -248.433 111.849 -246.5L607.62 39.7335C610.968 41.6665 612.116 45.9476 610.183 49.2957L434.51 353.569C432.416 357.196 426.862 354.957 427.869 350.892C453.249 248.457 364.663 153.871 260.786 172.495L164.754 189.712C70.1604 201.22 -23.5617 162.414 -82.3332 87.4061L-85.8758 82.8848C-86.0595 82.6503 -86.0823 82.3278 -85.9333 82.0698L102.287 -243.938Z"
+							/>
+						</Svg>
+					</View>
+				</View> */ }
 			<View style={styles.centerContainer}>
 				<Text style={styles.createAccountText}>Create Account</Text>
 				<Text style={styles.textInputLabel}>Name</Text>
 				<View style={styles.textInput}>
 					<TextInput
-						style={{ marginLeft: 10, marginTop: 12 }}
+						style={{ marginLeft: 10, marginTop: 8, width: "100%" }}
 						value={name}
 						onChangeText={(e) => setName(e)}
 					/>
@@ -72,7 +73,7 @@ const Register = () => {
 				<Text style={styles.textInputLabel}>Email</Text>
 				<View style={styles.textInput}>
 					<TextInput
-						style={{ marginLeft: 10, marginTop: 12 }}
+						style={{ marginLeft: 10, marginTop: 8, width: "100%" }}
 						value={email}
 						onChangeText={(e) => setEmail(e)}
 					/>
@@ -80,7 +81,7 @@ const Register = () => {
 				<Text style={styles.textInputLabel}>Username</Text>
 				<View style={styles.textInput}>
 					<TextInput
-						style={{ marginLeft: 10, marginTop: 12 }}
+						style={{ marginLeft: 10, marginTop: 8, width: "100%" }}
 						value={username}
 						onChangeText={(e) => setUsername(e)}
 					/>
@@ -88,7 +89,7 @@ const Register = () => {
 				<Text style={styles.textInputLabel}>Phone</Text>
 				<View style={styles.textInput}>
 					<TextInput
-						style={{ marginLeft: 10, marginTop: 12 }}
+						style={{ marginLeft: 10, marginTop: 8, width: "100%" }}
 						value={phone}
 						onChangeText={(e) => setPhone(e)}
 					/>
@@ -96,7 +97,7 @@ const Register = () => {
 				<Text style={styles.textInputLabel}>Password</Text>
 				<View style={styles.textInput}>
 					<TextInput
-						style={{ marginLeft: 10, marginTop: 12 }}
+						style={{ marginLeft: 10, marginTop: 8, width: "100%" }}
 						secureTextEntry={true}
 						value={password}
 						onChangeText={(e) => setPassword(e)}
@@ -105,7 +106,7 @@ const Register = () => {
 				<Text style={styles.textInputLabel}>Confirm Password</Text>
 				<View style={styles.textInput}>
 					<TextInput
-						style={{ marginLeft: 10, marginTop: 12 }}
+						style={{ marginLeft: 10, marginTop: 8, width: "100%" }}
 						secureTextEntry={true}
 						value={passwordConfirm}
 						onChangeText={(e) => setPasswordConfirm(e)}
@@ -140,6 +141,10 @@ const Register = () => {
 };
 
 const styles = StyleSheet.create({
+	mainContainer: {
+		flex: 1,
+		backgroundColor: "#ffffff",
+	},
 	textInputLabel: {
 		color: "#5f6566",
 		marginBottom: 3
@@ -153,20 +158,20 @@ const styles = StyleSheet.create({
 		color: "#ffffff",
 		borderColor: "#5f6566",
 		borderWidth: 1,
-		borderRadius: 10,
-		marginBottom: 15,
+		borderRadius: 15,
+		marginBottom: 20,
 		width: "85%",
-		height: "8%",
+		height: 45,
 		alignItems: "flex-start",
 		justifyContent: "flex-start",
 	},
 	signupbutton: {
 		backgroundColor: "#e4f3f6",
 		borderRadius: 15,
-		marginTop: 10,
+		marginTop: 5,
 		marginBottom: 20,
 		width: "85%",
-		height: "12%",
+		height: 50,
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -191,10 +196,12 @@ const styles = StyleSheet.create({
 		bottom: 0,
 	},
 	centerContainer: {
+		flex: 1,
 		backgroundColor: "#ffffff",
 		alignItems: "flex-start",
 		justifyContent: "flex-start",
 		marginLeft: 30,
+		marginTop: 70,
 	},
 	createAccountText: {
 		fontSize: 36,
