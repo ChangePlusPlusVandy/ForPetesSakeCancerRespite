@@ -1,59 +1,89 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { IconButton } from "react-native-paper";
-import { useNavigation, Link } from "@react-navigation/native";
+import { StyleSheet, View, TouchableOpacity,Image} from "react-native";
+import { useNavigation} from "@react-navigation/native";
 
-const BottomBar = () => {
+//If you want to use this component with post function, pass in postEnabled = true. Example provided below.
+// <BottomBar postEnabled={true} ></BottomBar>
+
+const BottomBar = (props) => {
+
+  const postEnabled = props.postEnabled;
   const navigation = useNavigation();
 
   return (
-    <View style={styles.rectangle}>
-      <View style={styles.homeButtonContainer}>
-        <Link to={{ screen: "Home" }} style={{ textDecoration: "none" }}>
-          <IconButton
-            icon="home"
-            iconColor={"white"}
-            size={50}
-            onPress={() => console.log("Pressed")}
-          />
-        </Link>
-        <Link to={{ screen: "Messaging" }} style={{ textDecoration: "none" }}>
-          <IconButton
-            icon="chat"
-            iconColor={"white"}
-            size={50}
-            onPress={() => console.log("Pressed")}
-          />
-        </Link>
-        <Link to={{ screen: "Profile" }} style={{ textDecoration: "none" }}>
-          <IconButton
-            icon="account-circle"
-            iconColor={"white"}
-            size={50}
-            onPress={() => console.log("Pressed")}
-          />
-        </Link>
+    <View style={styles.footer}>
+
+        {postEnabled
+          ? 
+            <TouchableOpacity 
+              style={styles.post}
+              onPress={() => navigation.navigate("CreatePost")}
+              >
+              <Image style={{height:'70px',width:undefined, aspectRatio:1,marginLeft:'5px'}} source={require('../../public/commonIcons/PostButton.png')}></Image>
+            </TouchableOpacity>
+          :
+            <View></View>
+        }
+        
+
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Home")}
+        >
+            <Image style={{height:'35px',width:undefined, aspectRatio:1,}} source={require('../../public/newsletter/Home.png')}></Image>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Profile")}
+            >
+                <Image style={{height:'35px',width:undefined, aspectRatio:1.8,}} source={require('../../public/newsletter/ProfileButton.png')}></Image>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  rectangle: {
-    width: "100%",
+  post:{
+    position:'absolute',
+    bottom:0,
+    zIndex:1,
+    alignItems: 'center',
+    justifyContent:'start',
+    marginBottom: 0,
+    width:'25%',
+    height:'100%',
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent:'start',
+    padding: 10,
+    marginBottom: 0,
+    width:'50%',
+    height:'100%',
+  },
+  footer:{
+    position:'absolute',
     bottom: 0,
-    position: "absolute",
-    height: "18%",
-    backgroundColor: "#088DA9",
-    flexDirection: "row",
-    justifyContent: "center",
+    height:'12%',
+    width:'100%',
+    flexDirection:'column',
+    alignItems:'center',
+    justifyContent:'end',
+    backgroundColor:'transparent'
   },
-  homeButtonContainer: {
-    width: "85%",
-    margin: 10,
-    flexDirection: "row", 
-    justifyContent: "space-between"
-  },
+  bottomBar: {
+    flexDirection: 'row',
+    justifyContent:'space-evenly',
+    alignItems:'center',
+    height:'66%',
+    width:'100%',
+    backgroundColor:'#088DA9',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  }
 });
 
 export default BottomBar;

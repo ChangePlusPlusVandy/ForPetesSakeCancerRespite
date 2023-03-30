@@ -4,6 +4,8 @@ const { scryptSync, randomBytes } = require("crypto")
 interface UserAttrs {
 	name: String,
     email: String,
+	username: String,
+	phone: Number,
 	groupchats?: []
 }
 
@@ -16,12 +18,16 @@ interface UserModel extends mongoose.Model<UserDoc> {
 interface UserDoc extends mongoose.Document {
 	name: String,
     email: String,
+	username: String,
+	phone: Number,
 	groupchats: []
 }
 
 const userSchema = new mongoose.Schema({
 	  name: String,
 	  email: String,
+	  username: String,
+	  phone: Number,
 	  groupchats: {
 		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChats' }]
 	}
