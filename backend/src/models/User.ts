@@ -5,7 +5,7 @@ interface UserAttrs {
 	name: String,
     email: String,
 	username: String,
-	phone, Number,
+	phone: Number,
 	groupchats?: []
 }
 
@@ -19,7 +19,7 @@ interface UserDoc extends mongoose.Document {
 	name: String,
     email: String,
 	username: String,
-	phone, Number,
+	phone: Number,
 	groupchats: []
 }
 
