@@ -12,7 +12,7 @@ const MONGODB_URI: string = process.env.MONGODB_URI || "mongodb://127.0.0.1:2701
 mongoose.set('strictQuery', false);
 
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
+	windowMs: 5 * 60 * 1000, // 5 minutes
 	max: 100, // limit ip to 100 requests every 15 minutes
 	standardHeaders: true,
 	legacyHeaders: false,

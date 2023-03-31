@@ -19,6 +19,7 @@ import MessagesPanel from "./Components/Messaging/MessagesPanel";
 import EditProfile from "./Components/EditProfile"
 //import PrivateRoute from "./Components/PrivateRoute";
 import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
+import BlogPage from "./Components/BlogPosts/BlogPage";
 import { GatewayProvider } from "./Gateway";
 
 const CustomRouter = () => {
@@ -40,6 +41,7 @@ const CustomRouter = () => {
 					<Stack.Screen name="Explore" component={ExploreScreen} />
 					<Stack.Screen name="EditProfile" component={EditProfile} />
 					<Stack.Screen name="Chat" component={MessagesPanel} />
+					<Stack.Screen name="BlogPage" component={BlogPage}/>
 				</Stack.Navigator>
 			</GatewayProvider>
 		</AuthProvider>

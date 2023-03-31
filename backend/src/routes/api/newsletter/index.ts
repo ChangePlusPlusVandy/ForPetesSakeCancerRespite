@@ -23,33 +23,70 @@ router.get("/get_newsletters", VerifyToken, async(req, res)=>{
     }
 });
 
-router.post("/create_newsletter", async (req, res) => {
-  // Parse through the text in here
-  var titleText = req.body.title;
-  var bodyText = req.body.body;
-  // var author = req.body.author;
-  if (!titleText || !bodyText) {
-    res
-      .status(400)
-      .send(JSON.stringify("Bad user input. Inputs required for all fields."));
-    return;
-  }
-  console.log("Got a POST request for the homepage for this: ");
-  // Create a newsletter item in the database here
-  try {
-    const newsletterItem = await Newsletter.create({
-      title: titleText, // change this based on what the req looks like
-      body: bodyText,
-      // author: author
-    });
-    res.status(200).send({
-      message: `Successfully added to the database: ${newsletterItem}`
-    });
-  } catch (e) {
-    res.status(400).send({
-      message: `Failed to add this post to the database. ${e}`
-    });
-  }
+router.get("/get_newsletter_byID", VerifyToken, async(req, res) => {
+    try {
+        let blogId = req.query.blogId;
+        let posts = await Newsletter.findById(blogId);
+
+        // console.log("api reached")
+        // console.log(blogId);
+
+        res.status(200).send(posts);
+    } catch (e) {
+        console.log(e.message);
+        res.status(500).send(e.message)
+    }
+});
+
+router.put("/like_post",VerifyToken, async(req, res) => {
+    try {
+        let blogId = req.query.blogId;
+        let user = (req as any).user;
+        let userId = user._id;
+
+        Newsletter.findById(blogId, function (err, doc){
+            if (doc.postsLiked.includes(userId)) {
+                doc.postsLiked.splice(doc.postsLiked.indexOf(userId),1);
+            } else {
+                doc.postsLiked.push(userId)
+            }
+            doc.save();
+          });
+        
+        let posts = await Newsletter.findById(blogId);
+        res.status(200).send(posts.postsLiked);
+    } catch (e) {
+        console.log(e.message);
+        res.status(500).send(e.message)
+    }
+});
+
+
+router.post("/create_newsletter", VerifyToken, async(req, res)=>{
+    // console.log('user token:  ' + req.body.userToken)
+    let user = (req as any).user;
+    console.log(user);
+    // Parse through the text in here
+    var titleText = req.body.title;
+    var bodyText = req.body.body;
+    // var author = req.body.author;
+    if(!titleText || !bodyText){
+        res.status(400).send(JSON.stringify("Bad user input. Inputs required for all fields."));
+        return;
+    }
+    console.log('Got a POST request for the homepage for this: ');
+    // Create a newsletter item in the database here
+    try {
+        const newsletterItem = await Newsletter.create({
+            title: titleText, // change this based on what the req looks like
+            body: bodyText,
+            author: user.name,
+            timePosted: Date()   
+        })
+        console.log("Successfully added to the database: " + newsletterItem)
+    } catch(e) {
+        console.log(e.message)
+    }
 });
 
 router.delete('/delete_newsletter', async(req, res)=>{

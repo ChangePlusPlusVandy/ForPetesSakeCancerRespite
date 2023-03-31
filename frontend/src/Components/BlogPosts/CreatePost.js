@@ -16,7 +16,6 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { IconButton, Colors } from "react-native-paper";
 
 const CreatePost = () => {
-  const { currentUserIn } = useAuth();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [success, setSuccess] = useState(false);
