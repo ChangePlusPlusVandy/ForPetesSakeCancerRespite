@@ -16,6 +16,7 @@ router.post(
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			let user = await getFromUserTokenAndAddIfNotFound(getTokenFromReq(req));
+			// return the user data
 			return res.json(user);
 		} catch (e) {
 			console.error(e);

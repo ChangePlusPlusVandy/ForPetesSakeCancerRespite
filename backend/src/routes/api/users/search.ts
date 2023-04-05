@@ -25,6 +25,13 @@ router.get(
                 username: { $regex: searchString, $options: "i" },
             });
 
+            // remove sensitive information from each user json
+            users.forEach((user) => {
+                user.email = undefined;
+                user.phone = undefined;
+                user.groupchats = undefined;
+            });
+
             // return the list of users
             res.json(users);
         } catch (e) {
