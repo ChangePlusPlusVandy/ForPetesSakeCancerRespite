@@ -2,16 +2,18 @@ import { Request, Response } from "express";
 import GroupChats from "../../../models/Groupchat";
 import { User } from "../../../models/User";
 
-// MAKE RANDOM USER OBJECTS
 
 async function createGroupChat(req: Request, res: Response) {
 	try {
+		// Gets the User Information from Verfiy Token
 		let user = (req as any).user;
 
+		// Gets the User ids and Groupchat Name from Request
 		const body = {
 			users: req.body.users,
 			name: req.body.name,
 		};
+		// Checks the entered parameters
 		if (body.users.length <= 0) {
 			res.status(400).json({ error: "EMPTY ARRAY" });
 			return;
@@ -20,12 +22,15 @@ async function createGroupChat(req: Request, res: Response) {
 			res.status(400).json({ error: "INVALID NAME OR EMPTY ARRAY" });
 			return;
 		}
-		// add to User, groupchat
-		// go through to make sure valid ids
+
+		// add to Users, groupchat
+		// Array of users
 		const users = [];
 
 		for (let i = 0; i < body.users.length; ++i) {
 			try {
+				// Checks if the user exists if not, throw error
+				//  If user exists, then add to the user array
 				const user = await User.findById(body.users[i]);
 				if(!user)
 				{

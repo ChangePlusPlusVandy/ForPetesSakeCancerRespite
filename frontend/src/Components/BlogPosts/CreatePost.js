@@ -13,35 +13,46 @@ import { useNavigation} from "@react-navigation/native";
 
 
 const CreatePost = () => {
-  const { currentUserIn } = useAuth();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   const navigation = useNavigation();
+  const authObj = useAuth()
 
   const postData = async () => {
     try {
-      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', {
+
+      let authHeader = await authObj.getAuthHeader();
+      // let token = await authObj.getTolken();
+      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', 
+      {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...authHeader
         },
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
-        body: JSON.stringify({title: title, body: body}),
-      });
+        body: JSON.stringify({title: title, body: body, 
+          // userToken : await authObj.getToken()
+        }),
+        // userToken : await authObj.getTolken()
+      }
+      );
       // How to check log for request      
       // console.log(response.json())
       // navigation.navigate("Explore")
-      
+      console.log(await response)
     } catch (err) {
       console.log(err);
     }
   }
 
   const handleSubmit = async (e) => {
+    // console.log(Date())
+
 		e.preventDefault();
     if(!title || !body){
       return;
