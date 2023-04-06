@@ -60,29 +60,31 @@ export function AuthProvider({ children }) {
 			throw new Error("Username already exists");
 		}
 
-		const userData = await firebase
-			.auth()
-			.createUserWithEmailAndPassword(email, password)
-			.then((cred) => {
-				return cred.user.updateProfile({
-					displayName: name,
-					phone: phone,
-					username: username,
-				});
-			});
+		const userData = await firebase.auth()
+			.createUserWithEmailAndPassword(email, password);
+			// .then((cred) => {
+			// 	return cred.user.updateProfile({
+			// 		displayName: name,
+			// 		phone: phone,
+			// 		username: username,
+			// 	});
+			// });
 
 		//add user data to mongoDB
 		var url = config["URL"] + "/api/users/signup";
 		var headers = await getAuthHeader();
 		headers["Content-Type"] = "application/json";
+		var body = JSON.stringify({name, email, username, phone});
 
 		const requestOptions = {
 			method: "POST",
 			headers,
+			body
 		};
 
 		await fetch(url, requestOptions);
 
+		await updateCurrentUser();
 		return userData;
 	}
 

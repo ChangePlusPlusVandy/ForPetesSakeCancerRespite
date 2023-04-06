@@ -44,36 +44,36 @@ const getFromUserTokenAndAddIfNotFound = async (token: string) => {
 
 	let mongoDBUser: any = await User.findOne({ email: decodedValue.email });
 
-	const name = decodedValue.name;
+	// const name = decodedValue.name;
 	const email = decodedValue.email;
-	const username = decodedValue.username;
-	const phone = decodedValue.phone;
+	// const username = decodedValue.username;
+	// const phone = decodedValue.phone;
 
 	if (!mongoDBUser) {
-		const user = User.build({
-			name,
+		const user = new User({
+			// name,
 			email,
-			username,
-			phone,
+			// username,
+			// phone,
 		});
 		await user.save();
 		return getUserFromToken(token);
 	}
 	else {
 		// update the user data if it is different
-		if (name !== mongoDBUser.name) {
-			mongoDBUser.name = name;
-		}
-		if (email !== mongoDBUser.email) {
-			mongoDBUser.email = email;
-		}
-		if (username !== mongoDBUser.username) {
-			mongoDBUser.username = username;
-		}
-		if (phone !== mongoDBUser.phone) {
-			mongoDBUser.phone = phone;
-		}
-		await mongoDBUser.save();
+		// if (name !== mongoDBUser.name) {
+		// 	mongoDBUser.name = name;
+		// }
+		// if (email !== mongoDBUser.email) {
+		// 	mongoDBUser.email = email;
+		// }
+		// if (username !== mongoDBUser.username) {
+		// 	mongoDBUser.username = username;
+		// }
+		// if (phone !== mongoDBUser.phone) {
+		// 	mongoDBUser.phone = phone;
+		// }
+		// await mongoDBUser.save();
 
 		return getUserFromToken(token);
 	}

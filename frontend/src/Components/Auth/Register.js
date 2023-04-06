@@ -11,6 +11,7 @@ import {
 import { useAuth } from "../../AuthContext";
 import Svg, { Path } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
+import { parsePhoneNumber } from "libphonenumber-js";
 
 const Register = () => {
 	const { register } = useAuth();
@@ -33,9 +34,34 @@ const Register = () => {
 			setError("Passwords do not match");
 			return;
 		}
+
+		if (! /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+		{
+			setError("Invalid Email");
+			return;
+		}
+
+		if (name.length < 2 || email.length < 3 || password.length < 5) {
+			setError("One or more fields are incomplete.");
+			return;
+		}
+
+		let phoneNum;
+		try {
+			phoneNum = parsePhoneNumber(phone, "US");
+			if (!phoneNum.isValid()) {
+				throw new Error();
+			}
+		} catch (e) {
+			setError("Invalid Phone Number");
+			return;
+		}
+
+		phoneNum = phoneNum.formatNational();
+
 		try {
 			setIsLoading(true);
-			await register(name, email, username, phone, password);
+			await register(name, email, username, phoneNum, password);
 			navigation.navigate("Home");
 		} catch (error) {
 			console.log(error.message);
@@ -59,7 +85,7 @@ const Register = () => {
 							/>
 						</Svg>
 					</View>
-				</View> */ }
+				</View> */}
 			<View style={styles.centerContainer}>
 				<Text style={styles.createAccountText}>Create Account</Text>
 				<Text style={styles.textInputLabel}>Name</Text>
@@ -125,11 +151,7 @@ const Register = () => {
 				</View>
 			</View>
 			<View style={styles.footer}>
-				<Svg
-					width="100%"
-					height="60%"
-					viewBox="0 0 411 149"
-					>
+				<Svg width="100%" height="60%" viewBox="0 0 411 149">
 					<Path
 						fill="#088da9"
 						d="M520.047 349.5C519.769 353.356 516.418 356.256 512.562 355.978L-35.0181 316.52C-38.8741 316.243 -41.7748 312.891 -41.4969 309.035L-19.9302 9.74317C-19.6484 5.83188 -14.0912 5.36214 -13.1568 9.17063V9.17063C9.54297 101.694 116.659 144.268 196.68 92.5706L281.766 37.6008V37.6008C359.222 -6.64413 453.094 -11.45 534.663 24.6533L542.688 28.2052C542.985 28.3368 543.168 28.641 543.144 28.9653L520.047 349.5Z"
@@ -147,7 +169,7 @@ const styles = StyleSheet.create({
 	},
 	textInputLabel: {
 		color: "#5f6566",
-		marginBottom: 3
+		marginBottom: 3,
 	},
 	forgot_button: {
 		height: 30,
