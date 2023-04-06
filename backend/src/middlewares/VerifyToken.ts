@@ -14,7 +14,8 @@ const VerifyToken = async (req, res, next) => {
 		req.user = await getUserFromToken(token);
 		return next();
 	} catch (e) {
-		console.error(e);
+		// console.error(e);
+		console.log("User not found in MongoDB (If you just registered a new account this is normal)");
 		return res
 			.status(401)
 			.json({ message: "Unauthorized/invalid credentials" });
