@@ -21,15 +21,13 @@ router.get(
             }
 
             // get the list of users that match the search string
-            const users = await User.find({
+            let users = await User.find({
                 username: { $regex: searchString, $options: "i" },
             });
 
             // remove sensitive information from each user json
-            users.forEach((user) => {
-                user.email = undefined;
-                user.phone = undefined;
-                user.groupchats = undefined;
+            users = users.map((user) => {
+				return (user as any).removeSensitiveData();
             });
 
             // return the list of users

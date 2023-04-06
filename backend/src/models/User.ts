@@ -48,10 +48,19 @@ userSchema.pre("save", function (next) {
 	}
 	if(!this.bio)
 	{
-		this.bio = ""; 
+		this.bio = "";
 	}
 	next();
 });
+
+userSchema.methods.removeSensitiveData = function ()
+{
+	let jsonObj = JSON.parse(JSON.stringify(this));
+	jsonObj.email = undefined;
+	jsonObj.phone = undefined;
+	jsonObj.groupchats = undefined;
+	return jsonObj;
+}
 
 const User = mongoose.model("User", userSchema);
 export { User };
