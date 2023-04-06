@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const { scryptSync, randomBytes } = require("crypto")
+const { scryptSync, randomBytes } = require("crypto");
 // required properties to create new user
 // interface UserAttrs {
 // 	name: String,
@@ -24,13 +24,14 @@ const { scryptSync, randomBytes } = require("crypto")
 // }
 
 const userSchema = new mongoose.Schema({
-	  name: String,
-	  email: String,
-	  username: String,
-	  phone: String,
-	  groupchats: {
-		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChats' }]
-	}
+	name: String,
+	email: String,
+	username: String,
+	phone: String,
+	bio: String,
+	groupchats: {
+		type: [{ type: mongoose.Schema.Types.ObjectId, ref: "GroupChats" }],
+	},
 });
 
 // userSchema.statics.build = (attrs) => {
@@ -41,13 +42,16 @@ const userSchema = new mongoose.Schema({
 //     return new User(attrs)
 // };
 
-userSchema.pre('save', function(next) {
-	if(!this.groupchats)
-	{
+userSchema.pre("save", function (next) {
+	if (!this.groupchats) {
 		this.groupchats = [];
+	}
+	if(!this.bio)
+	{
+		this.bio = ""; 
 	}
 	next();
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 export { User };
