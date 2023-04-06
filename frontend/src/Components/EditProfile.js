@@ -10,7 +10,6 @@ import {
 import PropTypes from "prop-types";
 import { useAuth } from "../AuthContext";
 import { useNavigation, Link } from "@react-navigation/native";
-import BlogDisplay from "./BlogPosts/BlogDisplay";
 import { IconButton } from "react-native-paper";
 import CONFIG from "../Config";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
@@ -18,8 +17,9 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 const EditProfileScreen = () => {
   const authObj = useAuth();
 
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(`${authObj.currentUser.number}`);
+  const [name, setName] = useState(`${authObj.currentUser.name}`);
+  const [bio, setBio] = useState(`${authObj.currentUser.bio}`);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const navigation = useNavigation();
@@ -34,7 +34,7 @@ const EditProfileScreen = () => {
     const requestOptions = {
       method: "POST",
       headers,
-      body: JSON.stringify({ name: name, number: phoneNumber }),
+      body: JSON.stringify({ name: name, number: phoneNumber, bio: bio }),
     };
 
     await fetch(url, requestOptions)
@@ -52,7 +52,7 @@ const EditProfileScreen = () => {
     <View style={styles.container}>
       <View style={styles.topPart}>
         <Text style={styles.welcomeText}>
-          Welcome, {authObj.currentUser.name}!
+          Welcome, @{authObj.currentUser.username}!
         </Text>
       </View>
       <Image
@@ -70,7 +70,7 @@ const EditProfileScreen = () => {
         <Text style={styles.textStyle}> Name </Text>
         <TextInput
           style={styles.textInputs}
-          placeholder={authObj.currentUser.name}
+          placeholder={authObj.currentUser.name} // TODO should be good when patryck make sures that users are there
           placeholderTextColor="#474C4D"
           onChangeText={(e) => setName(e)}
         />
@@ -84,17 +84,16 @@ const EditProfileScreen = () => {
         <Text style={styles.textStyle}> Phone Number </Text>
         <TextInput
           style={styles.textInputs}
-          placeholder="Phone Number"
+          placeholder={authObj.currentUser.number} // TODO should be fixed once patryck updates this
           placeholderTextColor="#474C4D"
           onChangeText={(e) => setPhoneNumber(e)}
         />
-        <Text style={styles.textStyle}> Password </Text>
+        <Text style={styles.textStyle}> Bio </Text>
         <TextInput
           style={styles.textInputs}
-          placeholder="Password"
+          placeholder={authObj.currentUser.bio}
           placeholderTextColor="#474C4D"
-          editable={false}
-          onChangeText={(e) => setPassword(e)}
+          onChangeText={(e) => setBio(e)}
         />
         <TouchableOpacity
           style={{ alignSelf: "center", marginBottom: 10 }}

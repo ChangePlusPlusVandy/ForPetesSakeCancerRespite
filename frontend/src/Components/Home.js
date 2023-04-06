@@ -24,6 +24,7 @@ const Home = () => {
 			<Link to={{ screen: "CreatePost" }}>Create Post</Link>
 			<Link to={{ screen: "Messaging" }}>Messaging</Link>
 			<Link to={{ screen: "Explore" }}>Explore</Link>
+			<Link to={{ screen: "SearchUsers" }}>Search Users</Link>
 		</View>
 	);
 };

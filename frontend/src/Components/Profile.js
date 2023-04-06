@@ -13,6 +13,12 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topPart}>
+        <View style={styles.usernameTextContainer}>
+          <Text style = {{
+            fontSize: 15,
+            fontWeight: 600,
+          }}>@charlottebarnes{authObj.currentUser.username}</Text>
+        </View>
         <View style={styles.topOfTopPart}>
           <Image
             style={styles.profilePicture}
@@ -35,12 +41,12 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
-		{/* Display user's name here */}
-        <View style={styles.bioContainer}> 
+        {/* Display user's name here */}
+        <View style={styles.bioContainer}>
           <Text style={{ fontWeight: 700, fontSize: 20, marginBottom: 4 }}>
-            {authObj.currentUser.name} 
+            Charlotte Barnes *PLACEHOLDER*{authObj.currentUser.name}
           </Text>
-          <Text style={{fontSize: 15, marginBottom: -5}}>Bio here</Text>
+          <Text style={{ fontSize: 15, marginBottom: -5 }}>Bio here</Text>
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.followButton}>
@@ -63,13 +69,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
+    height: "100%",
   },
   topPart: {
     backgroundColor: "#fff",
-    margin: 20,
-    height: "20%",
+    marginBottom: 20,
+    marginTop: 0,
+    height: "27%",
     width: "100%",
     justifyContent: "center",
+  },
+  blogDisplayContainer: {
+    width: "100%",
+    height: "73%",
   },
   feed: {},
   followButton: {
@@ -137,13 +149,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     margin: 10,
   },
+  usernameTextContainer: {
+    marginTop: 5,
+    alignSelf: "center",
+    justifyContent: "center",
+    height: "15%",
+  },
   bioContainer: {
     alignItems: "flex-start",
     marginLeft: "7%",
     marginTop: "2%",
-  },
-  blogDisplayContainer: {
-    width: "100%",
   },
 });
 

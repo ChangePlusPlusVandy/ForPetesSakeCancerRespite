@@ -6,6 +6,7 @@ interface UserAttrs {
     email: String,
 	username: String,
 	phone: Number,
+	bio?: String,
 	groupchats?: []
 }
 
@@ -20,6 +21,7 @@ interface UserDoc extends mongoose.Document {
     email: String,
 	username: String,
 	phone: Number,
+	bio: String,
 	groupchats: []
 }
 
@@ -28,21 +30,20 @@ const userSchema = new mongoose.Schema({
 	  email: String,
 	  username: String,
 	  phone: Number,
+	  bio: String,
 	  groupchats: {
 		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GroupChats' }]
-	  },
-	  follower: {
-		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
-	  },
-	  following: {
-		type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
-	  }
+	}
 });
 
 userSchema.statics.build = (attrs: UserAttrs) => {
 	if(!attrs.groupchats)
 	{
 		attrs.groupchats = [];
+	}
+	if(!attrs.bio)
+	{
+		attrs.bio = "";
 	}
     return new User(attrs)
 };

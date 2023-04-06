@@ -21,6 +21,7 @@ import EditProfile from "./Components/EditProfile"
 import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
 import BlogPage from "./Components/BlogPosts/BlogPage";
 import { GatewayProvider } from "./Gateway";
+import SearchUsers from "./Components/SearchUsers";
 
 const CustomRouter = () => {
 	const Stack = createStackNavigator();
@@ -42,6 +43,7 @@ const CustomRouter = () => {
 					<Stack.Screen name="EditProfile" component={EditProfile} />
 					<Stack.Screen name="Chat" component={MessagesPanel} />
 					<Stack.Screen name="BlogPage" component={BlogPage}/>
+					<Stack.Screen name="SearchUsers" component={SearchUsers}/>
 				</Stack.Navigator>
 			</GatewayProvider>
 		</AuthProvider>

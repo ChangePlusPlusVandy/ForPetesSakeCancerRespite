@@ -107,6 +107,14 @@ const CreatePost = () => {
     }
   };
 
+  const handleRemovePhoto = async (uri_i) => {
+    setUriArray(
+      uri_array.filter(link =>
+        link != uri_i
+      )
+    );
+  }
+
   const navigation = useNavigation();
 
   return (
@@ -154,13 +162,21 @@ const CreatePost = () => {
                 <ScrollView style={styles.image_container_style}>
                   {uri_array.map((uri_i, i) => {
                     return (
-                      <Image
-                        style={styles.attachedImages}
-                        source={{
-                          uri: uri_i,
-                        }}
-                        key={i}
-                      />
+                      <View key={uri_i} style = {styles.individualContainer}>
+                        <IconButton
+                          icon="close-circle"
+                          color= "red"
+                          onPress={() => handleRemovePhoto(uri_i)}
+                          style = {styles.removeImageButton}
+                        >
+                        </IconButton>
+                        <Image
+                          style={styles.attachedImages}
+                          source={{
+                            uri: uri_i,
+                          }}
+                        />
+                      </View>
                     );
                   })}
                 </ScrollView>
@@ -249,8 +265,18 @@ const styles = StyleSheet.create({
     directionalLockEnabled: "true",
     contentInset: { top: 10, left: 10, bottom: 10, right: 10 },
   },
-  imageContainerNoImages:{
-    height: 0
+  imageContainerNoImages: {
+    height: 0,
+  },
+  individualContainer: {
+    width: 125, 
+    height: 125,
+  },
+  removeImageButton: {
+    position: "absolute",
+    zIndex: 1,
+    right: 0,
+    top: 0,
   },
   attachedImages: {
     width: 125,
