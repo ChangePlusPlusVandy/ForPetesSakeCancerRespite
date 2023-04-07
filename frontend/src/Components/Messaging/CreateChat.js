@@ -20,6 +20,7 @@ class _CreateChat extends Component{
 		this.state = {
 			currentUser: "",
             groupName: "",
+			searchUsers: [],
 			users: []
 		};
 		this.socket = props.socket;
@@ -41,55 +42,34 @@ class _CreateChat extends Component{
 		}
 	};
 
-	addUser() {
-		this.setState({users: [...this.state.users, this.state.currentUser]});
+	addUser(user) {
+		this.setState({users: [...this.state.users, user._id]});
 	}
 
 	searchUser = async (text) => {
-		const data = [
-			{
-				id: 1,
-				name: "Doga"
-			},
-			{
-				id: 2,
-				name: "Do"
-			},
-			{
-				id: 3,
-				name: "Aryan"
-			}
-		]
 
-		this.setState({users: data})
-		console.log(data);
-		console.log(this.state.users);
-		/*
 		var headers = await this.auth.getAuthHeader();
-		fetch(CONFIG.URL + "/api/users/search?searchString=" + text).then(
+		console.log(text);
+		fetch(CONFIG.URL + "/api/users/search?searchString=" + text, {headers}).then(
 			async (response) => {
 				let data = await response.json();
-				
+				this.setState({searchUsers: data});
+				debugger
 			}
 		);
-		*/
-	};
 
-	/*
-	addUser = async () => {
-		//api request to get the groupchats
-		var headers = await this.auth.getAuthHeader();
-		fetch(CONFIG.URL + "/api/messaging/get_users", { headers }).then(
-			async (response) => {
-				let data = await response.json();
-				this.setState({users: [...this.state.users, this.state.currentUser]});
-			}
-		);
 	};
-	*/
-
 
     render(){
+		var userSearch = [];
+		for(var i = 0; i < this.state.users.length; i++){
+			userSearch.push(
+				<Pressable onPress={() => this.addUser(this.state.searchUsers(i))}>
+					<Text>{this.state.searchUsers[i].name}</Text>
+				</Pressable>
+			)
+		}
+
         return(
             <View>
 				<View style={styles.inputContainer}>
@@ -102,13 +82,8 @@ class _CreateChat extends Component{
 					}}
 				></TextInput>
 				<Pressable style={styles.addButton} onPress={() => this.searchUser(this.state.currentUser)}>
-                <Text style={{ color: "#FFFFFF", fontSize: 20 }}>ADD</Text>
+                <Text style={{ color: "#FFFFFF", fontSize: 20 }}>Search</Text>
                 </Pressable>
-				<FlatList>
-					data={this.state.users}
-          			renderItem={({m}) => <Text>Hello</Text>}
-					keyExtractor={(item) => item.id}
-				</FlatList>
 
 				</View>
 				<View style={styles.inputContainer}>

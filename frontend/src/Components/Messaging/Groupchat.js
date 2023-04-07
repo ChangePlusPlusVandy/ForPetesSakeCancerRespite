@@ -10,7 +10,6 @@ class Groupchat extends Component {
 				<View style={styles.chatContent}>
 					<Text style={styles.chatName}>{this.props.item.name}</Text>
 					<View style={styles.message}>
-					<Text>Message1</Text>
 				{this.props.item.last_message && (
 						<>
 							<Text>{this.props.item.last_message.message}</Text>

@@ -3,6 +3,13 @@ import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 
 export class Message extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      data: this.props.message
+    }
+  }
+
   render() {
     return (
       <View>
@@ -10,11 +17,23 @@ export class Message extends Component {
         <Ionicons style={{paddingTop: 10}} name="person-circle" size={40} color="black" />
         <View style={styles.messageWrapper}>
             <View style={styles.message}>
-              <Text>Message 1</Text>
+              {this.state.data && (
+                <>
+                  <Text>{this.state.data.message}</Text>
+                </>
+              )}
             </View>
         </View>
         </View>
-        <View style={{flexDirection: "row"}}>
+      </View>
+    );
+  }
+}
+
+// give a property to see if the message is from the user or not
+// <Text>{this.props.message.message}</Text>
+/* 
+<View style={{flexDirection: "row"}}>
         <View style={styles.messageWrapper2}>
             <View style={styles.message2}>
               <Text>Message 2</Text>
@@ -22,13 +41,7 @@ export class Message extends Component {
         </View>
         <Ionicons style={{paddingTop: 10}} name="person-circle" size={40} color="black" />
         </View>
-      </View>
-    );
-  }
-}
-
-// <Text>{this.props.m.message}</Text> instead of message
-// give a property to see if the message is from them or not
+*/
 
 const styles = StyleSheet.create({
   messageWrapper: {

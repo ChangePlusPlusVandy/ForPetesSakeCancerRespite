@@ -27,14 +27,6 @@ const Messaging = mongoose.model("Messaging", MessagingSchema)
 
 
 async function verifyMessage(msg){
-<<<<<<< HEAD
-	if(msg.message && msg.user && msg.groupchat && msg.timestamp){
-		if(msg.message.length <= 0){
-			return false;
-		}
-		const user = await User.findById({_id: msg.user})
-=======
-	
 	if(msg.message && msg.user[0] && msg.groupchat[0] && msg.timestamp){
 		//console.log("verifyingMessage...")
 		//console.log(msg)
@@ -42,7 +34,6 @@ async function verifyMessage(msg){
 		//console.log(msg.groupchat)
 
 		const user = await User.findById({_id: msg.user[0]})
->>>>>>> 436c67108194e5865999e7cac546bc99a6b028f4
 		if(!user){
 			console.log("invalid user")
 			return false;

@@ -2,17 +2,12 @@ import {Messaging, verifyMessage} from "../models/Messages";
 import { Server, Socket } from "socket.io";
 import { Server as HTTPServer } from "http";
 import { getUserFromToken } from "../firebase";
-<<<<<<< HEAD
-import { addOnlineUser, removeOnlineUser } from "./OnlineUsersManager";
-import { mongo } from "mongoose";
-=======
 import { addOnlineUser, removeOnlineUser, getUserFromSocketID, checkIfUserOnline } from "./OnlineUsersManager";
 import mongoose from "mongoose";
 import {ObjectId} from "mongoose"
 import { verify } from "crypto";
 import { User } from "../models/User";
 import Groupchats from "../models/Groupchat"
->>>>>>> 436c67108194e5865999e7cac546bc99a6b028f4
 
 class Gateway {
 	socketIO: Server;
@@ -54,12 +49,6 @@ class Gateway {
 		console.log(`USER ${socket.id} SENT ${msg}`);
 	}
 
-<<<<<<< HEAD
-	groupchatMessage(socket, msg, callback) {
-		msg.groupchat = new mongo.ObjectId(msg.groupChat);
-		const message = new Messaging(msg);	
-		if(!verifyMessage(message)){
-=======
 	async groupchatMessage(socket, msg, callback) {
 		
 		// Verify and store message from groupchat
@@ -115,7 +104,6 @@ class Gateway {
 			}
 		}
 		if(!userInGroupChat){
->>>>>>> 436c67108194e5865999e7cac546bc99a6b028f4
 			callback({
 				status: "error",
 				error: "INVALID USER IN GROUPCHAT"

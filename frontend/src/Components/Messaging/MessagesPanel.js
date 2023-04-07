@@ -17,9 +17,11 @@ class _MessagesPanel extends Component {
 	constructor(props) {
 		super(props);
 		this.submitChatMessage.bind(this);
+		this.getMessages.bind(this);
 		this.state = {
 			chatMessage: "",
 			messages: [],
+			messageNum: 0,
 			groupid: "",
 			groupname: ""
 		};
@@ -39,14 +41,18 @@ class _MessagesPanel extends Component {
 		).then(async (response) => {
 			let data = await response.json();
 			this.setState({ messages: data.groupchat.messages, groupid: data.groupchat._id, groupname: data.groupchat.name });
+			this.setState({messageNum: data.groupchat.messages.length});
+			this.forceUpdate();
 		});
 
 	};
 
+	//update it when a message is sent
 	submitChatMessage() {
 		if(this.state.chatMessage){
 			this.socket.emit("send_groupchat_message", {message: this.state.chatMessage, groupchat: this.state.groupid, timestamp: Date.now()});
 		}
+		this.getMessages();
 	}
 
 	//this.auth.currentUser._id
@@ -54,6 +60,12 @@ class _MessagesPanel extends Component {
 	render() {
 
 		// this.socket.send("hello world!");
+		var messages = [];
+		for(var i = 0; i < this.state.messageNum; i++){
+			messages.push(
+				<Message message={this.state.messages[i]}/>
+			)
+		}
 
 		return (
 			<View style={styles.messagingscreen}>
@@ -65,14 +77,13 @@ class _MessagesPanel extends Component {
 					</View>
       			</View>
 
-				<View style={styles.chatbody}>
-					<Message></Message>
-					<Message></Message>
-					<FlatList
-						data={this.state.messages}
-						renderItem={({ m }) => <Message message={m} />}
-					/>
-				</View>
+				  {this.state.messages.length > 0 && (
+						<>
+						<View style={styles.chatbody}>
+						{messages}
+						</View>
+						</>
+				)}
 
 				<View style={styles.messaginginputContainer}>
 					<TextInput

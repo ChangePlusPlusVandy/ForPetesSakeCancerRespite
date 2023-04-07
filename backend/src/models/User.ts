@@ -1,15 +1,6 @@
 import mongoose from "mongoose";
 const { scryptSync, randomBytes } = require("crypto");
 // required properties to create new user
-<<<<<<< HEAD
-interface UserAttrs {
-	name: String,
-    email: String,
-	username: String,
-	phone: Number,
-	groupchats?: []
-}
-=======
 // interface UserAttrs {
 // 	name: String,
 //     email: String,
@@ -17,7 +8,6 @@ interface UserAttrs {
 // 	phone: Number,
 // 	groupchats?: []
 // }
->>>>>>> 436c67108194e5865999e7cac546bc99a6b028f4
 
 // // describe user model interface
 // interface UserModel extends mongoose.Model<UserDoc> {
