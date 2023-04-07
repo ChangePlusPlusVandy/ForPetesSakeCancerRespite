@@ -6,7 +6,9 @@ interface UserAttrs {
     email: String,
 	username: String,
 	phone: Number,
-	groupchats?: []
+	groupchats?: [],
+	follower?: [],
+	following?: []
 }
 
 // describe user model interface
@@ -20,7 +22,9 @@ interface UserDoc extends mongoose.Document {
     email: String,
 	username: String,
 	phone: Number,
-	groupchats: []
+	groupchats: [],
+	follower: [],
+	following: []
 }
 
 const userSchema = new mongoose.Schema({
