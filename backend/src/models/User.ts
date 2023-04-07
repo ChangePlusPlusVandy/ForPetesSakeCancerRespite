@@ -5,7 +5,7 @@ interface UserAttrs {
 	name: String,
     email: String,
 	username: String,
-	phone, Number,
+	phone: Number,
 	groupchats?: []
 }
 

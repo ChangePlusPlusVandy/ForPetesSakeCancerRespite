@@ -10,6 +10,7 @@ import {
 import Message from "./Message";
 import MessagesPanel from "./MessagesPanel";
 import Groupchat from "./Groupchat";
+import BottomBar from "../BottomBar";
 import { useNavigation, Link } from "@react-navigation/native";
 import CONFIG from "../../Config";
 import { getAuthHeader, useAuth } from "../../AuthContext";
@@ -54,7 +55,6 @@ class _ChatApp extends Component {
 			<View style={styles.container}>
 				<View style={styles.chatTop}>
 					<Text style={styles.recentChats}>Recent Chats</Text>
-					<AntDesign name="search1" size={24} color="black" />
 				</View>
 
 				<View style={styles.chats}>
@@ -74,7 +74,7 @@ class _ChatApp extends Component {
 						</Link>
 						</View>
 					</View>
-
+				<BottomBar/>
 			</View>
 			
 		);
@@ -98,7 +98,7 @@ function User({ user }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#E5E5E5",
+		backgroundColor: "#FFFFFF",
 	},
 	chatTop: {
 		top: 29,
@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
 	},
 	chats: {
 		marginTop: 60,
-		backgroundColor: "#BDBDBD",
+		backgroundColor: "#F7F7F7",
+		width: "100%",
 	},
 	newChat: {
 		paddingLeft: "50%",
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
 	createButtonContainer: {
 		width: "30%",
 		height: "150%",
-		backgroundColor: "#2F80ED",
+		backgroundColor: "#088DA9",
 		borderRadius: 20,
 		alignItems: "center",
 		justifyContent: "center",

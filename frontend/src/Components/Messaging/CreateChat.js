@@ -16,6 +16,7 @@ class _CreateChat extends Component{
     constructor(props) {
 		super(props);
 		this.createChat.bind(this);
+		this.searchUser.bind(this);
 		this.state = {
 			currentUser: "",
             groupName: "",
@@ -44,6 +45,50 @@ class _CreateChat extends Component{
 		this.setState({users: [...this.state.users, this.state.currentUser]});
 	}
 
+	searchUser = async (text) => {
+		const data = [
+			{
+				id: 1,
+				name: "Doga"
+			},
+			{
+				id: 2,
+				name: "Do"
+			},
+			{
+				id: 3,
+				name: "Aryan"
+			}
+		]
+
+		this.setState({users: data})
+		console.log(data);
+		console.log(this.state.users);
+		/*
+		var headers = await this.auth.getAuthHeader();
+		fetch(CONFIG.URL + "/api/users/search?searchString=" + text).then(
+			async (response) => {
+				let data = await response.json();
+				
+			}
+		);
+		*/
+	};
+
+	/*
+	addUser = async () => {
+		//api request to get the groupchats
+		var headers = await this.auth.getAuthHeader();
+		fetch(CONFIG.URL + "/api/messaging/get_users", { headers }).then(
+			async (response) => {
+				let data = await response.json();
+				this.setState({users: [...this.state.users, this.state.currentUser]});
+			}
+		);
+	};
+	*/
+
+
     render(){
         return(
             <View>
@@ -53,12 +98,18 @@ class _CreateChat extends Component{
 					value={this.state.currentUser}
 					placeholder="Enter username..."
 					onChangeText={(text) => {
-						this.setState({ currentUser: text });
+						this.setState({currentUser: text})
 					}}
 				></TextInput>
-				<Pressable  style={styles.addButton} onPress={() => this.addUser()}>
+				<Pressable style={styles.addButton} onPress={() => this.searchUser(this.state.currentUser)}>
                 <Text style={{ color: "#FFFFFF", fontSize: 20 }}>ADD</Text>
                 </Pressable>
+				<FlatList>
+					data={this.state.users}
+          			renderItem={({m}) => <Text>Hello</Text>}
+					keyExtractor={(item) => item.id}
+				</FlatList>
+
 				</View>
 				<View style={styles.inputContainer}>
 				<TextInput
@@ -101,7 +152,7 @@ const styles = StyleSheet.create({
 	createButton: {
 		width: "30%",
 		height: "150%",
-		backgroundColor: "#2F80ED",
+		backgroundColor: "#088DA9",
 		borderRadius: 20,
 		alignItems: "center",
 		justifyContent: "center",
@@ -114,7 +165,7 @@ const styles = StyleSheet.create({
 	addButton: {
 		width: "30%",
 		height: "60%",
-		backgroundColor: "#2F80ED",
+		backgroundColor: "#088DA9",
 		borderRadius: 20,
 		alignItems: "center",
 		justifyContent: "center",

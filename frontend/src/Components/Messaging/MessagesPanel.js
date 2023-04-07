@@ -11,7 +11,7 @@ import Message from "./Message";
 import CONFIG from "../../Config";
 import { useGateway } from "../../Gateway";
 import { useAuth } from "../../AuthContext";
-import { AntDesign, Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons'; 
 
 class _MessagesPanel extends Component {
 	constructor(props) {
@@ -58,14 +58,16 @@ class _MessagesPanel extends Component {
 		return (
 			<View style={styles.messagingscreen}>
 				<View style={styles.header}>
-        			<Pressable>
-          			<Ionicons style={{paddingTop: 50}} name="chevron-back" size={24} color="black" />
-        			</Pressable>
-        			<Ionicons style={{paddingTop: 30}} name="person-circle" size={60} color="black" />
-       				<Text style={{fontWeight:"bold", paddingTop: 50, paddingLeft: 15, fontSize: 15}}>{this.state.groupname}</Text>
+        			<Ionicons style={{paddingTop: 10}} name="person-circle" size={60} color="black" />
+					<View style={styles.headerRight}>
+						<Text style={{fontWeight:"bold", fontSize: 15, color:  "#1B1A57"}}>{this.state.groupname}</Text>
+						<Text style={{fontSize: 12, color: "#4F5E7B"}}>Active</Text>
+					</View>
       			</View>
 
 				<View style={styles.chatbody}>
+					<Message></Message>
+					<Message></Message>
 					<FlatList
 						data={this.state.messages}
 						renderItem={({ m }) => <Message message={m} />}
@@ -98,11 +100,17 @@ class _MessagesPanel extends Component {
 
 const styles = StyleSheet.create({
 	messagingscreen: {
-		  flex: 1,
-	  },
+		flex: 1,
+	},
 	header: {
 	  flexDirection: "row",
-	  height: 100,
+	  height: 80,
+	  backgroundColor: "#FFFFFF",
+	},
+	headerRight: {
+		flexDirection: "column",
+		paddingTop: 30,
+		paddingLeft: 10,
 	},
 	  chatbody: {
 		  flex: 1,
@@ -128,7 +136,7 @@ const styles = StyleSheet.create({
 	  },
 	  messagingbuttonContainer: {
 		  width: "30%",
-		  backgroundColor: "#2F80ED",
+		  backgroundColor: "#088DA9",
 		  borderRadius: 20,
 		  alignItems: "center",
 		  justifyContent: "center",
