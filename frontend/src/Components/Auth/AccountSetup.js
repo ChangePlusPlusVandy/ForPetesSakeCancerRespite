@@ -21,7 +21,9 @@ const AccountSetup = () => {
 				<Image
 					style={styles.logo}
 					source={require("../../../assets/logo.png")}></Image>
-				<Text style={styles.welcometext}>Welcome</Text>
+				<View style={styles.welcomeContainer}>
+					<Text style={styles.welcometext}>Welcome</Text>
+				</View>
 				<TouchableOpacity onPress={() => navigation.navigate("Login")} style={styles.loginbutton}>
 					<Text style={{ color: "white" }}>Login</Text>
 				</TouchableOpacity>
@@ -46,20 +48,26 @@ const AccountSetup = () => {
 }
 
 const styles = StyleSheet.create({
+	welcomeContainer: {
+		alignItems: "flex-start",
+		justifyContent: "center",
+	},
 	loginbutton: {
 		backgroundColor: "#088da9",
-		borderRadius: 30,
-		marginTop: 20,
-		marginBottom: 20,
-		width: "50%",
+		borderRadius: 10,
+		marginTop: 10,
+		marginBottom: 15,
+		width: "75%",
 		height: "5%",
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	signupbutton: {
 		backgroundColor: "#e4f3f6",
-		borderRadius: 30,
-		width: "50%",
+		borderRadius: 10,
+		marginTop: 10,
+		marginBottom: 20,
+		width: "75%",
 		height: "5%",
 		alignItems: "center",
 		justifyContent: "center",
@@ -80,18 +88,17 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	logo: {
-		width: 300,
-		height: 300,
+		width: 270,
+		height: 270,
 		resizeMode: "contain",
 		marginBottom: 50,
-		marginTop: 0,
 	},
 	welcometext: {
 		fontSize: 36,
 		lineHeight: 43,
 		color: "#088da9",
 		marginTop: 20,
-		fontWeight: "bold",
+		marginBottom: 15,
 		//fontFamily: "Lato",
 		fontStyle: "normal",
 	},
