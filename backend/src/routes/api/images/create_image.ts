@@ -1,14 +1,11 @@
 
 const express = require('express');
-const googleStorage = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage');
 const Multer = require('multer');
 import CONFIG from "../../../Config";
 
-const storage = googleStorage({
-  credentials: require(CONFIG.firebaseCert as any)
-});
-
-const bucket = storage.bucket("https://console.firebase.google.com/project/for-petes-sake-cancer-respite/storage/for-petes-sake-cancer-respite.appspot.com/files");
+const storage = new Storage({ credentials: CONFIG.firebaseCert });
+const bucket = storage.bucket("for-petes-sake-cancer-respite.appspot.com");
 const router = express.Router();
 
 const multer = Multer({
@@ -18,7 +15,7 @@ const multer = Multer({
   }
 });
 
-router.post('/upload', multer.single('file'), (req, res) => {
+router.post('/create_image', multer.single('file'), (req, res) => {
   let file = req.file;
   if (file) {
     uploadImageToStorage(file).then((success) => {
@@ -47,7 +44,7 @@ const uploadImageToStorage = (file) => {
     });
 
     blobStream.on('error', (error) => {
-      reject('ERROR: Unable to Upload File');
+      reject('ERROR: Unable to Upload File: ' + error.message);
     });
 
     blobStream.on('finish', () => {
