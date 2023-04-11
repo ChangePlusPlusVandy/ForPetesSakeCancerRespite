@@ -46,7 +46,7 @@ const BlogDisplay = () => {
 
     useEffect(()=>{
         getAllNewsLetter();
-    });
+    }, []);
 
     return (            
         <View style={styles.newsLetter}>
@@ -64,7 +64,7 @@ const BlogDisplay = () => {
 const styles = StyleSheet.create({
     newsLetter: {
         flex:8,
-        maxHeight:'70vh',
+        maxHeight:'60vh',
         backgroundColor:'#FFFFFF',
 		justifyContent: "flex-start",
         borderColor:"#C4C4C4"

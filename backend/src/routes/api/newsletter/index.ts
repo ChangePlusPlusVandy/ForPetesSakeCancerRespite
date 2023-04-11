@@ -61,6 +61,22 @@ router.put("/like_post",VerifyToken, async(req, res) => {
     }
 });
 
+router.put("/create_comment", VerifyToken, async(req, res) => {
+    var commentBody = req.body;
+    let blogId = req.query.blogId;
+    let user = (req as any).user;
+    let userId = user._id;
+
+    // console.log(commentBody);
+    // console.log(blogId);
+    Newsletter.findById(blogId, function (err, doc){
+        doc.comments.push(commentBody);
+        doc.save();
+      });
+    let posts = await Newsletter.findById(blogId);
+    console.log(posts);
+    res.status(200).send('comment success');
+});
 
 router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     // console.log('user token:  ' + req.body.userToken)
@@ -88,6 +104,7 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
         console.log(e.message)
     }
 });
+
 
 router.delete('/delete_newsletter', async(req, res)=>{
     // Delete a newsletter post here
