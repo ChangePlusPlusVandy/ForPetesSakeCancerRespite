@@ -23,6 +23,44 @@ router.get("/get_newsletters", VerifyToken, async(req, res)=>{
     }
 });
 
+router.get("/get_newsletter_byID", VerifyToken, async(req, res) => {
+    try {
+        let blogId = req.query.blogId;
+        let posts = await Newsletter.findById(blogId);
+
+        // console.log("api reached")
+        // console.log(blogId);
+
+        res.status(200).send(posts);
+    } catch (e) {
+        console.log(e.message);
+        res.status(500).send(e.message)
+    }
+});
+
+router.put("/like_post",VerifyToken, async(req, res) => {
+    try {
+        let blogId = req.query.blogId;
+        let user = (req as any).user;
+        let userId = user._id;
+
+        Newsletter.findById(blogId, function (err, doc){
+            if (doc.postsLiked.includes(userId)) {
+                doc.postsLiked.splice(doc.postsLiked.indexOf(userId),1);
+            } else {
+                doc.postsLiked.push(userId)
+            }
+            doc.save();
+          });
+        
+        let posts = await Newsletter.findById(blogId);
+        res.status(200).send(posts.postsLiked);
+    } catch (e) {
+        console.log(e.message);
+        res.status(500).send(e.message)
+    }
+});
+
 
 router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     // console.log('user token:  ' + req.body.userToken)
