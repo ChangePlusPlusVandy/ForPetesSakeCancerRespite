@@ -128,5 +128,4 @@ router.delete('/delete_newsletter', async(req, res)=>{
 	res.send("Hello World!"); // THIS WORKS! when you do localhost:3000/api/newsletter/ in postman
 });
 
-
 export default router;
