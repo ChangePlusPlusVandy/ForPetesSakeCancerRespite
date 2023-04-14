@@ -17,7 +17,7 @@ const ProfileScreen = () => {
           <Text style = {{
             fontSize: 15,
             fontWeight: 600,
-          }}>@charlottebarnes{authObj.currentUser.username}</Text>
+          }}>{authObj.currentUser.username}</Text>
         </View>
         <View style={styles.topOfTopPart}>
           <Image
@@ -44,9 +44,9 @@ const ProfileScreen = () => {
         {/* Display user's name here */}
         <View style={styles.bioContainer}>
           <Text style={{ fontWeight: 700, fontSize: 20, marginBottom: 4 }}>
-            Charlotte Barnes *PLACEHOLDER*{authObj.currentUser.name}
+            {authObj.currentUser.name}
           </Text>
-          <Text style={{ fontSize: 15, marginBottom: -5 }}>Bio here</Text>
+          <Text style={{ fontSize: 15, marginBottom: -5 }}>{authObj.currentUser.bio}</Text>
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.followButton}>

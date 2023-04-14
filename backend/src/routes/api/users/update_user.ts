@@ -8,12 +8,19 @@ router.post("/update_user", VerifyToken, async (req, res) => {
   var userId = user._id;
   var newName = req.body.name;
   var newNumber = req.body.number;
-  var newBio = req.body.newBio;
+  var newBio = req.body.bio;
   if (!newName || !newNumber) {
+    // Basically, in the frontend these values are automatically set to the values they were before
+    // So, by defult if a user sends an update_user request but doesn't change anything, nothing really needs to be changed
+    // because the same values as before are just sent over. 
+
+    // but, this condition will be true if the user were to delete the field and click update, you can't not have
+    // a phone number or username, so we return error
+    // if the user doesn't want a bio that's okay (bio = ""), no need to give an error
     res.status(400).send("Bad user input. Inputs required for all fields.");
-    return; // if we have no new info, just return
+    return;
   } else {
-    var update = { name: newName, number: newNumber, bio: newBio }; // CHANGE NUMBER HERE TOO
+    var update = { name: newName, phone: newNumber, bio: newBio }; // CHANGE NUMBER HERE TOO
     try {
       let doc = await User.findOneAndUpdate(userId, update, {
         new: true,

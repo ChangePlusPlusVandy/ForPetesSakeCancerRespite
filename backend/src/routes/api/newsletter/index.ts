@@ -69,6 +69,7 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     // Parse through the text in here
     var titleText = req.body.title;
     var bodyText = req.body.body;
+    var dateText = req.body.date;
     // var author = req.body.author;
     if(!titleText || !bodyText){
         res.status(400).send(JSON.stringify("Bad user input. Inputs required for all fields."));
@@ -81,7 +82,7 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
             title: titleText, // change this based on what the req looks like
             body: bodyText,
             author: user.name,
-            timePosted: Date()   
+            timePosted: dateText,   
         })
         console.log("Successfully added to the database: " + newsletterItem)
     } catch(e) {
