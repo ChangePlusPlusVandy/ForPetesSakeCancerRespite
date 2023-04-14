@@ -29,23 +29,23 @@ const ImageCarousel = () => {
     // { id: '3', text: 'Item 3' },
     // ];
     // // console.log(images[0].id)
-    
+
 
     // return (
     //     <View>
-    //         {/* <FlatList  
-    //             data={images}  
-    //             renderItem={({item}) =>{  return <Image source={{ uri: item.uri }}></Image>}}  
+    //         {/* <FlatList
+    //             data={images}
+    //             renderItem={({item}) =>{  return <Image source={{ uri: item.uri }}></Image>}}
     //             // renderItem={({ item }) => <Text>{item.uri}</Text>}
     //             keyExtractor={(item) => item.id}
-    //             // snapToAlignment="start"  
-    //             // decelerationRate={"normal"}  
+    //             // snapToAlignment="start"
+    //             // decelerationRate={"normal"}
     //             horizontal
-    //             // pagingEnabled  
-    //             // snapToInterval={120}  
+    //             // pagingEnabled
+    //             // snapToInterval={120}
     //         /> */}
 
-            
+
     //     </View>
     // );
 
@@ -87,3 +87,5 @@ const styles = StyleSheet.create({
 
 
 export default ImageCarousel;
+
+// export default () => {};
