@@ -5,7 +5,7 @@ import CONFIG from "../../../Config";
 
 const storage = new Storage({ credentials: CONFIG.firebaseCert });
 const bucket = storage.bucket("for-petes-sake-cancer-respite.appspot.com");
-const router = express.Router();
+const create_image = express.Router();
 
 const multer = Multer({
 	storage: Multer.memoryStorage(),
@@ -14,7 +14,7 @@ const multer = Multer({
 	},
 });
 
-router.post("/create_image", multer.single("file"), (req, res) => {
+create_image.post("/create_image", multer.single("file"), (req, res) => {
 	let file = req.file;
 	if (file) {
 		uploadImageToStorage(file)
@@ -59,4 +59,4 @@ const uploadImageToStorage = (file) => {
 	});
 };
 
-export default router;
+export { create_image, uploadImageToStorage };
