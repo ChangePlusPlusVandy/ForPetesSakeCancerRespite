@@ -114,7 +114,7 @@ const CreatePost = () => {
             <Text
               style={{
                 color: "white",
-                fontWeight: 400,
+                fontWeight: '400',
                 fontSize: 16,
               }}
             >
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#d9d9d959",
     borderColor: "#5f6566",
-    fontWeight: 700,
+    fontWeight: '700',
     fontSize: 20,
     color: "#474C4D",
   },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d9d9d959",
     padding: 15,
     marginBottom: 20,
-    fontWeight: 500,
+    fontWeight: '500',
     fontSize: 20,
     color: "#474C4D",
   },

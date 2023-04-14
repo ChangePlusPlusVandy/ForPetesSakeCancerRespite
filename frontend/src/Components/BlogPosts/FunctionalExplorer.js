@@ -21,12 +21,15 @@ const ExploreScreen = () => {
 
                     <TouchableOpacity style={{width:'50%',height:'100%',justifyContent:'flex-end', alignItems:'center',flexDirection:'row'}}>
                         <Text style={styles.optionText}> Sort By</Text>
-                        <Image style={{height:'15px',width:'15px', aspectRatio:1, margin:'5px'}} source={require('../../../public/newsletter/SortBy.png')}></Image>
+                        <Image style={{height:15,width:15, aspectRatio:1, margin:5}} source={require('../../../public/newsletter/SortBy.png')}></Image>
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <BlogDisplay></BlogDisplay>
+            <View style={{flex:5}}>
+                <BlogDisplay></BlogDisplay>
+            </View>
+            
 
             <BottomBar postEnabled={true} ></BottomBar>
         </View>
@@ -36,41 +39,43 @@ const ExploreScreen = () => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		// backgroundComlor: "#fff",
+        backgroundColor:'E5E5E570',
 		justifyContent: "flex-start",
         alignItems:"stretch",
 	},
     header: {
-        flex:2.5,
+        flex:1.5,
+        backgroundColor:'#fff',
         borderBottomColor:'#C4C4C4',
-        borderBottomWidth:'1px',
-        paddingTop: '24px',
-        paddingLeft:'24px',
-        paddingRight:'30px'
+        borderBottomWidth:1,
+        paddingTop: 24,
+        paddingLeft:24,
+        paddingRight:30
     },
     title:{
-        flex:1.5,
+        flex:1,
         fontWeight:'bold',
         color:"#088DA9",
-        fontSize: '40px',
+        fontSize: 40,
     },
     profile:{
-        flex:2,
+        flex:1,
         alignItems:'flex-start',
-        padding:'0px',
-        margin:'0px'
+        padding:0,
+        margin:0
     },
     headeroptions:{
         flex:1,
         flexDirection: 'row',
         justifyContent:'space-evenly',
         width:'100%',
-        paddingBottom:'0px',
-        marginBottom:'0px',
+        paddingBottom:0,
+        marginBottom:0,
     },
     optionText:{
         fontWeight:'500',
-        fontSize:'16px',
+        fontSize:16,
     },
 });
 

@@ -19,7 +19,7 @@ const BottomBar = (props) => {
               style={styles.post}
               onPress={() => navigation.navigate("CreatePost")}
               >
-              <Image style={{height:'70px',width:undefined, aspectRatio:1,marginLeft:'5px'}} source={require('../../public/commonIcons/PostButton.png')}></Image>
+              <Image style={{height:70,width:undefined, aspectRatio:1,marginLeft:5}} source={require('../../public/commonIcons/PostButton.png')}></Image>
             </TouchableOpacity>
           :
             <View></View>
@@ -31,14 +31,14 @@ const BottomBar = (props) => {
         style={styles.button}
         onPress={() => navigation.navigate("Home")}
         >
-            <Image style={{height:'35px',width:undefined, aspectRatio:1,marginTop:'5px'}} source={require('../../public/newsletter/Home.png')}></Image>
+            <Image style={{height:35,width:undefined, aspectRatio:1,marginTop:5}} source={require('../../public/newsletter/Home.png')}></Image>
         </TouchableOpacity>
 
         <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("Profile")}
             >
-                <Image style={{height:'35px',width:undefined, aspectRatio:1.85,marginTop:'2px'}} source={require('../../public/newsletter/ProfileButton.png')}></Image>
+                <Image style={{height:35,width:undefined, aspectRatio:1,marginTop:2}} source={require('../../public/newsletter/ProfileButton.png')}></Image>
         </TouchableOpacity>
       </View>
     </View>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     bottom:0,
     zIndex:1,
     alignItems: 'center',
-    justifyContent:'start',
+    justifyContent:'end',
     marginBottom: 0,
     width:'25%',
     height:'100%',
@@ -66,23 +66,27 @@ const styles = StyleSheet.create({
   },
   footer:{
     position:'absolute',
+    marginBottom:0,
+    paddingBottom: 0,
     bottom: 0,
     height:'12%',
     width:'100%',
     flexDirection:'column',
     alignItems:'center',
-    justifyContent:'end',
+    justifyContent:'flex-end',
     backgroundColor:'transparent'
   },
   bottomBar: {
     flexDirection: 'row',
     justifyContent:'space-evenly',
     alignItems:'center',
-    height:'66%',
+    height:'80%',
     width:'100%',
     backgroundColor:'#088DA9',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    marginBottom:0,
+    paddingBottom: 0,
   }
 });
 

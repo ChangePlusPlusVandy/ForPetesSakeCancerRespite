@@ -95,17 +95,17 @@ const BlogPage = ({route, navigation}) => {
 
     return (
         <View style={styles.container}>
-            <View style={{height:'660px', backgroundColor:'#E5E5E550'}}>
+            <View style={{height:585, backgroundColor:'#E5E5E550'}}>
                 <ScrollView contentContainerStyle={styles.newsItem}>
                     <View>
                         <ImageCarousel  imgLink={images}></ImageCarousel>
                     </View>
 
-                    <Text style={{ fontWeight:'bold', fontSize:'23px', paddingTop:'15px',paddingLeft:'15px', paddingRight:'15px'}}>{newsLetter.title}</Text>
-                    <Text style={{ fontSize:'18px', paddingLeft:'15px', paddingRight:'15px'}}>{newsLetter.body}</Text>
+                    <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
+                    <Text style={{ fontSize:18, paddingLeft:15, paddingRight:15}}>{newsLetter.body}</Text>
 
-                    <View style={{borderTopWidth:'1px', marginTop:'15px', marginBottom:'15px'}}>
-                        <Text style={{fontWeight:'600', fontSize:'18px', paddingLeft:'15px', paddingRight:'15px'}}>Comments</Text>
+                    <View style={{borderTopWidth:1, marginTop:15, marginBottom:15}}>
+                        <Text style={{fontWeight:'600', fontSize:18, paddingLeft:15, paddingRight:15}}>Comments</Text>
                     </View>
 
                     <View>
@@ -121,12 +121,12 @@ const BlogPage = ({route, navigation}) => {
             
             
             <View style={styles.utilityContainer}>
-                <View style={{marginLeft:'20px'}}>
+                <View style={{marginLeft:10}}>
                     <Text style={{color:'#FF3D00'}}>{likeNumber}</Text>
                 </View>
                 
                 <TouchableOpacity onPress={() => likePost()} >
-                    <Image style={{ height:'45px', width:'45px', aspectRatio:1}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
+                    <Image style={{ height:45, width:45, aspectRatio:1}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
                 </TouchableOpacity>
                 
                 <TextInput
@@ -136,7 +136,7 @@ const BlogPage = ({route, navigation}) => {
                     />
 
                 <TouchableOpacity  onPress={() => postComment()}>
-                    <Image style={{ height:'45px', width:'45px', aspectRatio:1, margin:'10px'}} source={require('../../../public/newsletter/commentButton.png')}></Image>
+                    <Image style={{ height:45, width:45, aspectRatio:1, margin:10}} source={require('../../../public/newsletter/commentButton.png')}></Image>
                 </TouchableOpacity>
             </View>
             
@@ -150,7 +150,6 @@ const styles = StyleSheet.create ({
     utilityContainer: {
         // flex:1,
         width:'100%',
-        // maxHeight:'50px',
         justifyContent:'flex-start',
         alignItems:'center',
         flexDirection:'row',
@@ -158,8 +157,8 @@ const styles = StyleSheet.create ({
         // borderTop
     },
     comment:{
-        paddingLeft:'15px', 
-        paddingRight:'15px',
+        paddingLeft:15, 
+        paddingRight:15,
     },
     input: {
         height: 40,
@@ -177,11 +176,9 @@ const styles = StyleSheet.create ({
         // flex:1,
         backgroundColor:'#E5E5E550',
         borderColor:"#C4C4C470",
-        // height:'550px',
         justifyContent:'flex-start'
     },
     // newsContent:{
-    //     height:'700px'
     // },
     newsHeader:{
         flex:1,
@@ -191,7 +188,7 @@ const styles = StyleSheet.create ({
     newsTitle:{
         flex:2,
         width:'90%',
-        paddingTop:'10px',
+        paddingTop:10,
     },
 });
 

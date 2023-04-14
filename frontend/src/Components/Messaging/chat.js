@@ -30,7 +30,10 @@ class Chat extends Component {
         this.setState({ messages: [...this.state.messages, message.msg] });
       });
     });
-
+    socket.on("recieved-message-user", (data)=>{
+      console.log(data)
+      console.log("hello")
+    })
     socket.on("message", (data) =>
       this.setState({ messages: [...this.state.messages, data] })
     );
