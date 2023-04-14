@@ -2,6 +2,7 @@ import express from "express";
 var router = express.Router();
 import Newsletter from "../../../models/Newsletter";
 import VerifyToken from "../../../middlewares/VerifyToken";
+import { User } from "../../../models/User";
 
 router.get("/get_newsletters", VerifyToken, async(req, res)=>{
     try {
@@ -65,6 +66,7 @@ router.put("/like_post",VerifyToken, async(req, res) => {
 router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     // console.log('user token:  ' + req.body.userToken)
     let user = (req as any).user;
+    const userMongoDBObj = User.findById
     console.log(user);
     // Parse through the text in here
     var titleText = req.body.title;
@@ -83,6 +85,10 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
             author: user.name,
             timePosted: Date()   
         })
+        // add newsletter id to user object
+        await User.findByIdAndUpdate(
+			{ _id: user._id },
+			{ $push: { newsletter: newsletterItem._id} })
         console.log("Successfully added to the database: " + newsletterItem)
     } catch(e) {
         console.log(e.message)
@@ -94,11 +100,15 @@ router.delete('/delete_newsletter', async(req, res)=>{
     try {
         // TODO: change these strings as needed based on what the user puts in
         var id = req.body.id;
-        Newsletter.findByIdAndDelete(id, function (err, docs) {
+        const user = (req as any).user
+        Newsletter.findByIdAndDelete(id, async function (err, docs) {
             if (err){
                 res.send(err)
             }
             else{
+                // remove id from userObject
+                await User.findByIdAndUpdate({_id: user._id}, {$pull: {newsletter: { $in: [id] } } })
+                
                 res.send("Deleted : " + docs);
             }
         });

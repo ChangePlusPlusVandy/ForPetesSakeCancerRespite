@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../../../models/User";
-
+import Newsletter from "../../../models/Newsletter"
 async function add_follower(req: Request, res: Response) {
 	try {
 		// Gets the User Information from Request
@@ -30,32 +30,54 @@ async function add_follower(req: Request, res: Response) {
 			{ _id: userID },
 			{ $push: { followers: selfUser._id } }
 		);
-		// TODO: Add Something for Information
-		res.status(200).json({});
+		res.status(200).json({ user: userIDINFO.removeSensitiveData() });
 	} catch (error) {
 		console.error(error);
 		throw error;
 	}
 }
 
-// TODO: Make a function that would return condensed public information about a user
-// TODO: Make two API Endpoints for follower and following using above function
-// TODO: Make a method that shows the feed of all the following people. get all posts then sort by timestamp
+// Takes a user ID and removes sensititve data
+async function getUser(req: Request, res: Response) {
+	try {
+		const userIDSent = req.body.user;
+		const userObj = await User.findById(userIDSent);
+		if (!userObj) {
+			res.status(404).json({ error: "User not found" });
+			return;
+		}
+		(userObj as any).removeSensitiveData();
 
-
-
-function getPublicUser(user){
-	return {
-		id: user._id,
-		username: user.username,
-		profilePicture: user.profilePicture,
-		bio: user.bio,
-		followers: user.followers,
-		following: user.following,
-		posts: user.posts,
-		likes: user.likes,
-		comments: user.comments,
+		res.status(200).json({ user: userObj });
+	} catch (error) {
+		console.error(error);
+		throw error;
 	}
 }
 
-export { add_follower };
+async function getFeed(req: Request, res: Response) {
+	try {
+		const user = (req as any).user;
+		const userObj = await User.findById(user._id);
+		if (!userObj) {
+			res.status(404).json({ error: "User not found" });
+			return;
+		}
+		const userObjFollowing = userObj.following
+		const userObjFollowingPostsIDS = []
+		// array of newsletter ids
+		for (let i = 0; i < userObjFollowing.length; i++) {
+			const userObjFollowingPostsTemp = await User.findById(userObjFollowing[i])
+			userObjFollowingPostsIDS.push(userObjFollowingPostsTemp.newsletter)
+		}
+		const allPosts = await Newsletter.find({_id:{$in:userObjFollowingPostsIDS}}).sort({timePosted: -1})
+		
+		res.status(200).json({ feed: allPosts });
+
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
+export { add_follower, getUser, getFeed };
