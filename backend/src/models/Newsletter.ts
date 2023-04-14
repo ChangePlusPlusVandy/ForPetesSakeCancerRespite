@@ -17,8 +17,8 @@ const NewsletterSchema = new mongoose.Schema({
   postsLiked : [{type:mongoose.Schema.Types.ObjectId, ref:"User"}],
   comments : [{
       content: String,
-      timePosted: String,
-      author: {type:mongoose.Schema.Types.ObjectId, ref:"User"}
+      // timePosted: String,
+      // author: {type:mongoose.Schema.Types.ObjectId, ref:"User"}
   }]
 });
 
