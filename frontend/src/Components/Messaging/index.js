@@ -32,10 +32,9 @@ class _ChatApp extends Component {
 	componentDidMount() {
 		//loading channels
 		this.getGroupchats();
-	}
-
-	componentDidUpdate() {
-		this.getGroupchats();
+		this.props.navigation.addListener("focus", () => {
+			this.getGroupchats();
+		})
 	}
 
 	getGroupchats = async () => {
@@ -62,7 +61,11 @@ class _ChatApp extends Component {
 						data={this.state.groupchats}
 						renderItem={({ item }) => (
 							<Link to={{ screen: "Chat", params: { item } }}>
+								<View style={{width: "100%", paddingHorizontal: 10}}>
+								<View style={{paddingTop: 5}}></View>
 								<Groupchat item={item} />
+								<View/>
+								</View>
 							</Link>
 						)}
 					/>
@@ -98,12 +101,12 @@ function User({ user }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		width: "100%",
 		backgroundColor: "#FFFFFF",
 	},
 	chatTop: {
 		top: 29,
 		left: 15,
-		paddingRight: 40,
 		justifyContent: "space-between",
 		flexDirection: "row",
 	},
@@ -114,7 +117,6 @@ const styles = StyleSheet.create({
 	},
 	chats: {
 		marginTop: 60,
-		backgroundColor: "#F7F7F7",
 		width: "100%",
 	},
 	newChat: {
@@ -127,11 +129,15 @@ const styles = StyleSheet.create({
 	},
 	createButtonContainer: {
 		width: "30%",
-		height: "150%",
+		height: 30,
 		backgroundColor: "#088DA9",
 		borderRadius: 20,
 		alignItems: "center",
 		justifyContent: "center",
+		shadowColor: '#171717',
+		shadowOffset: {width: -2, height: 4},
+		shadowOpacity: 0.2,
+		shadowRadius: 3,
 	},
 });
 
