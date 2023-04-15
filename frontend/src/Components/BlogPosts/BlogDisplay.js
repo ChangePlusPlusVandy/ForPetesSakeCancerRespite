@@ -11,14 +11,14 @@ const NewsItem = (props) => {
          <View style={styles.newsItem}>
             <View style={styles.newsHeader}>
                 <Image style={{flex:1, height:'100%', width:-1, borderRadius:'50%'}} source={require('../../../public/defaultProfile.png')}/>
-                <Text style={{flex:4, alignSelf:'center',marginLeft:'19px'}}>{props.author}</Text>
+                <Text style={{flex:4, alignSelf:'center',marginLeft:19}}>{props.author}</Text>
                 <Text style={{flex:4, alignSelf:'center'}}>Posted: {props.timePosted}</Text>
             </View>
             <View style={styles.newsTitle}>
-                <Text style={{fontWeight:'bold', fontSize:'26px'}}>{props.title}</Text>
+                <Text style={{fontWeight:'bold', fontSize:26}}>{props.title}</Text>
             </View>
             <TouchableOpacity 
-                style={{alignSelf:'stretch', flex:1, alignItems:'center',padding:'5px'}}
+                style={{alignSelf:'stretch', flex:1, alignItems:'center',padding:5}}
                 onPress={() => navigation.navigate("BlogPage", {blogId: props.id})}>
                 
                 <Image style={{flex:1, height:'100%', width:-1, aspectRatio:1}} source={require('../../../public/newsletter/ViewMore.png')}></Image>
@@ -46,7 +46,7 @@ const BlogDisplay = () => {
 
     useEffect(()=>{
         getAllNewsLetter();
-    });
+    }, []);
 
     return (            
         <View style={styles.newsLetter}>
@@ -64,18 +64,18 @@ const BlogDisplay = () => {
 const styles = StyleSheet.create({
     newsLetter: {
         flex:8,
-        maxHeight:'70vh',
-        backgroundColor:'#FFFFFF',
+        maxHeight:'60%',
+        // backgroundColor:'#E5E5E525',
 		justifyContent: "flex-start",
         borderColor:"#C4C4C4"
     },
     newsItem:{
         backgroundColor:'#E5E5E550',
-        borderWidth:'1px',
+        borderWidth:1,
         borderColor:"#C4C4C470",
-        height:'183px',
-        paddingLeft:'19px',
-        paddingTop:'10px'
+        height:150,
+        paddingLeft:19,
+        paddingTop:10
     },
     newsHeader:{
         flex:1,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     newsTitle:{
         flex:2,
         width:'90%',
-        paddingTop:'10px',
+        paddingTop:10,
     },
 });
 

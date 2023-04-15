@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../AuthContext";
 import CONFIG from "../../Config";
+import BottomBar from "../BottomBar";
 import { useNavigation } from "@react-navigation/native";
 import { IconButton } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -20,13 +21,16 @@ import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 let nextId = 0;
 
+
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const [uri_array, setUriArray] = useState([]);
+
   const navigation = useNavigation();
+  const authObj = useAuth()
 
   // GET CAMERA PERMISSIONS HERE
   const permissionFunction = async (param) => {
@@ -43,36 +47,47 @@ const CreatePost = () => {
   };
 
   const postData = async () => {
-    await fetch(CONFIG.URL + "/api/newsletter/create_newsletter", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      body: JSON.stringify({ title: title, body: body }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        setSuccess(true);
-      })
-      .catch((error) => {
-        console.log("There has been a problem uploading this post", error);
-        setFailure(true);
-      });
-  };
+    try {
+
+      let authHeader = await authObj.getAuthHeader();
+      // let token = await authObj.getTolken();
+      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', 
+      {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          ...authHeader
+        },
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        body: JSON.stringify({title: title, body: body, 
+          // userToken : await authObj.getToken()
+        }),
+        // userToken : await authObj.getTolken()
+      }
+      );
+      // How to check log for request      
+      // console.log(response.json())
+      // navigation.navigate("Explore")
+      console.log(await response)
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!title || !body) {
+    // console.log(Date())
+
+		e.preventDefault();
+    if(!title || !body){
       return;
     } else {
       postData();
+      navigation.navigate("Explore");
     }
-  };
+	};
 
   const handleTakePhoto = async () => {
     let permission = await permissionFunction("camera");
@@ -147,136 +162,137 @@ const CreatePost = () => {
   const handleRemovePhoto = async (id) => {
     setUriArray(uri_array.filter((link) => link.id !== id));
   };
-
+  
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View
-        style={{
-          width: "100%",
-          height: "100%",
-          backgroundColor: "white",
-        }}
-      >
-        <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>Create post</Text>
-        </View>
-        <View style={styles.container}>
-          <View style={styles.bigInputContainer}>
-            <TextInput
-              style={styles.title_input}
-              placeholder="Title your post"
-              placeholderTextColor="#474C4D"
-              onChangeText={(e) => setTitle(e)}
-            />
-            {(() => {
-              var current_style;
-              var image_container_style;
-              if (uri_array.length == 0) {
-                current_style = styles.postInputNoImages;
-                image_container_style = styles.imageContainerNoImages;
-              } else {
-                // has images attached
-                current_style = styles.postInput;
-                image_container_style = styles.imageContainer;
-              }
-              return (
-                <>
-                    <TextInput
-                      multiline
-                      allowFontScaling
-                      clearButtonMode="always"
-                      placeholderTextColor="#474C4D"
-                      style={current_style}
-                      textAlign={"left"}
-                      textAlignVertical={"top"}
-                      placeholder="Write here..."
-                      onChangeText={(e) => setBody(e)}
-                      maxLength={1100}
-                    />
-                  <ScrollView
-                    horizontal={"true"}
-                    directionalLockEnabled={"true"}
-                  >
-                    {/* so that we can scroll within the box of all rendered images*/}
-                    <View
-                      onStartShouldSetResponder={() => true}
-                      style={styles.testContainer}
-                    >
-                      {uri_array.map((uri_i, index) => {
-                        return (
-                          <View key={index}>
-                            <Image
-                              style={styles.image}
-                              source={{
-                                uri: uri_i.uri,
-                              }}
-                              resizeMode="cover"
-                            />
-                            <IconButton
-                              icon={(props) => (
-                                <Icon name="close-circle" {...props} />
-                              )}
-                              color="white"
-                              style={{
-                                position: "absolute",
-                                top: 7,
-                                right: 0,
-                              }}
-                              onPress={() => handleRemovePhoto(uri_i.id)}
-                            />
-                          </View>
-                        );
-                      })}
-                    </View>
-                  </ScrollView>
-                </>
-              );
-            })()}
-            <IconButton
-              icon={() => <Icon name="image" size={30} />}
-              color={"black"}
-              onPress={() => handleUploadPhoto()}
-              style={{
-                position: "absolute",
-                alignSelf: "center",
-                top: 7,
-                right: 35,
-              }}
-            />
-            <IconButton
-              icon={() => <Icon name="camera" size={30} />}
-              color={"black"}
-              onPress={() => handleTakePhoto()}
-              style={{
-                position: "absolute",
-                alignSelf: "center",
-                top: 7,
-                right: 0,
-              }}
-            />
-          </View>
-          <View style={styles.postButtonContainer}>
-            <TouchableOpacity style={styles.postButton} onPress={handleSubmit}>
-              <Text
-                style={{
-                  color: "white",
-                  FontWeight: 500,
-                  fontSize: 20,
-                }}
-              >
-                Post!
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {!!success && <Text style={styles.successText}>Success!</Text>}
-        {!!failure && (
-          <Text style={styles.failureText}>
-            Failed to update user information.
-          </Text>
-        )}
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+        backgroundColor: "white",
+      }}
+    >
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>Create post</Text>
       </View>
-    </TouchableWithoutFeedback>
+      <View style={styles.container}>
+        <View style={styles.bigInputContainer}>
+          <TextInput
+            style={styles.title_input}
+            placeholder="Title your post"
+            placeholderTextColor="#474C4D"
+            onChangeText={(e) => setTitle(e)}
+          />
+          {(() => {
+            var current_style;
+            var image_container_style;
+            if (uri_array.length == 0) {
+              current_style = styles.postInputNoImages;
+              image_container_style = styles.imageContainerNoImages;
+            } else {
+              // has images attached
+              current_style = styles.postInput;
+              image_container_style = styles.imageContainer;
+            }
+            return (
+              <>
+                  <TextInput
+                    multiline
+                    allowFontScaling
+                    clearButtonMode="always"
+                    placeholderTextColor="#474C4D"
+                    style={current_style}
+                    textAlign={"left"}
+                    textAlignVertical={"top"}
+                    placeholder="Write here..."
+                    onChangeText={(e) => setBody(e)}
+                    maxLength={1100}
+                  />
+                <ScrollView
+                  horizontal={"true"}
+                  directionalLockEnabled={"true"}
+                >
+                  {/* so that we can scroll within the box of all rendered images*/}
+                  <View
+                    onStartShouldSetResponder={() => true}
+                    style={styles.testContainer}
+                  >
+                    {uri_array.map((uri_i, index) => {
+                      return (
+                        <View key={index}>
+                          <Image
+                            style={styles.image}
+                            source={{
+                              uri: uri_i.uri,
+                            }}
+                            resizeMode="cover"
+                          />
+                          <IconButton
+                            icon={(props) => (
+                              <Icon name="close-circle" {...props} />
+                            )}
+                            color="white"
+                            style={{
+                              position: "absolute",
+                              top: 7,
+                              right: 0,
+                            }}
+                            onPress={() => handleRemovePhoto(uri_i.id)}
+                          />
+                        </View>
+                      );
+                    })}
+                  </View>
+                </ScrollView>
+              </>
+            );
+          })()}
+          <IconButton
+            icon={() => <Icon name="image" size={30} />}
+            color={"black"}
+            onPress={() => handleUploadPhoto()}
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+              top: 7,
+              right: 35,
+            }}
+          />
+          <IconButton
+            icon={() => <Icon name="camera" size={30} />}
+            color={"black"}
+            onPress={() => handleTakePhoto()}
+            style={{
+              position: "absolute",
+              alignSelf: "center",
+              top: 7,
+              right: 0,
+            }}
+          />
+        </View>
+        <View style={styles.postButtonContainer}>
+          <TouchableOpacity style={styles.postButton} onPress={handleSubmit}>
+            <Text
+              style={{
+                color: "white",
+                FontWeight: 500,
+                fontSize: 20,
+              }}
+            >
+              Post!
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {!!success && <Text style={styles.successText}>Success!</Text>}
+      {!!failure && (
+        <Text style={styles.failureText}>
+          Failed to update user information.
+        </Text>
+      )}
+    </View>
+  </TouchableWithoutFeedback>
+    
   );
 };
 

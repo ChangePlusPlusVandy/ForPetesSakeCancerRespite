@@ -61,6 +61,22 @@ router.put("/like_post",VerifyToken, async(req, res) => {
     }
 });
 
+router.put("/create_comment", VerifyToken, async(req, res) => {
+    var commentBody = req.body;
+    let blogId = req.query.blogId;
+    let user = (req as any).user;
+    let userId = user._id;
+
+    // console.log(commentBody);
+    // console.log(blogId);
+    Newsletter.findById(blogId, function (err, doc){
+        doc.comments.push(commentBody);
+        doc.save();
+      });
+    let posts = await Newsletter.findById(blogId);
+    console.log(posts);
+    res.status(200).send('comment success');
+});
 
 router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     // console.log('user token:  ' + req.body.userToken)
@@ -69,7 +85,6 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     // Parse through the text in here
     var titleText = req.body.title;
     var bodyText = req.body.body;
-    var dateText = req.body.date;
     // var author = req.body.author;
     if(!titleText || !bodyText){
         res.status(400).send(JSON.stringify("Bad user input. Inputs required for all fields."));
@@ -82,13 +97,14 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
             title: titleText, // change this based on what the req looks like
             body: bodyText,
             author: user.name,
-            timePosted: dateText,   
+            timePosted: Date()   
         })
         console.log("Successfully added to the database: " + newsletterItem)
     } catch(e) {
         console.log(e.message)
     }
 });
+
 
 router.delete('/delete_newsletter', async(req, res)=>{
     // Delete a newsletter post here
@@ -111,5 +127,6 @@ router.delete('/delete_newsletter', async(req, res)=>{
  router.get("/", async(req, res) => {
 	res.send("Hello World!"); // THIS WORKS! when you do localhost:3000/api/newsletter/ in postman
 });
+
 
 export default router;
