@@ -14,6 +14,13 @@ const multer = Multer({
 		fileSize: 25 * 1024 * 1024, // no larger than 25mb
 		fieldSize: 25 * 1024 * 1024, // no larger than 25mb
 	},
+	fileFilter: (req, file, cb) => {
+		if (file.mimetype !== "image/png" && file.mimetype !== "image/jpeg") {
+			cb(new Error("Only .png and .jpg format allowed!"), false);
+			return;
+		}
+		cb(null, true);
+	},
 });
 
 const convertToWebp = async (buffer) => {
@@ -35,6 +42,10 @@ create_image.post("/create_image", multer.single("file"), async (req, res) => {
 			})
 			.catch((error) => {
 				console.error(error);
+				res.status(500).json({
+					status: "error",
+					error: error.message,
+				});
 			});
 	}
 });
