@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
 	groupchats: {
 		type: [{ type: mongoose.Schema.Types.ObjectId, ref: "GroupChats" }],
 	},
+	profile_picture: String,
 });
 
 // userSchema.statics.build = (attrs) => {
