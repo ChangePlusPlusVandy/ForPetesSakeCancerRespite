@@ -1,59 +1,49 @@
 import { Request, Response } from "express";
 import { User } from "../../../models/User";
 import Newsletter from "../../../models/Newsletter"
+import mongoose from "mongoose"
+
 async function add_follower(req: Request, res: Response) {
 	try {
 		// Gets the User Information from Request
 		const userID = req.body.id;
+		const userIDINFO = await User.findById(userID);
+		// Get Self Information
 		const selfUser = (req as any).user;
-
+		const selfINFO = await User.findById(selfUser._id);
+		
 		// Check if userID is valid
-		const userIDINFO: any = await User.findById(userID);
 		if (!userIDINFO) {
 			throw new Error("User not found");
 		}
-		// const selfINFO = await User.findById(selfUser);
+		//console.log("IndexPosition: " + selfINFO.following.indexOf(userIDINFO._id))
 		// Check if user is already following
-		for (let i = 0; i < selfUser.following; i++) {
-			if (userIDINFO.following[i] == selfUser._id) {
-				throw new Error("Already following");
-			}
-		}
-		// Add to person to self following
-		const selfINFO: any = await User.findById(selfUser._id);
-		await selfINFO.findByIdAndUpdate(
-			{ _id: selfUser._id },
-			{ $push: { following: userID } }
-		);
-		// Add self to person followers
-		await userIDINFO.findByIdAndUpdate(
-			{ _id: userID },
-			{ $push: { followers: selfUser._id } }
-		);
-		res.status(200).json({ user: userIDINFO.removeSensitiveData() });
-	} catch (error) {
-		console.error(error);
-		throw error;
-	}
-}
-
-// Takes a user ID and removes sensititve data
-async function getUser(req: Request, res: Response) {
-	try {
-		const userIDSent = req.body.user;
-		const userObj = await User.findById(userIDSent);
-		if (!userObj) {
-			res.status(404).json({ error: "User not found" });
+		if(selfINFO.following.indexOf(userIDINFO._id) !== -1){
+			res.status(200).json({user: (userIDINFO as any).removeSensitiveData() })
 			return;
 		}
-		(userObj as any).removeSensitiveData();
 
-		res.status(200).json({ user: userObj });
+		// Add to person to self following
+		await User.findByIdAndUpdate(
+			{ _id: selfINFO._id },
+			{ $push: { following: userIDINFO._id } }
+		);
+
+		// Add self to person followers NEED TO FIX
+		await User.findByIdAndUpdate(
+			{ _id: userIDINFO._id },
+			{ $push: { follower: selfINFO._id } }
+		);
+		//console.log("Other User: " + userIDINFO.username)
+		//console.log("SELF: " + selfUser.username)
+		res.status(200).json({ message: "SUCCESS"});
 	} catch (error) {
 		console.error(error);
 		throw error;
 	}
 }
+
+
 
 async function getFeed(req: Request, res: Response) {
 	try {
@@ -68,8 +58,12 @@ async function getFeed(req: Request, res: Response) {
 		// array of newsletter ids
 		for (let i = 0; i < userObjFollowing.length; i++) {
 			const userObjFollowingPostsTemp = await User.findById(userObjFollowing[i])
-			userObjFollowingPostsIDS.push(userObjFollowingPostsTemp.newsletter)
+			for(let j = 0; j < userObjFollowingPostsTemp.newsletter.length; ++j){
+				userObjFollowingPostsIDS.push(userObjFollowingPostsTemp.newsletter[j])
+			}
+			
 		}
+		//console.log(userObjFollowingPostsIDS)
 		const allPosts = await Newsletter.find({_id:{$in:userObjFollowingPostsIDS}}).sort({timePosted: -1})
 		
 		res.status(200).json({ feed: allPosts });
@@ -80,4 +74,4 @@ async function getFeed(req: Request, res: Response) {
 	}
 }
 
-export { add_follower, getUser, getFeed };
+export { add_follower, getFeed };
