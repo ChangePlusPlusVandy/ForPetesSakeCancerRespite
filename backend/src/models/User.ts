@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
 	groupchats: {
 		type: [{ type: mongoose.Schema.Types.ObjectId, ref: "GroupChats" }],
 	},
+	profile_picture: String,
 	follower: {
 		type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 	},
