@@ -41,8 +41,14 @@ const Register = () => {
 			return;
 		}
 
-		if (name.length < 2 || email.length < 3 || password.length < 5) {
+		if (name.length < 2 || email.length < 3) {
 			setError("One or more fields are incomplete.");
+			return;
+		}
+
+		if(password.length < 5)
+		{
+			setError("Password must be at least 5 characters long");
 			return;
 		}
 
