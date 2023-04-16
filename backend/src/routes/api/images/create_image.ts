@@ -10,7 +10,8 @@ const create_image = express.Router();
 const multer = Multer({
 	storage: Multer.memoryStorage(),
 	limits: {
-		fileSize: 8 * 1024 * 1024, // no larger than 8mb
+		fileSize: 25 * 1024 * 1024, // no larger than 25mb
+		fieldSize: 25 * 1024 * 1024, // no larger than 25mb
 	},
 });
 

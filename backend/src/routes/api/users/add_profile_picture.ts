@@ -20,7 +20,8 @@ const router = express.Router();
 const multer = Multer({
   storage: Multer.memoryStorage(),
   limits: {
-    fileSize: 20 * 1024 * 1024 // no larger than 20mb
+    fileSize: 25 * 1024 * 1024, // no larger than 25mb
+	fieldSize: 25 * 1024 * 1024, // no larger than 25mb
   }
 });
 
