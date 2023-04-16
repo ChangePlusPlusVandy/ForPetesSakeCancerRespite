@@ -223,7 +223,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 5,
     paddingLeft: 10,
-    // fontWeight: "400",
     color: "#888888",
   },
 });

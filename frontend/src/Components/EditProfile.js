@@ -14,17 +14,20 @@ import { IconButton } from "react-native-paper";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CONFIG from "../Config";
 import * as ImagePicker from "expo-image-picker";
-
+import { parsePhoneNumber } from "libphonenumber-js";
 
 const EditProfileScreen = () => {
   const authObj = useAuth();
-  const [phoneNumber, setPhoneNumber] = useState(`${authObj.currentUser.phone}`);
+  const [phoneNumber, setPhoneNumber] = useState(
+    `${authObj.currentUser.phone}`
+  );
   const [name, setName] = useState(`${authObj.currentUser.name}`);
   const [bio, setBio] = useState(`${authObj.currentUser.bio}`);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const [pfpUri, setPfpUri] = useState("../../public/defaultProfile.png");
   const navigation = useNavigation();
+  const [error, setError] = useState("");
 
   const changeProfilePicture = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -35,17 +38,30 @@ const EditProfileScreen = () => {
     });
     if (result.canceled) return;
     setPfpUri(result.assets[0].uri);
-  }
+  };
 
   const updateUser = async () => {
     var url = CONFIG.URL + "/api/users/update_user";
     var headers = await authObj.getAuthHeader();
     headers["Content-Type"] = "application/json";
 
+    let phoneNum;
+    try {
+      phoneNum = parsePhoneNumber(phoneNumber, "US");
+      if (!phoneNum.isValid()) {
+        throw new Error();
+      }
+    } catch (e) {
+      setError("Invalid Phone Number");
+      return;
+    }
+
+    phoneNum = phoneNum.formatNational();
+
     const requestOptions = {
       method: "POST",
       headers,
-      body: JSON.stringify({ name: name, number: phoneNumber, bio: bio }),
+      body: JSON.stringify({ name: name, number: phoneNum, bio: bio }),
     };
 
     await fetch(url, requestOptions)
@@ -65,8 +81,9 @@ const EditProfileScreen = () => {
       contentContainerStyle={styles.container}
       scrollEnabled={false}
     >
-      <View style = {styles.container}>
+      <View style={styles.container}>
         <View style={styles.topPart}>
+          <Text style={{ color: "red" }}>{error}</Text>
           <Text style={styles.welcomeText}>
             Welcome, @{authObj.currentUser.username}!
           </Text>
@@ -215,6 +232,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "normal",
     textTransform: "capitalize",
+    marginBottom: 10,
   },
   successText: {
     marginTop: 10,

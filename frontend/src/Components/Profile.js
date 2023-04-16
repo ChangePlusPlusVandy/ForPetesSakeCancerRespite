@@ -14,10 +14,13 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <View style={styles.topPart}>
         <View style={styles.usernameTextContainer}>
-          <Text style = {{
-            fontSize: 15,
-            fontWeight: 600,
-          }}>{authObj.currentUser.username}</Text>
+          <Text
+            style={{
+              fontSize: 15,
+            }}
+          >
+            {authObj.currentUser.username}
+          </Text>
         </View>
         <View style={styles.topOfTopPart}>
           <Image
@@ -41,12 +44,11 @@ const ProfileScreen = () => {
             </View>
           </View>
         </View>
-        {/* Display user's name here */}
         <View style={styles.bioContainer}>
-          <Text style={{ fontWeight: 700, fontSize: 20, marginBottom: 4 }}>
+          <Text style={{ fontSize: 18, marginBottom: 4 }}>
             {authObj.currentUser.name}
           </Text>
-          <Text style={{ fontSize: 15, marginBottom: -5 }}>{authObj.currentUser.bio}</Text>
+          <Text style={{ fontSize: 15, color: "#888888" }}>{authObj.currentUser.bio}</Text>
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={styles.followButton}>
@@ -73,92 +75,91 @@ const styles = StyleSheet.create({
   },
   topPart: {
     backgroundColor: "#fff",
-    marginBottom: 20,
-    marginTop: 0,
-    height: "27%",
+    height: "25%",
     width: "100%",
     justifyContent: "center",
+    paddingLeft: 20,
+    paddingBottom: 10,
+  },
+  topOfTopPart: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 5,
+    marginTop: 5,
   },
   blogDisplayContainer: {
     width: "100%",
-    height: "73%",
+    height: "75%",
   },
-  feed: {},
-  followButton: {
-    borderRadius: "5px",
-    backgroundColor: "#4192EF",
-    width: "40%",
+  buttonsContainer: {
+    flexDirection: "row",
+    width: "60%",
+    height: "20%",
+    alignItems: "center",
+  },
+  statsContainer: {
+    width: "70%",
     height: "100%",
-    padding: 8,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "flex-start",
+  },
+  followButton: {
+    borderRadius: 5,
+    backgroundColor: "#088DA9",
+    width: "40%",
+    height: "80%",
+    padding: 3,
     alignItems: "center",
     justifyContent: "center",
   },
   messageButton: {
-    borderRadius: "5px",
+    borderRadius: 5,
     backgroundColor: "#000000",
     width: "40%",
-    height: "100%",
-    padding: 8,
+    height: "80%",
+    marginLeft: 20,
+    padding: 3,
     alignItems: "center",
     justifyContent: "center",
   },
   buttonTextStyle: {
     color: "#fff",
-    fontWeight: 400,
     fontSize: 16,
-    fontWeight: 500,
-    lineHeight: "100%",
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    width: "60%",
-    justifyContent: "space-evenly",
-    marginLeft: 10,
-    marginTop: "3%",
-  },
-  statsContainer: {
-    width: "70%",
-    height: "60%",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignSelf: "flex-end",
   },
   followersNumber: {
     justifyContent: "center",
-    marginBottom: "10%",
+    alignSelf: "center",
     alignItems: "center",
   },
   postsNumber: {
     justifyContent: "center",
-    marginBottom: "10%",
+    alignSelf: "center",
     alignItems: "center",
   },
   followingNumber: {
     justifyContent: "center",
-    marginBottom: "10%",
+    alignSelf: "center",
     alignItems: "center",
   },
   profilePicture: {
     width: 60,
     height: 60,
-    marginLeft: "5%",
     alignSelf: "center",
-  },
-  topOfTopPart: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    margin: 10,
   },
   usernameTextContainer: {
-    marginTop: 5,
+    marginTop: 10,
     alignSelf: "center",
-    justifyContent: "center",
-    height: "15%",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    height: "10%",
   },
   bioContainer: {
     alignItems: "flex-start",
-    marginLeft: "7%",
-    marginTop: "2%",
+    marginTop: 3,
+    marginBottom: 3,
   },
 });
 

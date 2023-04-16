@@ -97,7 +97,7 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
             title: titleText, // change this based on what the req looks like
             body: bodyText,
             author: user.name,
-            timePosted: Date()   
+            timePosted: Date.now(),  
         })
         console.log("Successfully added to the database: " + newsletterItem)
     } catch(e) {

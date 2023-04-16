@@ -1,82 +1,147 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet,Text,View, TouchableOpacity, FlatList, Image} from "react-native";
-import BlogDisplay from "./BlogDisplay"
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  Image,
+} from "react-native";
+import BlogDisplay from "./BlogDisplay";
 import Config from "../../Config";
 import BottomBar from "../BottomBar";
 
 const ExploreScreen = () => {
+  const [followingState, setFollowingState] = useState(false);
 
-    return (
-        <View style={styles.container}>
-            <View style = {styles.header}>
-                <View style={styles.profile}>
-                    <Image style={{height:'100%',width:undefined,aspectRatio:1}} source={require('../../../public/defaultProfile.png')}/>
-                </View>
+  const handleFollowingButton = () => {
+    if (followingState == false) setFollowingState(true);
+    else setFollowingState(false);
+    // also filter what's being displayed
+  };
 
-                <Text style = {styles.title}>Explore</Text>
-                <View style={styles.headeroptions}>
-                    <TouchableOpacity style={{ width:'50%',height:'100%', alignItems:'center',flexDirection:'row'}}>
-                        <Text style = {styles.optionText}>Following</Text>
-                    </TouchableOpacity>
+  const handleExploreState = () => {
+    if (followingState == true) setFollowingState(false);
+    else setFollowingState(true);
+    // also filter what's being displayed
+  };
 
-                    <TouchableOpacity style={{width:'50%',height:'100%',justifyContent:'flex-end', alignItems:'center',flexDirection:'row'}}>
-                        <Text style={styles.optionText}> Sort By</Text>
-                        <Image style={{height:15,width:15, aspectRatio:1, margin:5}} source={require('../../../public/newsletter/SortBy.png')}></Image>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            <View style={{flex:5}}>
-                <BlogDisplay></BlogDisplay>
-            </View>
-            
-
-            <BottomBar postEnabled={true} ></BottomBar>
+  return (
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <View style={styles.profile}>
+          <Image
+            style={{ height: "95%", width: undefined, aspectRatio: 1 }}
+            source={require("../../../public/defaultProfile.png")}
+          />
+          <Text style={styles.title}>Feed</Text>
         </View>
-    );
+        <View style={styles.headerOptions}>
+          {(() => {
+            var text_style;
+            var explore_text_style;
+            if (followingState == true) {
+              text_style = styles.followingTextBlue;
+              explore_text_style = styles.followingText;
+            } else {
+                text_style = styles.followingText;
+                explore_text_style = styles.followingTextBlue;
+            }
+            return (
+              <>
+                <TouchableOpacity
+                  style={styles.followingButton}
+                  onPress={() => handleFollowingButton()}
+                >
+                  <Text style={text_style}>Following</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.exploreButton}
+                  onPress={() => handleExploreState()}
+                >
+                  <Text style={explore_text_style}>Explore</Text>
+                </TouchableOpacity>
+              </>
+            );
+          })()}
+        </View>
+      </View>
+      <View style={styles.exploreContainer}>
+        <BlogDisplay></BlogDisplay>
+      </View>
+      <BottomBar postEnabled={true}></BottomBar>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		// backgroundComlor: "#fff",
-        backgroundColor:'E5E5E570',
-		justifyContent: "flex-start",
-        alignItems:"stretch",
-	},
-    header: {
-        flex:1.5,
-        backgroundColor:'#fff',
-        borderBottomColor:'#C4C4C4',
-        borderBottomWidth:1,
-        paddingTop: 24,
-        paddingLeft:24,
-        paddingRight:30
-    },
-    title:{
-        flex:1,
-        fontWeight:'bold',
-        color:"#088DA9",
-        fontSize: 40,
-    },
-    profile:{
-        flex:1,
-        alignItems:'flex-start',
-        padding:0,
-        margin:0
-    },
-    headeroptions:{
-        flex:1,
-        flexDirection: 'row',
-        justifyContent:'space-evenly',
-        width:'100%',
-        paddingBottom:0,
-        marginBottom:0,
-    },
-    optionText:{
-        fontWeight:'500',
-        fontSize:16,
-    },
+  container: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "E5E5E570",
+    justifyContent: "flex-start",
+    alignItems: "stretch",
+  },
+  followingButton: {
+    width: "30%",
+    height: "100%",
+    borderRadius: 15,
+    borderWidth: 0.5,
+    borderColor: "#C4C4C4",
+    padding: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  exploreButton: {
+    width: "30%",
+    height: "100%",
+    borderRadius: 15,
+    borderWidth: 0.5,
+    borderColor: "#C4C4C4",
+    padding: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginLeft: 10,
+  },
+  headerContainer: {
+    height: "18%",
+    backgroundColor: "#fff",
+    borderBottomColor: "#C4C4C4",
+    borderBottomWidth: 1,
+    paddingLeft: 10,
+    paddingTop: 10,
+  },
+  exploreContainer: {
+    height: "72%",
+  },
+  title: {
+    fontWeight: "bold",
+    color: "#088DA9",
+    fontSize: 35,
+    marginLeft: "3%",
+  },
+  profile: {
+    height: "55%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerOptions: {
+    flexDirection: "row",
+    height: "45%",
+    width: "100%",
+    padding: 10,
+    alignSelf: "flex-end",
+  },
+  followingText: {
+    fontSize: 18,
+  },
+  followingTextBlue: {
+    fontSize: 18,
+    color: "#088DA9",
+  },
 });
 
 export default ExploreScreen;

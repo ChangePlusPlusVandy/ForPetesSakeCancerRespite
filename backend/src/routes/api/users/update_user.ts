@@ -2,6 +2,7 @@ import express from "express";
 var router = express.Router();
 import VerifyToken from "../../../middlewares/VerifyToken";
 import { User } from "../../../models/User";
+import { parsePhoneNumber } from "libphonenumber-js";
 
 router.post("/update_user", VerifyToken, async (req, res) => {
   let user = (req as any).user;
@@ -9,6 +10,19 @@ router.post("/update_user", VerifyToken, async (req, res) => {
   var newName = req.body.name;
   var newNumber = req.body.number;
   var newBio = req.body.bio;
+
+  let phoneNum;
+    try {
+      phoneNum = parsePhoneNumber(newNumber, "US");
+      if (!phoneNum.isValid()) {
+        throw new Error();
+      }
+    } catch (e) {
+      res.status(400).send({
+        message: `Invalid phone number.`
+      });
+    }
+
   if (!newName || !newNumber) {
     // Basically, in the frontend these values are automatically set to the values they were before
     // So, by defult if a user sends an update_user request but doesn't change anything, nothing really needs to be changed
@@ -20,9 +34,9 @@ router.post("/update_user", VerifyToken, async (req, res) => {
     res.status(400).send("Bad user input. Inputs required for all fields.");
     return;
   } else {
-    var update = { name: newName, phone: newNumber, bio: newBio }; // CHANGE NUMBER HERE TOO
+    var update = { $set: { name: newName, phone: newNumber, bio: newBio }};
     try {
-      let doc = await User.findOneAndUpdate(userId, update, {
+      let doc = await User.findOneAndUpdate({_id: userId}, update, {
         new: true,
       });
       res.status(200).send({

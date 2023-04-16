@@ -48,7 +48,6 @@ const CreatePost = () => {
 
   const postData = async () => {
     try {
-
       let authHeader = await authObj.getAuthHeader();
       // let token = await authObj.getTolken();
       const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', 
@@ -100,23 +99,7 @@ const CreatePost = () => {
       quality: 1,
     });
     if (result.canceled) return;
-    else if (result.errorCode == "camera_unavailable") {
-      alert("Camera unavailable", "Your device may not have a camera.", {
-        text: "OK",
-        onPress: () => console.log("OK Pressed"),
-      });
-    } else if (result.errorCode == "permission") {
-      alert(
-        "Permission error",
-        "Please allow permissions to your camera in your settings",
-        { text: "OK", onPress: () => console.log("OK Pressed") }
-      );
-    } else if (result.errorCode == "others") {
-      alert("Unkown error occurred", {
-        text: "OK",
-        onPress: () => console.log("OK Pressed"),
-      });
-    } else {
+    else {
       setUriArray(
         // Replace the state
         [
@@ -133,7 +116,6 @@ const CreatePost = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      // quality: 1,
     });
     if (result.canceled) return;
     if (result.errorCode == "permission") {
@@ -229,9 +211,9 @@ const CreatePost = () => {
                           />
                           <IconButton
                             icon={(props) => (
-                              <Icon name="close-circle" {...props} />
+                              <Icon name="close" {...props} />
                             )}
-                            color="white"
+                            color="red"
                             style={{
                               position: "absolute",
                               top: 7,
