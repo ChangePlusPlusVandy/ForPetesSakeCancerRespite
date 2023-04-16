@@ -1,22 +1,38 @@
 const express = require("express");
 const { Storage } = require("@google-cloud/storage");
 const Multer = require("multer");
+const sharp = require("sharp");
 import CONFIG from "../../../Config";
 
 const storage = new Storage({ credentials: CONFIG.firebaseCert });
 const bucket = storage.bucket("for-petes-sake-cancer-respite.appspot.com");
-const router = express.Router();
+const create_image = express.Router();
 
 const multer = Multer({
 	storage: Multer.memoryStorage(),
 	limits: {
-		fileSize: 8 * 1024 * 1024, // no larger than 8mb
+		fileSize: 25 * 1024 * 1024, // no larger than 25mb
+		fieldSize: 25 * 1024 * 1024, // no larger than 25mb
+	},
+	fileFilter: (req, file, cb) => {
+		if (file.mimetype !== "image/png" && file.mimetype !== "image/jpeg") {
+			cb(new Error("Only .png and .jpg format allowed!"), false);
+			return;
+		}
+		cb(null, true);
 	},
 });
 
-router.post("/create_image", multer.single("file"), (req, res) => {
+const convertToWebp = async (buffer) => {
+	return sharp(buffer).webp().toBuffer();
+};
+
+create_image.post("/create_image", multer.single("file"), async (req, res) => {
 	let file = req.file;
 	if (file) {
+		const webpFile = await convertToWebp(file.buffer);
+		file.buffer = webpFile;
+		file.mimetype = "image/webp";
 		uploadImageToStorage(file)
 			.then((url: any) => {
 				res.status(200).json({
@@ -26,6 +42,10 @@ router.post("/create_image", multer.single("file"), (req, res) => {
 			})
 			.catch((error) => {
 				console.error(error);
+				res.status(500).json({
+					status: "error",
+					error: error.message,
+				});
 			});
 	}
 });
@@ -35,7 +55,7 @@ const uploadImageToStorage = (file) => {
 		if (!file) {
 			reject("No image file");
 		}
-		let newFileName = `${file.originalname}_${Date.now()}`;
+		let newFileName = `${Date.now()}` + ".webp";
 
 		let fileUpload = bucket.file(newFileName);
 
@@ -59,4 +79,4 @@ const uploadImageToStorage = (file) => {
 	});
 };
 
-export default router;
+export { create_image, uploadImageToStorage };
