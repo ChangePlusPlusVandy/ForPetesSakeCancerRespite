@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet,Text,View, TouchableOpacity, FlatList, Image} from "react-native";
+import { StyleSheet,Text,View, TouchableOpacity, ScrollView, Image} from "react-native";
 import Config from "../../Config";
 import { useAuth } from "../../AuthContext";
 import BottomBar from "../BottomBar";
 import ImageCarousel from "./imageCarousel";
+import { TextInput } from "react-native-gesture-handler";
 
 
     // placeholder images
@@ -28,6 +29,9 @@ const BlogPage = ({route, navigation}) => {
 
     const [newsLetter, setNewsLetter] = useState({})
     const [likeNumber, setLikeNumber] = useState(0)
+    const [comment, setComment] = useState('')
+    const [commentList, setCommentList] = useState([])
+    
 
     // var likeNumber = 0;
 
@@ -64,43 +68,78 @@ const BlogPage = ({route, navigation}) => {
         // console.log(data);
         getNewsLetterbyID();
         console.log(likeNumber)
-
     };
+
+    const postComment = async() => {
+        var header = await authObj.getAuthHeader();
+        const promist = await fetch(Config.URL+`/api/newsletter/create_comment/?blogId=${blogId}`,
+        {
+            method: 'PUT',
+            headers: 
+            { 
+                'Content-Type': 'application/json' ,
+                ...header
+            },
+            body: JSON.stringify({content:comment})
+        });
+        getNewsLetterbyID();
+    };
+
 
     useEffect(() => {
         getNewsLetterbyID();
-    });
+    }, []);
 
     
     let timePosted= newsLetter.timePosted ? newsLetter.timePosted.substring(4,16) : '';
 
     return (
         <View style={styles.container}>
+            <View style={{height:585, backgroundColor:'#E5E5E550'}}>
+                <ScrollView contentContainerStyle={styles.newsItem}>
+                    <View>
+                        <ImageCarousel  imgLink={images}></ImageCarousel>
+                    </View>
+
+                    <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
+                    <Text style={{ fontSize:18, paddingLeft:15, paddingRight:15}}>{newsLetter.body}</Text>
+
+                    <View style={{borderTopWidth:1, marginTop:15, marginBottom:15}}>
+                        <Text style={{fontWeight:'600', fontSize:18, paddingLeft:15, paddingRight:15}}>Comments</Text>
+                    </View>
+
+                    <View>
+                        { newsLetter.comments && newsLetter.comments.map((comment) => {
+                            return (
+                                <Text style={styles.comment}>{comment.content}</Text>
+                            );
+                        })}
+                    </View>
+
+                </ScrollView>
+            </View>
             
-            <View style={styles.newsItem}>
-                <View style={styles.newsHeader}>
-                    <Image style={{flex:1.5, height:'100%', width:-1, borderRadius:'50%'}} source={require('../../../public/defaultProfile.png')}/>
-                    <Text style={{flex:4, alignSelf:'center',marginLeft:'19px'}}>{newsLetter.author}</Text>
-                    <Text style={{flex:4, alignSelf:'center'}}>Posted: {timePosted}</Text>
-                </View>
-                <View style={styles.newsTitle}>
-                    <Text style={{fontWeight:'bold', fontSize:'26px'}}>{newsLetter.title}</Text>
-                </View>
-
-                {/* actually contnt */}
-                <View style={styles.newsContent}>
-                    <ImageCarousel></ImageCarousel>
-                </View>
-            </View>
-
+            
             <View style={styles.utilityContainer}>
-                <Text style={{margin:'15px'}}>{likeNumber}</Text>
+                <View style={{marginLeft:10}}>
+                    <Text style={{color:'#FF3D00'}}>{likeNumber}</Text>
+                </View>
+                
                 <TouchableOpacity onPress={() => likePost()} >
-                    <Image style={{flex:1, height:'45px', width:'45px', aspectRatio:1, marginTop:'5px'}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
+                    <Image style={{ height:45, width:45, aspectRatio:1}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
                 </TouchableOpacity>
-                <TouchableOpacity></TouchableOpacity>
-            </View>
+                
+                <TextInput
+                     placeholder="Write here..."
+                     style={styles.input}
+                     onChangeText={(e) => setComment(e)}
+                    />
 
+                <TouchableOpacity  onPress={() => postComment()}>
+                    <Image style={{ height:45, width:45, aspectRatio:1, margin:10}} source={require('../../../public/newsletter/commentButton.png')}></Image>
+                </TouchableOpacity>
+            </View>
+            
             <BottomBar></BottomBar>
         </View>
         
@@ -109,34 +148,38 @@ const BlogPage = ({route, navigation}) => {
 
 const styles = StyleSheet.create ({
     utilityContainer: {
-        flex:1,
+        // flex:1,
         width:'100%',
-        height:'20%',
         justifyContent:'flex-start',
-        alignItems:'flex-start',
+        alignItems:'center',
         flexDirection:'row',
-        // marginLeft:'10px',
-        // marginTop:'10px',
-        backgroundColor: "#fff",
+        backgroundColor: "#E5E5E550",
+        // borderTop
     },
+    comment:{
+        paddingLeft:15, 
+        paddingRight:15,
+    },
+    input: {
+        height: 40,
+        width: 250,
+        borderWidth: 1,
+        padding: 10,
+      },
     container: {
 		flex: 1,
 		backgroundColor: "#fff",
 		justifyContent: "flex-start",
-        alignItems:"stretch",
+        // alignItems:"flex-start",
 	},
     newsItem:{
+        // flex:1,
         backgroundColor:'#E5E5E550',
-        borderWidth:'1px',
         borderColor:"#C4C4C470",
-        height:'660px',
-        paddingLeft:'19px',
-        paddingTop:'10px',
         justifyContent:'flex-start'
     },
-    newsContent:{
-        flex:7
-    },
+    // newsContent:{
+    // },
     newsHeader:{
         flex:1,
         justifyContent:'flex-start',
@@ -145,7 +188,7 @@ const styles = StyleSheet.create ({
     newsTitle:{
         flex:2,
         width:'90%',
-        paddingTop:'10px',
+        paddingTop:10,
     },
 });
 
