@@ -55,21 +55,20 @@ class _ChatApp extends Component {
 				<View style={styles.chatTop}>
 					<Text style={styles.recentChats}>Recent Chats</Text>
 				</View>
-
 				<View style={styles.chats}>
-					<FlatList
-						data={this.state.groupchats}
-						renderItem={({ item }) => (
-							<Link to={{ screen: "Chat", params: { item } }}>
-								<View style={{width: "100%", paddingHorizontal: 10}}>
-								<View style={{paddingTop: 5}}></View>
-								<Groupchat item={item} />
-								<View/>
-								</View>
-							</Link>
-						)}
-					/>
-				</View>
+				<FlatList
+					data={this.state.groupchats}
+					renderItem={({ item }) => (
+						<Link to={{ screen: "Chat", params: { item } }}>
+							<View style={{width: "100%", paddingHorizontal: 10}}>
+							<View style={{paddingTop: 7, width:"100%"}}></View>
+							<Groupchat item={item} />
+							<View/>
+							</View>
+						</Link>
+					)}
+				/>
+			</View>
 					<View style={styles.createContainer}>
 						<View style={styles.createButtonContainer}>
 						<Link to={{screen: "CreateChat"}}>
@@ -77,7 +76,6 @@ class _ChatApp extends Component {
 						</Link>
 						</View>
 					</View>
-				<BottomBar/>
 			</View>
 			
 		);
@@ -102,10 +100,12 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		width: "100%",
+		height: "100%",
 		backgroundColor: "#FFFFFF",
 	},
 	chatTop: {
 		top: 29,
+		bottom: 20,
 		left: 15,
 		justifyContent: "space-between",
 		flexDirection: "row",
@@ -113,11 +113,13 @@ const styles = StyleSheet.create({
 	recentChats: {
 		color: "#088DA9",
 		fontWeight: "bold",
-		fontSize: 32,
+		fontSize: 27,
 	},
 	chats: {
-		marginTop: 60,
+		marginTop: 50,
 		width: "100%",
+		height: "75%",
+		backgroundColor: "#E4E4E4"
 	},
 	newChat: {
 		paddingLeft: "50%",
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
 	},
 	createButtonContainer: {
 		width: "30%",
-		height: 30,
+		height: 35,
 		backgroundColor: "#088DA9",
 		borderRadius: 20,
 		alignItems: "center",

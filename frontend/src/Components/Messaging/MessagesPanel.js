@@ -7,6 +7,9 @@ import {
 	TextInput,
 	Pressable,
 	ScrollView,
+	KeyboardAvoidingView,
+	TouchableWithoutFeedback,
+	Keyboard
 } from "react-native";
 import Message from "./Message";
 import CONFIG from "../../Config";
@@ -19,15 +22,16 @@ class _MessagesPanel extends Component {
 		super(props);
 		this.submitChatMessage.bind(this);
 		this.getMessages.bind(this);
+		this.receiveMessage.bind(this);
+		this.socket = props.socket;
+		this.auth = props.auth;
 		this.state = {
 			chatMessage: "",
 			messages: [],
 			messageNum: 0,
-			groupid: "",
+			groupid: this.props.route.params.item._id,
 			groupname: "",
 		};
-		this.socket = props.socket;
-		this.auth = props.auth;
 	}
 
 	//socket.io get messages
@@ -39,19 +43,18 @@ class _MessagesPanel extends Component {
 	getMessages = async () => {
 		//api request
 		var headers = await this.auth.getAuthHeader();
-		fetch(
+		var response = await fetch(
 			CONFIG.URL +
 				"/api/messaging/get_groupchat?id=" +
 				this.props.route.params.item._id,
 			{ headers }
-		).then(async (response) => {
-			let data = await response.json();
-			this.setState({
+		)
+		let data = await response.json();
+		this.setState({
 				messages: data.groupchat.messages,
 				groupid: data.groupchat._id,
 				groupname: data.groupchat.name,
-			});
-			this.setState({ messageNum: data.groupchat.messages.length });
+				messageNum: data.groupchat.messages.length
 		});
 	};
 
@@ -64,27 +67,27 @@ class _MessagesPanel extends Component {
 					message: this.state.chatMessage,
 					groupchat: this.state.groupid,
 					timestamp: Date.now(),
-				},
-				async (response) => {
-					this.setState({ chatMessage: "" });
-					await this.getMessages();
-				}
+				},(response) => {this.getMessages()}
 			);
+
+			this.setState({chatMessage: ""});
+			//await this.getMessages();
 		}
 	};
 
 	receiveMessage = async () => {
-		this.socket.on("received-message-user", (response) => {
-			if (response.groupchat_id == groupid) {
-				this.setState({ messages: [...messages, response.message] });
-			}
-		});
+		this.socket.on("received-message-user", ((response) => {
+			console.log("receives", this.auth.currentUser._id, response);
+			console.log(this.state.groupid)
+			// if (response.groupchat_id == this.state.groupid) {
+			// 	this.setState({ messages: [...this.state.messages, response.message] });
+			// }
+			this.getMessages();
+		}).bind(this));
 	};
 
 	//this.auth.currentUser._id == messages[i].user
 	//add scroll feature
-	//drop shadows
-	//<ScrollView style={styles.chatbody}>{messages}</ScrollView>
 	render() {
 		// this.socket.send("hello world!");
 		var messages = [];
