@@ -23,12 +23,9 @@ const convertToWebp = async (buffer) => {
 create_image.post("/create_image", multer.single("file"), async (req, res) => {
 	let file = req.file;
 	if (file) {
-		const webpBuffer = await convertToWebp(file);
-		const webpFile = {
-			buffer: webpBuffer,
-			mimetype: "image/webp",
-			originalname: file.originalname.replace(/\.[^/.]+$/, "") + ".webp",
-		}
+		const webpFile = await convertToWebp(file.buffer);
+		file.buffer = webpFile;
+		file.mimetype = "image/webp";
 		uploadImageToStorage(file)
 			.then((url: any) => {
 				res.status(200).json({
@@ -47,7 +44,7 @@ const uploadImageToStorage = (file) => {
 		if (!file) {
 			reject("No image file");
 		}
-		let newFileName = `${Date.now()}`;
+		let newFileName = `${Date.now()}` + ".webp";
 
 		let fileUpload = bucket.file(newFileName);
 

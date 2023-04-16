@@ -3,6 +3,7 @@ const express = require('express');
 const { Storage } = require('@google-cloud/storage');
 import { mongo } from "mongoose";
 const Multer = require('multer');
+const sharp = require('sharp');
 import {
 	auth,
 	getTokenFromReq,
@@ -25,9 +26,16 @@ const multer = Multer({
   }
 });
 
-router.post("/add_profile_picture", multer.single("file"), VerifyToken, (req, res) => {
+const convertToWebp = async (buffer) => {
+	return sharp(buffer).webp().toBuffer();
+};
+
+router.post("/add_profile_picture", multer.single("file"), VerifyToken, async (req, res) => {
 	let file = req.file;
 	if (file) {
+		const webpFile = await convertToWebp(file.buffer);
+		file.buffer = webpFile;
+		file.mimetype = "image/webp";
 		uploadImageToStorage(file)
 			.then(async (url: any) => {
                 let user = (req as any).user;
