@@ -61,6 +61,22 @@ router.put("/like_post",VerifyToken, async(req, res) => {
     }
 });
 
+router.put("/create_comment", VerifyToken, async(req, res) => {
+    var commentBody = req.body;
+    let blogId = req.query.blogId;
+    let user = (req as any).user;
+    let userId = user._id;
+
+    // console.log(commentBody);
+    // console.log(blogId);
+    Newsletter.findById(blogId, function (err, doc){
+        doc.comments.push(commentBody);
+        doc.save();
+      });
+    let posts = await Newsletter.findById(blogId);
+    console.log(posts);
+    res.status(200).send('comment success');
+});
 
 router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     // console.log('user token:  ' + req.body.userToken)
@@ -81,7 +97,7 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
             title: titleText, // change this based on what the req looks like
             body: bodyText,
             author: user.name,
-            timePosted: Date()   
+            timePosted: Date.now(),  
         })
         console.log("Successfully added to the database: " + newsletterItem)
     } catch(e) {
@@ -89,23 +105,24 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     }
 });
 
-router.delete('/delete_newsletter', async(req, res)=>{
-    // Delete a newsletter post here
-    try {
-        // TODO: change these strings as needed based on what the user puts in
-        var id = req.body.id;
-        Newsletter.findByIdAndDelete(id, function (err, docs) {
-            if (err){
-                res.send(err)
-            }
-            else{
-                res.send("Deleted : " + docs);
-            }
-        });
-    } catch(e) {
-        console.log(e.message)
-    }
- })
+//TODO, uncomment this at this point and add authentication
+// router.delete('/delete_newsletter', VerifyToken, async(req, res)=>{
+//     // Delete a newsletter post here
+//     try {
+//         // TODO: change these strings as needed based on what the user puts in
+//         var id = req.body.id;
+//         Newsletter.findByIdAndDelete(id, function (err, docs) {
+//             if (err){
+//                 res.send(err)
+//             }
+//             else{
+//                 res.send("Deleted : " + docs);
+//             }
+//         });
+//     } catch(e) {
+//         console.log(e.message)
+//     }
+//  })
 
  router.get("/", async(req, res) => {
 	res.send("Hello World!"); // THIS WORKS! when you do localhost:3000/api/newsletter/ in postman

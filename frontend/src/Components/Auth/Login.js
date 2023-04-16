@@ -72,11 +72,11 @@ const Login = () => {
 						onChangeText={(e) => setPassword(e)}
 					/>
 				</View>
-				<TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-					<Text style={styles.forgot_button}>Forgot Password?</Text>
-				</TouchableOpacity>
 				<TouchableOpacity onPress={handleSubmit} style={styles.loginbutton}>
 					<Text style={{ color: "white" }}>Login</Text>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+					<Text style={styles.forgot_button}>Forgot Password?</Text>
 				</TouchableOpacity>
 				<View
 					style={{
@@ -110,19 +110,19 @@ const styles = StyleSheet.create({
 	},
 	forgot_button: {
 		height: 30,
-		marginBottom: 30,
-		marginLeft: 200,
+		alignSelf: "flex-end",
 	},
 	textInput: {
 		color: "#ffffff",
 		borderColor: "#5f6566",
-		borderWidth: 1,
+		backgroundColor: "#efefef",
 		borderRadius: 15,
 		marginBottom: 20,
+		padding: 10,
+		marginTop: 5,
 		width: "85%",
-		height: 45,
-		alignItems: "flex-start",
-		justifyContent: "flex-start",
+		height: 50,
+		justifyContent: "center",
 	},
 	loginbutton: {
 		backgroundColor: "#088da9",
