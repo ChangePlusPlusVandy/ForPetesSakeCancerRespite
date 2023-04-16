@@ -105,24 +105,24 @@ router.post("/create_newsletter", VerifyToken, async(req, res)=>{
     }
 });
 
-
-router.delete('/delete_newsletter', async(req, res)=>{
-    // Delete a newsletter post here
-    try {
-        // TODO: change these strings as needed based on what the user puts in
-        var id = req.body.id;
-        Newsletter.findByIdAndDelete(id, function (err, docs) {
-            if (err){
-                res.send(err)
-            }
-            else{
-                res.send("Deleted : " + docs);
-            }
-        });
-    } catch(e) {
-        console.log(e.message)
-    }
- })
+//TODO, uncomment this at this point and add authentication
+// router.delete('/delete_newsletter', VerifyToken, async(req, res)=>{
+//     // Delete a newsletter post here
+//     try {
+//         // TODO: change these strings as needed based on what the user puts in
+//         var id = req.body.id;
+//         Newsletter.findByIdAndDelete(id, function (err, docs) {
+//             if (err){
+//                 res.send(err)
+//             }
+//             else{
+//                 res.send("Deleted : " + docs);
+//             }
+//         });
+//     } catch(e) {
+//         console.log(e.message)
+//     }
+//  })
 
  router.get("/", async(req, res) => {
 	res.send("Hello World!"); // THIS WORKS! when you do localhost:3000/api/newsletter/ in postman

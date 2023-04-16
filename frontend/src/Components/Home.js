@@ -10,6 +10,9 @@ const Home = () => {
 	const navigation = useNavigation();
 
 	let userDisplayObject = authObj.currentUser;
+	if(!userDisplayObject){
+		navigation.navigate("AccountSetup")
+	}
 	// userDisplayObject.firebase = JSON.stringify(authObj.currentUser.firebase);
 	userDisplayObject.firebase = "Field Removed for condensed display";
 	return (
