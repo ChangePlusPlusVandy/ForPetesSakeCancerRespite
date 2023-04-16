@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-  Image,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import BlogDisplay from "./BlogDisplay";
-import Config from "../../Config";
 import BottomBar from "../BottomBar";
+import { Icon } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 
 const ExploreScreen = () => {
   const [followingState, setFollowingState] = useState(false);
+  const navigation = useNavigation();
 
   const handleFollowingButton = () => {
     if (followingState == false) setFollowingState(true);
@@ -35,6 +30,11 @@ const ExploreScreen = () => {
             source={require("../../../public/defaultProfile.png")}
           />
           <Text style={styles.title}>Feed</Text>
+          <View style={styles.iconContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("SearchUsers")}>
+              <Icon name="search" color="#888888" size ={35} />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.headerOptions}>
           {(() => {
@@ -44,8 +44,8 @@ const ExploreScreen = () => {
               text_style = styles.followingTextBlue;
               explore_text_style = styles.followingText;
             } else {
-                text_style = styles.followingText;
-                explore_text_style = styles.followingTextBlue;
+              text_style = styles.followingText;
+              explore_text_style = styles.followingTextBlue;
             }
             return (
               <>
@@ -82,6 +82,12 @@ const styles = StyleSheet.create({
     backgroundColor: "E5E5E570",
     justifyContent: "flex-start",
     alignItems: "stretch",
+  },
+  iconContainer: {
+    position: "absolute",
+    right: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   followingButton: {
     width: "30%",

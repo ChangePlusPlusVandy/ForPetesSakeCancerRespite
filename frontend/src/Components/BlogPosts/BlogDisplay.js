@@ -18,11 +18,16 @@ const NewsItem = (props) => {
   return (
     <View style={styles.newsItem}>
       <View style={styles.newsHeader}>
-        <Image
-          style={styles.profilePicture}
-          source={require("../../../public/defaultProfile.png")}
-        />
-        <Text style={styles.authorText}>{props.author}</Text>
+        <TouchableOpacity 
+        style = {styles.profileButton}
+        // onPress={() => {navigation.navigate("Profile")}}
+        >
+          <Image
+            style={styles.profilePicture}
+            source={require("../../../public/defaultProfile.png")}
+          />
+          <Text style={styles.authorText}>{props.author}</Text>
+        </TouchableOpacity>
         <Text style={styles.dateText}>Posted: {props.timePosted}</Text>
       </View>
       <View style={styles.newsTitle}>
@@ -120,8 +125,14 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
+  profileButton:{
+    width: "50%",
+    height: "100%",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+  },
   profilePicture: {
-    width: "11%",
+    width: "25%",
     height: "105%",
     borderRadius: 120 / 2,
     overflow: "hidden",
@@ -134,7 +145,7 @@ const styles = StyleSheet.create({
   },
   authorText: {
     alignSelf: "center",
-    marginLeft: "3%",
+    marginLeft: 20,
     fontSize: 16,
   },
   buttonContainer: {
@@ -153,11 +164,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#C4C4C470",
     height: 150,
-    padding: 12,
+    padding: 10,
     width: "100%",
   },
   newsHeader: {
-    height: "30%",
+    height: "33%",
     justifyContent: "flex-start",
     flexDirection: "row",
   },

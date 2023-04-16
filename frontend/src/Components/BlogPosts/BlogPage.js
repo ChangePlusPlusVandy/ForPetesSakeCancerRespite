@@ -72,7 +72,7 @@ const BlogPage = ({route, navigation}) => {
 
     const postComment = async() => {
         var header = await authObj.getAuthHeader();
-        const promist = await fetch(Config.URL+`/api/newsletter/create_comment/?blogId=${blogId}`,
+        const promise = await fetch(Config.URL+`/api/newsletter/create_comment/?blogId=${blogId}`,
         {
             method: 'PUT',
             headers: 
