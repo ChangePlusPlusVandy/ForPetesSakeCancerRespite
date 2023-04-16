@@ -17,10 +17,12 @@ import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
 import MessagesPanel from "./Components/Messaging/MessagesPanel";
 import CreateChat from "./Components/Messaging/CreateChat";
+import EditProfile from "./Components/EditProfile"
 //import PrivateRoute from "./Components/PrivateRoute";
 import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
 import BlogPage from "./Components/BlogPosts/BlogPage";
 import { GatewayProvider } from "./Gateway";
+import SearchUsers from "./Components/SearchUsers";
 
 const CustomRouter = () => {
 	const Stack = createStackNavigator();
@@ -39,9 +41,11 @@ const CustomRouter = () => {
 					<Stack.Screen name="CreatePost" component={CreatePost} />
 					<Stack.Screen name="Messaging" component={Messaging} />
 					<Stack.Screen name="Explore" component={ExploreScreen} />
+					<Stack.Screen name="EditProfile" component={EditProfile} />
 					<Stack.Screen name="Chat" component={MessagesPanel} />
 					<Stack.Screen name="CreateChat" component={CreateChat} />
 					<Stack.Screen name="BlogPage" component={BlogPage}/>
+					<Stack.Screen name="SearchUsers" component={SearchUsers}/>
 				</Stack.Navigator>
 			</GatewayProvider>
 		</AuthProvider>

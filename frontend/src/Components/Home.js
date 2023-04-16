@@ -10,6 +10,9 @@ const Home = () => {
 	const navigation = useNavigation();
 
 	let userDisplayObject = authObj.currentUser;
+	if(!userDisplayObject){
+		navigation.navigate("AccountSetup")
+	}
 	// userDisplayObject.firebase = JSON.stringify(authObj.currentUser.firebase);
 	userDisplayObject.firebase = "Field Removed for condensed display";
 	return (
@@ -19,10 +22,12 @@ const Home = () => {
 				Current User JSON Data: {JSON.stringify(userDisplayObject, null, 4)}
 			</Text>
 			<Link to={{ screen: "Profile" }}>Profile</Link>
+			<Link to={{ screen: "EditProfile" }}>Edit Profile</Link>
 			<Link to={{ screen: "Logout" }}>Logout</Link>
 			<Link to={{ screen: "CreatePost" }}>Create Post</Link>
 			<Link to={{ screen: "Messaging" }}>Messaging</Link>
 			<Link to={{ screen: "Explore" }}>Explore</Link>
+			<Link to={{ screen: "SearchUsers" }}>Search Users</Link>
 		</View>
 	);
 };

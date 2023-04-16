@@ -63,11 +63,11 @@ const ForgotPassword = () => {
 						onChangeText={(e) => setEmail(e)}
 					/>
 				</View>
-				<TouchableOpacity onPress={() => navigation.navigate("Login")}>
-					<Text style={styles.forgot_button}>Back To Login</Text>
-				</TouchableOpacity>
 				<TouchableOpacity onPress={handleSubmit} style={styles.resetbutton}>
 					<Text style={{ color: "white" }}>Reset Password</Text>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => navigation.navigate("Login")}>
+					<Text style={styles.forgot_button}>Back To Login</Text>
 				</TouchableOpacity>
 				<View style={{ alignContent: "center", justifyContent: "center" }}>
 					<Text style={{ color: "red" }}>{error}</Text>
@@ -98,18 +98,18 @@ const styles = StyleSheet.create({
 	forgot_button: {
 		height: 30,
 		marginBottom: 30,
-		marginLeft: 225,
 	},
 	textInput: {
 		color: "#ffffff",
 		borderColor: "#5f6566",
-		borderWidth: 1,
+		backgroundColor: "#efefef",
 		borderRadius: 15,
 		marginBottom: 20,
+		padding: 10,
+		marginTop: 5,
 		width: "85%",
-		height: 45,
-		alignItems: "flex-start",
-		justifyContent: "flex-start",
+		height: 50,
+		justifyContent: "center",
 	},
 	resetbutton: {
 		backgroundColor: "#088da9",
