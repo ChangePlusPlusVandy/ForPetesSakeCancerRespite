@@ -28,8 +28,8 @@ const CustomRouter = () => {
 		<AuthProvider>
 			<GatewayProvider>
 				<Stack.Navigator>
-					<Stack.Screen name="AccountSetup" component={AccountSetup} />
 					<Stack.Screen name="Home" component={Home} />
+					<Stack.Screen name="AccountSetup" component={AccountSetup} />
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Logout" component={Logout} />
 					<Stack.Screen name="Register" component={Register} />

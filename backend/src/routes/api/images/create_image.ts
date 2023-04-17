@@ -1,6 +1,7 @@
 const express = require("express");
 const { Storage } = require("@google-cloud/storage");
 const Multer = require("multer");
+const sharp = require("sharp");
 import CONFIG from "../../../Config";
 
 const storage = new Storage({ credentials: CONFIG.firebaseCert });
@@ -15,9 +16,19 @@ const multer = Multer({
 	},
 });
 
-create_image.post("/create_image", multer.single("file"), (req, res) => {
+const convertToWebp = async (buffer) => {
+	return sharp(buffer).webp().toBuffer();
+};
+
+create_image.post("/create_image", multer.single("file"), async (req, res) => {
 	let file = req.file;
 	if (file) {
+		const webpBuffer = await convertToWebp(file);
+		const webpFile = {
+			buffer: webpBuffer,
+			mimetype: "image/webp",
+			originalname: file.originalname.replace(/\.[^/.]+$/, "") + ".webp",
+		}
 		uploadImageToStorage(file)
 			.then((url: any) => {
 				res.status(200).json({
@@ -36,7 +47,7 @@ const uploadImageToStorage = (file) => {
 		if (!file) {
 			reject("No image file");
 		}
-		let newFileName = `${file.originalname}_${Date.now()}`;
+		let newFileName = `${Date.now()}`;
 
 		let fileUpload = bucket.file(newFileName);
 
