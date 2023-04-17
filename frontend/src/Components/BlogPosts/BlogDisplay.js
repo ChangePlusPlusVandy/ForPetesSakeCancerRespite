@@ -58,7 +58,7 @@ const BlogDisplay = () => {
     );
     let data = await promise.json();
     setNewsletterData(
-      data.sort((a, b) => Number(a.timePosted) > Number(b.timePosted))
+      data.sort((a, b) => Number(a.timePosted) < Number(b.timePosted))
     );
   };
 

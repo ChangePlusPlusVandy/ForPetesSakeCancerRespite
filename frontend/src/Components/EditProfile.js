@@ -25,9 +25,42 @@ const EditProfileScreen = () => {
   const [bio, setBio] = useState(`${authObj.currentUser.bio}`);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
-  const [pfpUri, setPfpUri] = useState("../../public/defaultProfile.png");
+  const [pfpUri, setPfpUri] = useState(authObj.currentUser.profile_picture);
+  // CONFIG.URL + `/api/users/profile_picture?id=${authObj.currentUser._id}`
   const navigation = useNavigation();
   const [error, setError] = useState("");
+
+  const sendProfilePicture = async () => {
+    try {
+      let authHeader = await authObj.getAuthHeader();
+      let localuri = pfpUri;
+      let fileName = localuri.split("/").pop();
+      // Infer the type of the image
+      let match = /\.(\w+)$/.exec(fileName);
+      let type = match ? `image/${match[1]}` : `image`;
+      const formData = new FormData();
+      formData.append("file", {
+        uri: localuri,
+        name: fileName,
+        type,
+      });
+      const response = await fetch(CONFIG.URL + "/api/users/add_profile_picture", {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          ...authHeader,
+        },
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        body: formData,
+      });
+      console.log("response received");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const changeProfilePicture = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,10 +74,10 @@ const EditProfileScreen = () => {
   };
 
   const updateUser = async () => {
+    sendProfilePicture();
     var url = CONFIG.URL + "/api/users/update_user";
     var headers = await authObj.getAuthHeader();
     headers["Content-Type"] = "application/json";
-
     let phoneNum;
     try {
       phoneNum = parsePhoneNumber(phoneNumber, "US");
@@ -55,15 +88,12 @@ const EditProfileScreen = () => {
       setError("Invalid Phone Number");
       return;
     }
-
     phoneNum = phoneNum.formatNational();
-
     const requestOptions = {
       method: "POST",
       headers,
       body: JSON.stringify({ name: name, number: phoneNum, bio: bio }),
     };
-
     await fetch(url, requestOptions)
       .then((res) => res.json())
       .then(() => {
@@ -105,7 +135,7 @@ const EditProfileScreen = () => {
           <Text style={styles.textStyle}> Name </Text>
           <TextInput
             style={styles.textInputs}
-            placeholder={authObj.currentUser.name} // TODO should be good when patryck make sures that users are there
+            placeholder={authObj.currentUser.name}
             placeholderTextColor="#474C4D"
             onChangeText={(e) => setName(e)}
           />
@@ -165,14 +195,14 @@ const styles = StyleSheet.create({
   },
   topPart: {
     backgroundColor: "#088DA9",
-    height: "22%",
+    height: "17%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
   bottomPart: {
     backgroundColor: "##fff",
-    marginTop: "14%",
+    marginTop: "16%",
     height: "80%",
     width: "70%",
     justifyContent: "flex-start",
@@ -189,7 +219,7 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     alignSelf: "center",
-    marginBottom: -3,
+    marginBottom: -16,
   },
   textStyle: {
     fontStyle: "normal",
@@ -221,7 +251,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 3,
     position: "absolute",
-    top: "14%",
+    top: "10%",
     borderColor: "black",
   },
   welcomeText: {
@@ -232,7 +262,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "normal",
     textTransform: "capitalize",
-    marginBottom: 10,
+    marginBottom: 35,
   },
   successText: {
     marginTop: 10,

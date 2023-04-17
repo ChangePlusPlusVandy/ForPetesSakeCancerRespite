@@ -14,17 +14,18 @@ import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import CONFIG from "../Config";
 let nextId = 0;
+let recentId = 0;
 
 const SearchUsersScreen = () => {
   const authObj = useAuth();
   const [searchText, setSearchText] = useState("");
   const [recents, setRecents] = useState([]); // TODO: when we add recents array to the mongo db schema, this would be something fetched from the backend i think
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState(recents);
   const navigation = useNavigation();
 
   const handleSubmitSearch = async (text) => {
     // add it to our list of recent searches
-    setRecents([...recents, { id: nextId++, name: text }]);
+    setRecents([...recents, { id: recentId++, name: text }]);
 
     // Do the actual search work here
   };
@@ -72,8 +73,10 @@ const SearchUsersScreen = () => {
           placeholder="Search for a user here...."
           returnKeyType="search"
           enablesReturnKeyAutomatically="true"
-          onSubmitEditing={({ nativeEvent: { text, eventCount, target } }) =>
-            handleRenderPreviews(text)
+          onSubmitEditing={({ nativeEvent: { text, eventCount, target } }) => {
+            handleRenderPreviews(text);
+            handleSubmitSearch(text);
+          }
           }
         />
         <View style={styles.iconContainer}>
@@ -106,7 +109,9 @@ const SearchUsersScreen = () => {
                 onPress={() => navigation.navigate("Profile", {username: result_i.username, userId: result_i._id})}>
                   <Image
                     style={styles.profilePicture}
-                    source={require("../../../frontend/public/defaultProfile.png")}
+                    source={{
+                      uri: result_i.profile_picture
+                    }}
                   />
                   <View style={styles.userInfoContainer}>
                     <Text style={styles.usernameText}>{result_i.username}</Text>

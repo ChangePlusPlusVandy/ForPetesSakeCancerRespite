@@ -2,7 +2,10 @@ import React from "react";
 import { View } from "react-native";
 import { AuthProvider } from "./AuthContext";
 import { useAuth } from "./AuthContext";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 //import PrivateRoute from "./Components/PrivateRoute";
 
 // Routes
@@ -33,7 +36,9 @@ const CustomRouter = () => {
           screenOptions={{
             headerStyle: {
               backgroundColor: "#ffff",
+              borderBottomWidth: 0,
             },
+            headerShadowVisible: false,
             headerTintColor: "#088DA9",
             headerTitleStyle: {
               fontWeight: "bold",
@@ -58,7 +63,25 @@ const CustomRouter = () => {
           <Stack.Screen name="CreatePost" component={CreatePost} />
           <Stack.Screen name="Messaging" component={Messaging} />
           <Stack.Screen name="Explore" component={ExploreScreen} />
-          <Stack.Screen name="EditProfile" component={EditProfile} />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{
+              headerStyle: {
+                backgroundColor: "#088DA9",
+                borderBottomColor: "#088DA9",
+              },
+              headerBackVisible: false,
+              headerBackTitle: "Cancel",
+              headerBackTitleStyle: {
+                color: "#fff",
+                fontSize: 17,
+              },
+              headerTintColor: "#088DA9",
+              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+              gestureDirection: "vertical",
+            }}
+          />
           <Stack.Screen name="Chat" component={MessagesPanel} />
           <Stack.Screen name="BlogPage" component={BlogPage} />
           <Stack.Screen name="SearchUsers" component={SearchUsers} />

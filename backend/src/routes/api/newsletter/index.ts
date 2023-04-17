@@ -104,6 +104,7 @@ router.post("/create_newsletter", VerifyToken, async (req, res) => {
 			body: bodyText,
 			author: user.name,
 			timePosted: Date.now(),
+			user: user._id,
 		});
 		// add newsletter id to user object
 		await User.findByIdAndUpdate(

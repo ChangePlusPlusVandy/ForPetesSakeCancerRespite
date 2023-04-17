@@ -22,21 +22,45 @@ const ProfileScreen = ({ route, navigation }) => {
   const loadUserObject = async (route) => {
     if (!route.params) {
       setUserObject(authObj.currentUser);
-      return;
     } else {
-      var userId = route.params.userId;
-      var url = CONFIG.URL + "/api/users/getUser?id=" + userId;
-      var headers = await authObj.getAuthHeader();
-      headers["Content-Type"] = "application/json";
-
-      const requestOptions = {
-        method: "GET",
-        headers,
-      };
-      var promise = await fetch(url, requestOptions);
+      var url = CONFIG.URL + "/api/users/get_user?id=" + route.params.userId;
+      let authHeader = await authObj.getAuthHeader();
+      // let token = await authObj.getTolken();
+      const promise = await fetch(url, {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          ...authHeader,
+        },
+        cache: "no-cache",
+        credentials: "same-origin", // include, *same-origin, omit
+        // userToken : await authObj.getToen()
+      });
       var data = await promise.json();
       setUserObject(data.user);
     }
+  };
+
+  const followUser = async () => {
+    // if (userObject._id == authObj.currentUser._id) return;
+    var url = CONFIG.URL + "/api/users/add_follower?id=" + userObject._id;
+    
+    let authHeader = await authObj.getAuthHeader();
+    // let token = await authObj.getTolken();
+    const promise = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...authHeader,
+      },
+      cache: "no-cache",
+      credentials: "same-origin", // include, *same-origin, omit
+    });
+    console.log(promise.json());
   };
 
   useEffect(() => {
@@ -57,7 +81,7 @@ const ProfileScreen = ({ route, navigation }) => {
             <Image
               style={styles.profilePicture}
               source={{
-                uri: "https://reactnative.dev/img/tiny_logo.png",
+                uri: userObject.profile_picture ? userObject.profile_picture : "../../public/defaultProfile.png",
               }}
             />
             <View style={styles.statsContainer}>
@@ -85,10 +109,14 @@ const ProfileScreen = ({ route, navigation }) => {
           </View>
 
           {(() => {
-            if (userObject == authObj.currentUser) { // looking at our own profile
+            if (userObject._id == authObj.currentUser._id) {
+              // looking at our own profile
               return (
                 <View style={styles.buttonsContainer}>
-                  <TouchableOpacity style={styles.editButton} onPress = {() => navigation.navigate("EditProfile")}>
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => navigation.navigate("EditProfile")}
+                  >
                     <Text style={styles.buttonTextStyle}>Edit Profile</Text>
                   </TouchableOpacity>
                 </View>
@@ -97,7 +125,10 @@ const ProfileScreen = ({ route, navigation }) => {
               // looking at somebody else's profile
               return (
                 <View style={styles.buttonsContainer}>
-                  <TouchableOpacity style={styles.followButton}>
+                  <TouchableOpacity
+                    style={styles.followButton}
+                    onPress={() => followUser()}
+                  >
                     <Text style={styles.buttonTextStyle}>Follow</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.messageButton}>
@@ -211,8 +242,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   profilePicture: {
-    width: 60,
-    height: 60,
+    borderRadius: 120 / 2,
+    height: "90%",
+    width: "20%",
     alignSelf: "center",
   },
   usernameTextContainer: {

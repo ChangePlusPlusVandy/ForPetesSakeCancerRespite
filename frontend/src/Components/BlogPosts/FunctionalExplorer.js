@@ -4,9 +4,11 @@ import BlogDisplay from "./BlogDisplay";
 import BottomBar from "../BottomBar";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../AuthContext";
 
 const ExploreScreen = () => {
   const [followingState, setFollowingState] = useState(false);
+  const authObj = useAuth();
   const navigation = useNavigation();
 
   const handleFollowingButton = () => {
@@ -26,8 +28,10 @@ const ExploreScreen = () => {
       <View style={styles.headerContainer}>
         <View style={styles.profile}>
           <Image
-            style={{ height: "95%", width: undefined, aspectRatio: 1 }}
-            source={require("../../../public/defaultProfile.png")}
+            style={{ borderRadius: 120 / 2, height: "95%", width: undefined, aspectRatio: 1 }}
+            source={{
+              uri: authObj.currentUser.profile_picture,
+            }}
           />
           <Text style={styles.title}>Feed</Text>
           <View style={styles.iconContainer}>
