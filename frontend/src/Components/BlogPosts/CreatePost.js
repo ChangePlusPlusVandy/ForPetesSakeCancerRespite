@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -32,6 +32,8 @@ const CreatePost = () => {
   const navigation = useNavigation();
   const authObj = useAuth()
 
+  var urlArray = []
+
   // GET CAMERA PERMISSIONS HERE
   const permissionFunction = async (param) => {
     // here is how you can get the camera permission
@@ -46,31 +48,79 @@ const CreatePost = () => {
     }
   };
 
+
+  const getImageURL = async () => {
+    try {
+      let authHeader = await authObj.getAuthHeader();
+
+      console.log(uri_array.size)
+      for (let idx = 0; idx < uri_array.length; ++idx) {
+        var localuri = uri_array[idx].uri
+        let fileName = localuri.split('/').pop();
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(fileName);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        const formData = new FormData();
+        formData.append("file", {
+          uri: localuri,
+          name: fileName,
+          type
+        });
+
+        const response = await fetch(CONFIG.URL + '/api/images/create_image',
+          {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'multipart/form-data',
+              ...authHeader
+            },
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            body: formData
+          });
+        console.log("response received")
+        var result = await response.json();
+        var link = result.url
+        // console.log(link)
+        urlArray.push({uri: link})
+        // console.log(result)
+      }
+      console.log(urlArray);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const postData = async () => {
     try {
       let authHeader = await authObj.getAuthHeader();
       // let token = await authObj.getTolken();
-      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', 
-      {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          ...authHeader
-        },
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        body: JSON.stringify({title: title, body: body, 
-          // userToken : await authObj.getToken()
-        }),
-        // userToken : await authObj.getTolken()
-      }
+      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter',
+        {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            ...authHeader
+          },
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, *same-origin, omit
+          body: JSON.stringify({
+            title: title, body: body, images: urlArray
+            // userToken : await authObj.getToken()
+          }),
+          // userToken : await authObj.getTolken()
+        }
       );
       // How to check log for request      
       // console.log(response.json())
       // navigation.navigate("Explore")
-      console.log(await response)
+      // var result = await response
+      // console.log(result.url)
     } catch (err) {
       console.log(err);
     }
@@ -79,14 +129,15 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     // console.log(Date())
 
-		e.preventDefault();
-    if(!title || !body){
+    e.preventDefault();
+    if (!title || !body) {
       return;
     } else {
+      await getImageURL();
       postData();
       navigation.navigate("Explore");
     }
-	};
+  };
 
   const handleTakePhoto = async () => {
     let permission = await permissionFunction("camera");
@@ -144,40 +195,40 @@ const CreatePost = () => {
   const handleRemovePhoto = async (id) => {
     setUriArray(uri_array.filter((link) => link.id !== id));
   };
-  
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <View
-      style={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "white",
-      }}
-    >
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Create post</Text>
-      </View>
-      <View style={styles.container}>
-        <View style={styles.bigInputContainer}>
-          <TextInput
-            style={styles.title_input}
-            placeholder="Title your post"
-            placeholderTextColor="#474C4D"
-            onChangeText={(e) => setTitle(e)}
-          />
-          {(() => {
-            var current_style;
-            var image_container_style;
-            if (uri_array.length == 0) {
-              current_style = styles.postInputNoImages;
-              image_container_style = styles.imageContainerNoImages;
-            } else {
-              // has images attached
-              current_style = styles.postInput;
-              image_container_style = styles.imageContainer;
-            }
-            return (
-              <>
+      <View
+        style={{
+          width: "100%",
+          height: "100%",
+          backgroundColor: "white",
+        }}
+      >
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Create post</Text>
+        </View>
+        <View style={styles.container}>
+          <View style={styles.bigInputContainer}>
+            <TextInput
+              style={styles.title_input}
+              placeholder="Title your post"
+              placeholderTextColor="#474C4D"
+              onChangeText={(e) => setTitle(e)}
+            />
+            {(() => {
+              var current_style;
+              var image_container_style;
+              if (uri_array.length == 0) {
+                current_style = styles.postInputNoImages;
+                image_container_style = styles.imageContainerNoImages;
+              } else {
+                // has images attached
+                current_style = styles.postInput;
+                image_container_style = styles.imageContainer;
+              }
+              return (
+                <>
                   <TextInput
                     multiline
                     allowFontScaling

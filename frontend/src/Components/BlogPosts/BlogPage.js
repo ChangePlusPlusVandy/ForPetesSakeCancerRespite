@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet,Text,View, TouchableOpacity, ScrollView, Image} from "react-native";
+import { StyleSheet,Text,View, TouchableOpacity, ScrollView, Image,KeyboardAvoidingView,} from "react-native";
 import Config from "../../Config";
 import { useAuth } from "../../AuthContext";
 import BottomBar from "../BottomBar";
 import ImageCarousel from "./imageCarousel";
 import { TextInput } from "react-native-gesture-handler";
+import { useHeaderHeight } from '@react-navigation/elements'
 
 
-    // placeholder images
-const images = [
-    { id: '1', uri: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80' },
-    { id: '2', uri: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' },
-    { id: '3', uri: 'https://cdn.shopify.com/s/files/1/0070/7032/files/best-free-stock-photo-websites.jpg?v=1619036042&width=1024' },
-    // Add more images here
-  ]
+const Comment = (props) => {
+    const dateObj = new Date(props.comment.timePosted)
 
-// const PostUtility = () => {
-
-//     return (
-
-//     )
-// }
+    return(
+        <View style={styles.comment}>
+            <Text>{props.comment.author}</Text>
+            <Text style={{fontSize: 18}}>{props.comment.content}</Text>
+            <Text style={{fontSize: 10, color:'gray'}}>{dateObj.toDateString()}</Text>
+        </View>
+    );
+}
 
 
 const BlogPage = ({route, navigation}) => {
@@ -30,11 +28,11 @@ const BlogPage = ({route, navigation}) => {
     const [newsLetter, setNewsLetter] = useState({})
     const [likeNumber, setLikeNumber] = useState(0)
     const [comment, setComment] = useState('')
-    const [commentList, setCommentList] = useState([])
+    // const [commentList, setCommentList] = useState([])
+    const [noImage, setNoImage] = useState(true)
     
 
     // var likeNumber = 0;
-
     const getNewsLetterbyID = async() => {
         var header = await authObj.getAuthHeader();
         const promise = await fetch(Config.URL+`/api/newsletter/get_newsletter_byID/?blogId=${blogId}`, 
@@ -48,6 +46,10 @@ const BlogPage = ({route, navigation}) => {
             setLikeNumber(0)
         } else {
             setLikeNumber(newsLetter.postsLiked.length);
+        }
+
+        if (newsLetter.images !== undefined) {
+            setNoImage(Object.keys(newsLetter.images).length === 0)
         }
     };
 
@@ -72,7 +74,7 @@ const BlogPage = ({route, navigation}) => {
 
     const postComment = async() => {
         var header = await authObj.getAuthHeader();
-        const promist = await fetch(Config.URL+`/api/newsletter/create_comment/?blogId=${blogId}`,
+        const promise = await fetch(Config.URL+`/api/newsletter/create_comment/?blogId=${blogId}`,
         {
             method: 'PUT',
             headers: 
@@ -80,7 +82,7 @@ const BlogPage = ({route, navigation}) => {
                 'Content-Type': 'application/json' ,
                 ...header
             },
-            body: JSON.stringify({content:comment})
+            body: JSON.stringify({content:comment, timePosted: Date.now()})
         });
         getNewsLetterbyID();
     };
@@ -88,65 +90,77 @@ const BlogPage = ({route, navigation}) => {
 
     useEffect(() => {
         getNewsLetterbyID();
-    }, []);
+    });
 
     
     let timePosted= newsLetter.timePosted ? newsLetter.timePosted.substring(4,16) : '';
-
+    const height = useHeaderHeight()
     return (
-        <View style={styles.container}>
-            <View style={{height:585, backgroundColor:'#E5E5E550'}}>
-                <ScrollView contentContainerStyle={styles.newsItem}>
-                    <View>
-                        <ImageCarousel  imgLink={images}></ImageCarousel>
-                    </View>
+            <KeyboardAvoidingView
+                behavior='position'
+                keyboardVerticalOffset={height}
+                style={styles.container}
+                >
 
-                    <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
-                    <Text style={{ fontSize:18, paddingLeft:15, paddingRight:15}}>{newsLetter.body}</Text>
+                <View style={{height:"90%", backgroundColor:'#E5E5E550'}}>
+                    <ScrollView contentContainerStyle={styles.newsItem}>
+                        <View>
+                            {!noImage && <ImageCarousel imgLink={newsLetter.images}></ImageCarousel>}
+                        </View>
 
-                    <View style={{borderTopWidth:1, marginTop:15, marginBottom:15}}>
-                        <Text style={{fontWeight:'600', fontSize:18, paddingLeft:15, paddingRight:15}}>Comments</Text>
-                    </View>
+                        <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
+                        <Text style={{ fontSize:18, paddingLeft:15, paddingRight:15}}>{newsLetter.body}</Text>
 
-                    <View>
-                        { newsLetter.comments && newsLetter.comments.map((comment) => {
-                            return (
-                                <Text style={styles.comment}>{comment.content}</Text>
-                            );
-                        })}
-                    </View>
+                        <View style={{borderTopWidth:1, marginTop:15, marginBottom:15}}>
+                            <Text style={{fontWeight:'600', fontSize:18, paddingLeft:15, paddingRight:15}}>Comments</Text>
+                        </View>
 
-                </ScrollView>
-            </View>
-            
-            
-            <View style={styles.utilityContainer}>
-                <View style={{marginLeft:10}}>
-                    <Text style={{color:'#FF3D00'}}>{likeNumber}</Text>
+                        <View>
+                            { newsLetter.comments && newsLetter.comments.map((comment, i) => {
+                                return (
+                                    <View style={styles.commentBox} key={i}> 
+                                        <Comment comment={comment} ></Comment>
+                                    </View>
+                                );
+                            })}
+                        </View>
+
+                    </ScrollView>
                 </View>
                 
-                <TouchableOpacity onPress={() => likePost()} >
-                    <Image style={{ height:45, width:45, aspectRatio:1}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
-                </TouchableOpacity>
                 
-                <TextInput
-                     placeholder="Write here..."
-                     style={styles.input}
-                     onChangeText={(e) => setComment(e)}
-                    />
+                <View style={styles.utilityContainer}>
+                    <View style={{marginLeft:10}}>
+                        <Text style={{color:'#FF3D00'}}>{likeNumber}</Text>
+                    </View>
+                    
+                    <TouchableOpacity onPress={() => likePost()} >
+                        <Image style={{ height:45, width:45, aspectRatio:1}} source={require('../../../public/newsletter/LikeButton.png')}></Image>
+                    </TouchableOpacity>
+                    
+                    <TextInput
+                        placeholder="Write here..."
+                        style={styles.input}
+                        onChangeText={(e) => setComment(e)}
+                        />
 
-                <TouchableOpacity  onPress={() => postComment()}>
-                    <Image style={{ height:45, width:45, aspectRatio:1, margin:10}} source={require('../../../public/newsletter/commentButton.png')}></Image>
-                </TouchableOpacity>
-            </View>
-            
-            <BottomBar></BottomBar>
-        </View>
+                    <TouchableOpacity  onPress={() => postComment()}>
+                        <Image style={{ height:45, width:45, aspectRatio:1, margin:10}} source={require('../../../public/newsletter/commentButton.png')}></Image>
+                    </TouchableOpacity>
+                </View>
+
+            </KeyboardAvoidingView>
         
     );
 };
 
 const styles = StyleSheet.create ({
+    commentBox: {
+        flex:1,
+        borderColor:'gray',
+        borderBottomWidth:1,
+        paddingBottom:5
+    },
     utilityContainer: {
         // flex:1,
         width:'100%',
@@ -168,7 +182,7 @@ const styles = StyleSheet.create ({
       },
     container: {
 		flex: 1,
-		backgroundColor: "#fff",
+		backgroundColor: "#E5E5E550",
 		justifyContent: "flex-start",
         // alignItems:"flex-start",
 	},
@@ -178,8 +192,6 @@ const styles = StyleSheet.create ({
         borderColor:"#C4C4C470",
         justifyContent:'flex-start'
     },
-    // newsContent:{
-    // },
     newsHeader:{
         flex:1,
         justifyContent:'flex-start',
