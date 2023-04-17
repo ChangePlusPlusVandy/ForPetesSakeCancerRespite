@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.1",
     "@react-navigation/stack": "^6.3.11",
+    "base-64": "^1.0.0",
     "expo": "^47.0.13",
     "expo-camera": "~13.1.0",
     "expo-image-picker": "~14.0.2",
