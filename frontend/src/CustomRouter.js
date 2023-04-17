@@ -15,7 +15,9 @@ import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
-import MessagesPanel from "./Components/Messaging/MessagesPanel";
+import _MessagesPanel from "./Components/Messaging/MessagesPanel";
+import _ChatApp from "./Components/Messaging/index";
+import CreateChat from "./Components/Messaging/CreateChat";
 import EditProfile from "./Components/EditProfile"
 //import PrivateRoute from "./Components/PrivateRoute";
 import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
@@ -41,9 +43,11 @@ const CustomRouter = () => {
 					<Stack.Screen name="Messaging" component={Messaging} />
 					<Stack.Screen name="Explore" component={ExploreScreen} />
 					<Stack.Screen name="EditProfile" component={EditProfile} />
-					<Stack.Screen name="Chat" component={MessagesPanel} />
+					<Stack.Screen name="Chat" component={_MessagesPanel} />
+					<Stack.Screen name="CreateChat" component={CreateChat} />
 					<Stack.Screen name="BlogPage" component={BlogPage}/>
 					<Stack.Screen name="SearchUsers" component={SearchUsers}/>
+					<Stack.Screen name="ChatApp" component={_ChatApp}/>
 				</Stack.Navigator>
 			</GatewayProvider>
 		</AuthProvider>
