@@ -18,6 +18,7 @@ import { useGateway } from "../../Gateway";
 import { useAuth } from "../../AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {useHeaderHeight} from "@react-navigation/elements"
 
 class _MessagesPanel extends Component {
 	constructor(props) {
@@ -98,7 +99,6 @@ class _MessagesPanel extends Component {
 		}
 
 		return (
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<View style={styles.messagingscreen}>
 				<View style={styles.header}>
 					<Ionicons
@@ -155,7 +155,6 @@ class _MessagesPanel extends Component {
 				</View>
 				
 			</View>
-			</TouchableWithoutFeedback>
 		);
 	}
 }
