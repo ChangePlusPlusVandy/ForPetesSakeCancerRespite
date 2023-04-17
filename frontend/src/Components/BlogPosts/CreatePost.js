@@ -134,7 +134,7 @@ const CreatePost = () => {
       return;
     } else {
       await getImageURL();
-      await postData();
+      postData();
       navigation.navigate("Explore");
     }
   };
