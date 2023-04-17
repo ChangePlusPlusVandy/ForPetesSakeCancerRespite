@@ -10,12 +10,16 @@ const router = express.Router();
 const multer = Multer({
 	storage: Multer.memoryStorage(),
 	limits: {
-		fileSize: 8 * 1024 * 1024, // no larger than 8mb
+		fileSize: 25 * 1024 * 1024, // no larger than 8mb
+		fieldSize: 25 * 1024 * 1024
+
 	},
 });
 
 router.post("/create_image", multer.single("file"), (req, res) => {
 	let file = req.file;
+	console.log("image received is: ")
+	console.log(file)
 	if (file) {
 		uploadImageToStorage(file)
 			.then((url: any) => {
@@ -27,6 +31,10 @@ router.post("/create_image", multer.single("file"), (req, res) => {
 			.catch((error) => {
 				console.error(error);
 			});
+	}
+	else
+	{
+		res.status(400).send();
 	}
 });
 

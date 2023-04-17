@@ -19,7 +19,8 @@ const NewsletterSchema = new mongoose.Schema({
       content: String,
       timePosted: String,
       author: {type:mongoose.Schema.Types.ObjectId, ref:"User"}
-  }]
+  }],
+  images : [{uri:String}]
 });
 
 export default mongoose.model("Newsletter", NewsletterSchema);
