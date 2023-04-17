@@ -8,20 +8,17 @@ import { TextInput } from "react-native-gesture-handler";
 import { useHeaderHeight } from '@react-navigation/elements'
 
 
-    // placeholder images
-// const images = [
-//     { id: '1', uri: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8&w=1000&q=80' },
-//     { id: '2', uri: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' },
-//     { id: '3', uri: 'https://cdn.shopify.com/s/files/1/0070/7032/files/best-free-stock-photo-websites.jpg?v=1619036042&width=1024' },
-//     // Add more images here
-//   ]
+const Comment = (props) => {
+    const dateObj = new Date(props.comment.timePosted)
 
-// const PostUtility = () => {
-
-//     return (
-
-//     )
-// }
+    return(
+        <View style={styles.comment}>
+            <Text>{props.comment.author}</Text>
+            <Text style={{fontSize: 18}}>{props.comment.content}</Text>
+            <Text style={{fontSize: 10, color:'gray'}}>{dateObj.toDateString()}</Text>
+        </View>
+    );
+}
 
 
 const BlogPage = ({route, navigation}) => {
@@ -31,7 +28,7 @@ const BlogPage = ({route, navigation}) => {
     const [newsLetter, setNewsLetter] = useState({})
     const [likeNumber, setLikeNumber] = useState(0)
     const [comment, setComment] = useState('')
-    const [commentList, setCommentList] = useState([])
+    // const [commentList, setCommentList] = useState([])
     const [noImage, setNoImage] = useState(true)
     
 
@@ -50,11 +47,10 @@ const BlogPage = ({route, navigation}) => {
         } else {
             setLikeNumber(newsLetter.postsLiked.length);
         }
-        setNoImage(Object.keys(newsLetter.images).length === 0)
-        // console.log(Object.keys(newsLetter.images).length)
-        // console.log(noImage)
 
-        // console.log(data)
+        if (newsLetter.images !== undefined) {
+            setNoImage(Object.keys(newsLetter.images).length === 0)
+        }
     };
 
     const likePost = async() => {
@@ -78,7 +74,7 @@ const BlogPage = ({route, navigation}) => {
 
     const postComment = async() => {
         var header = await authObj.getAuthHeader();
-        const promist = await fetch(Config.URL+`/api/newsletter/create_comment/?blogId=${blogId}`,
+        const promise = await fetch(Config.URL+`/api/newsletter/create_comment/?blogId=${blogId}`,
         {
             method: 'PUT',
             headers: 
@@ -86,7 +82,7 @@ const BlogPage = ({route, navigation}) => {
                 'Content-Type': 'application/json' ,
                 ...header
             },
-            body: JSON.stringify({content:comment})
+            body: JSON.stringify({content:comment, timePosted: Date.now()})
         });
         getNewsLetterbyID();
     };
@@ -94,10 +90,6 @@ const BlogPage = ({route, navigation}) => {
 
     useEffect(() => {
         getNewsLetterbyID();
-        // while(newsLetter !== undefined) {
-        //     console.log(Object.keys(newsLetter.images).length)
-        // }
-        // noImage = Object.keys(newsLetter.images).length === 0
     });
 
     
@@ -124,9 +116,11 @@ const BlogPage = ({route, navigation}) => {
                         </View>
 
                         <View>
-                            { newsLetter.comments && newsLetter.comments.map((comment) => {
+                            { newsLetter.comments && newsLetter.comments.map((comment, i) => {
                                 return (
-                                    <Text style={styles.comment}>{comment.content}</Text>
+                                    <View style={styles.commentBox} key={i}> 
+                                        <Comment comment={comment} ></Comment>
+                                    </View>
                                 );
                             })}
                         </View>
@@ -161,6 +155,12 @@ const BlogPage = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create ({
+    commentBox: {
+        flex:1,
+        borderColor:'gray',
+        borderBottomWidth:1,
+        paddingBottom:5
+    },
     utilityContainer: {
         // flex:1,
         width:'100%',
