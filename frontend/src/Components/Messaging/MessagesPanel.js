@@ -9,13 +9,15 @@ import {
 	ScrollView,
 	KeyboardAvoidingView,
 	TouchableWithoutFeedback,
-	Keyboard
+	Keyboard,
+	SafeAreaView
 } from "react-native";
 import Message from "./Message";
 import CONFIG from "../../Config";
 import { useGateway } from "../../Gateway";
 import { useAuth } from "../../AuthContext";
 import { Ionicons } from "@expo/vector-icons";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 class _MessagesPanel extends Component {
 	constructor(props) {
@@ -96,10 +98,11 @@ class _MessagesPanel extends Component {
 		}
 
 		return (
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<View style={styles.messagingscreen}>
 				<View style={styles.header}>
 					<Ionicons
-						style={{ paddingTop: 10, 
+						style={{paddingLeft: 5, 
 							shadowColor: "#171717",
 							shadowOffset: { width: -2, height: 4 },
 							shadowOpacity: 0.2,
@@ -120,7 +123,7 @@ class _MessagesPanel extends Component {
 
 				{this.state.messages.length > 0 && (
 					<>
-					<View style={{height: 700}}>
+					<SafeAreaView style={styles.chatbodyContainer}>
 					<FlatList 
 					style={styles.chatbody}
 					data={this.state.messages}
@@ -128,10 +131,9 @@ class _MessagesPanel extends Component {
 						<Message message={item} />
 					)}
 					/>
-					</View>
+					</SafeAreaView>
 					</>
 				)}
-
 				<View style={styles.messaginginputContainer}>
 					<TextInput
 						style={styles.messaginginput}
@@ -151,7 +153,9 @@ class _MessagesPanel extends Component {
 						</View>
 					</Pressable>
 				</View>
+				
 			</View>
+			</TouchableWithoutFeedback>
 		);
 	}
 }
@@ -163,28 +167,33 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		flexDirection: "row",
-		height: 80,
+		height: "8%",
 		backgroundColor: "#FFFFFF",
 		borderBottomWidth: 2,
 		borderBottomColor: "#EDEDED",
 	},
 	headerRight: {
 		flexDirection: "column",
-		paddingTop: 30,
-		paddingLeft: 10,
+		paddingTop: 15,
+		paddingLeft: 12,
+	},
+	chatbodyContainer: {
+		height: "80%",
+		backgroundColor: "#FFFFFF",
+		paddingVertical: 5,
+		borderBottomWidth: 2,
+		borderBottomColor: "#EDEDED",
 	},
 	chatbody: {
-		flex: 1,
-		backgroundColor: "#FFFFFF",
 		paddingHorizontal: 10,
-		paddingTop: 15,
 	},
 	messaginginputContainer: {
 		width: "100%",
+		height: "12%",
 		backgroundColor: "white",
-		paddingVertical: 30,
+		paddingVertical: 20,
 		paddingHorizontal: 15,
-		justifyContent: "center",
+		justifyContent: "flex-end",
 		flexDirection: "row",
 		position: "absolute",
 		bottom: 0

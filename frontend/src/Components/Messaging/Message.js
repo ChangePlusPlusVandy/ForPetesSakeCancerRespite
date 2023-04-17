@@ -44,7 +44,7 @@ class _Message extends Component {
 							</View>
 						</View>
 						<Ionicons
-							style={{ paddingTop: 10 }}
+							style={{ paddingTop: 10}}
 							name="person-circle"
 							size={40}
 							color="black"
@@ -58,7 +58,7 @@ class _Message extends Component {
 
 const styles = StyleSheet.create({
 	messageWrapper: {
-		width: "100%",
+		width: "92%",
 		alignItems: "flex-start",
 		marginBottom: 15,
 	},

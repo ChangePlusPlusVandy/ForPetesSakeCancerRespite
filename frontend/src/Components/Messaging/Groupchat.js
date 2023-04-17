@@ -19,7 +19,7 @@ class Groupchat extends Component {
 			else{
 				var year = date.getFullYear();
 				var month = date.getMonth();
-				var day = date.getDay();
+				var day = date.getDay() + 1;
 				dateString = month + "/" + day + "/" + year;
 			}
 		}

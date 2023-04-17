@@ -11,6 +11,7 @@ import {
 import CONFIG from "../../Config";
 import { useGateway } from "../../Gateway";
 import { useAuth } from "../../AuthContext";
+import { useNavigation, Link } from "@react-navigation/native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { ListItem, SearchBar } from "react-native-elements";
 import { Feather, Entypo } from "@expo/vector-icons";
@@ -116,7 +117,6 @@ class _CreateChat extends Component {
 				)}
 				/>
 				)}
-				<Text>{this.state.users}</Text>
 				</View>
 				<View style={styles.container}>
 				<View style={styles.inputContainer}>
