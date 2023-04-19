@@ -17,13 +17,10 @@ const NewsletterSchema = new mongoose.Schema({
   comments: [
     {
       content: String,
-      timePosted: String,
-      author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    },
-  ],
-  user: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  },
+      timePosted: Number,
+      author: {type:mongoose.Schema.Types.ObjectId, ref:"User"}
+  }],
+  images : [{uri:String}]
 });
 
 export default mongoose.model("Newsletter", NewsletterSchema);

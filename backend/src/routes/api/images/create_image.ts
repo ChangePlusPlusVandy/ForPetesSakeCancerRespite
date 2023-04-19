@@ -29,6 +29,8 @@ const convertToWebp = async (buffer) => {
 
 create_image.post("/create_image", multer.single("file"), async (req, res) => {
 	let file = req.file;
+	console.log("image received is: ")
+	console.log(file)
 	if (file) {
 		const webpFile = await convertToWebp(file.buffer);
 		file.buffer = webpFile;
@@ -47,6 +49,10 @@ create_image.post("/create_image", multer.single("file"), async (req, res) => {
 					error: error.message,
 				});
 			});
+	}
+	else
+	{
+		res.status(400).send();
 	}
 });
 

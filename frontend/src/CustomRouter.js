@@ -18,8 +18,10 @@ import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
-import MessagesPanel from "./Components/Messaging/MessagesPanel";
-import EditProfile from "./Components/EditProfile";
+import _MessagesPanel from "./Components/Messaging/MessagesPanel";
+import _ChatApp from "./Components/Messaging/index";
+import CreateChat from "./Components/Messaging/CreateChat";
+import EditProfile from "./Components/EditProfile"
 //import PrivateRoute from "./Components/PrivateRoute";
 import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
 import BlogPage from "./Components/BlogPosts/BlogPage";

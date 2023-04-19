@@ -27,7 +27,6 @@ const Messaging = mongoose.model("Messaging", MessagingSchema)
 
 
 async function verifyMessage(msg){
-	
 	if(msg.message && msg.user[0] && msg.groupchat[0] && msg.timestamp){
 		//console.log("verifyingMessage...")
 		//console.log(msg)

@@ -80,41 +80,38 @@ router.put("/create_comment", VerifyToken, async (req, res) => {
 	console.log(posts);
 	res.status(200).send("comment success");
 });
-
 router.post("/create_newsletter", VerifyToken, async (req, res) => {
-	// console.log('user token:  ' + req.body.userToken)
-	let user = (req as any).user;
-	const userMongoDBObj = User.findById;
-	console.log(user);
-	// Parse through the text in here
-	var titleText = req.body.title;
-	var bodyText = req.body.body;
-	// var author = req.body.author;
-	if (!titleText || !bodyText) {
-		res
-			.status(400)
-			.send(JSON.stringify("Bad user input. Inputs required for all fields."));
-		return;
-	}
-	console.log("Got a POST request for the homepage for this: ");
-	// Create a newsletter item in the database here
-	try {
-		const newsletterItem = await Newsletter.create({
-			title: titleText, // change this based on what the req looks like
-			body: bodyText,
-			author: user.name,
-			timePosted: Date.now(),
-			user: user._id,
-		});
-		// add newsletter id to user object
+    // console.log('user token:  ' + req.body.userToken)
+    let user = (req as any).user;
+	// const userMongoDBObj = User.findById;
+    console.log(user);
+    // Parse through the text in here
+    var titleText = req.body.title;
+    var bodyText = req.body.body;
+    var imageArray = [...req.body.images]
+    // var author = req.body.author;
+    if(!titleText || !bodyText){
+        res.status(400).send(JSON.stringify("Bad user input. Inputs required for all fields."));
+        return;
+    }
+    console.log('Got a POST request for the homepage for this: ');
+    // Create a newsletter item in the database here
+    try {
+        const newsletterItem = await Newsletter.create({
+            title: titleText, // change this based on what the req looks like
+            body: bodyText,
+            author: user.name,
+            timePosted: Date.now(),
+            images: imageArray
+        })
 		await User.findByIdAndUpdate(
 			{ _id: user._id },
 			{ $push: { newsletter: newsletterItem._id } }
 		);
-		console.log("Successfully added to the database: " + newsletterItem);
-	} catch (e) {
-		console.log(e.message);
-	}
+        console.log("Successfully added to the database: " + newsletterItem)
+    } catch(e) {
+        console.log(e.message)
+    }
 });
 
 router.delete("/delete_newsletter", VerifyToken, delete_newsletter);
