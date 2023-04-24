@@ -111,8 +111,10 @@ class _CreateChat extends Component {
 				<FlatList style={styles.list__container}
 				data = {this.state.searchUsers}
 				renderItem = {({item}) => (
-					<Pressable style={styles.item} onPress={() => this.addUser(item)}>
+					<Pressable style={this.state.users.includes(item._id) ? styles.itemSelected : styles.item} onPress={() => this.addUser(item)}>
+						{item._id != this.auth.currentUser._id &&
 						<Text style={styles.itemTitle} >{item.name}</Text>
+						}
 					</Pressable>
 				)}
 				/>
@@ -239,6 +241,13 @@ const styles = StyleSheet.create({
 	item: {
 		width: "80%",
 		backgroundColor: "lightgrey",
+		margin: 5,
+		borderBottomWidth: 2,
+		borderBottomColor: "lightgrey",
+	},
+	itemSelected: {
+		width: "80%",
+		backgroundColor: "#B9B9B9",
 		margin: 5,
 		borderBottomWidth: 2,
 		borderBottomColor: "lightgrey",

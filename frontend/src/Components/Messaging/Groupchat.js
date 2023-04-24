@@ -1,9 +1,37 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import CONFIG from "../../Config";
 
 //Date object
 class Groupchat extends Component {
+	constructor(props){
+		super(props);
+		this.getProfilePic.bind(this);
+		this.state = {
+			profile: ""
+		}
+	}
+
+	componentDidMount() {
+		//loading channels
+		this.getProfilePic();
+		this.props.navigation.addListener("focus", () => {
+			this.getProfilePic();
+		})
+	}
+
+	getProfilePic = async() => {
+		var response = await fetch(
+			CONFIG.URL +
+				"/api/users/get_profile_picture?id=" +
+				this.props.route.params.item.last_message.user
+		)
+		let data = await response.json();
+
+		this.setState({profile: data.location});
+	}
+
 	render() {
 		if(this.props.item.last_message){
 			var date = new Date(this.props.item.last_message.timestamp);

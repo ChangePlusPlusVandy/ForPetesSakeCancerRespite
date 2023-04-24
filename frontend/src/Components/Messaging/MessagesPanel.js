@@ -99,6 +99,11 @@ class _MessagesPanel extends Component {
 		}
 
 		return (
+			<KeyboardAwareScrollView
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={{flex: 1}}
+      scrollEnabled={false}
+    >
 			<View style={styles.messagingscreen}>
 				<View style={styles.header}>
 					<Ionicons
@@ -124,13 +129,26 @@ class _MessagesPanel extends Component {
 				{this.state.messages.length > 0 && (
 					<>
 					<SafeAreaView style={styles.chatbodyContainer}>
+					{this.state.messages.length > 10 &&
 					<FlatList 
 					style={styles.chatbody}
 					data={this.state.messages}
+					inverted
+					contentContainerStyle={{ flexDirection: 'column-reverse' }}
 					renderItem={({item}) => (
 						<Message message={item} />
 					)}
 					/>
+				    }
+					{this.state.messages.length < 10 &&
+					<FlatList 
+					style={styles.chatbody}
+					data={this.state.messages.sort((a, b) => a.name.localeCompare(b.name))}
+					renderItem={({item}) => (
+						<Message message={item} />
+					)}
+					/>
+				    }					
 					</SafeAreaView>
 					</>
 				)}
@@ -155,6 +173,7 @@ class _MessagesPanel extends Component {
 				</View>
 				
 			</View>
+			</KeyboardAwareScrollView>
 		);
 	}
 }
