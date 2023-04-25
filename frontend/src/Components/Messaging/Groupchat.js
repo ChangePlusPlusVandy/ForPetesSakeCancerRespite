@@ -1,13 +1,16 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import CONFIG from "../../Config";
+import { useAuth } from "../../AuthContext";
+import { useGateway } from "../../Gateway";
 
-//Date object
-class Groupchat extends Component {
+class _Groupchat extends Component {
 	constructor(props){
 		super(props);
 		this.getProfilePic.bind(this);
+		this.socket = props.socket;
+		this.auth = props.auth;
 		this.state = {
 			profile: ""
 		}
@@ -16,20 +19,25 @@ class Groupchat extends Component {
 	componentDidMount() {
 		//loading channels
 		this.getProfilePic();
-		this.props.navigation.addListener("focus", () => {
-			this.getProfilePic();
-		})
 	}
 
 	getProfilePic = async() => {
-		var response = await fetch(
-			CONFIG.URL +
-				"/api/users/get_profile_picture?id=" +
-				this.props.route.params.item.last_message.user
-		)
-		let data = await response.json();
 
-		this.setState({profile: data.location});
+		if(this.props.item.last_message){
+			let user = this.props.item.last_message.user
+			var headers = await this.auth.getAuthHeader();
+
+			var response = await fetch(
+				CONFIG.URL +
+					"/api/users//profile_picture?id=" +
+					user,
+					{method: "GET", mode: "no-cors", headers: headers}
+			)
+			let data = response;
+	
+			this.setState({profile: data.url});
+		}
+
 	}
 
 	render() {
@@ -55,11 +63,18 @@ class Groupchat extends Component {
 		return (
 			<View style={styles.chatComponent}>
 				<View style={{justifyContent: "center", paddingLeft: 10}}>
-				<Ionicons
+				{this.state.profile == "" && (
+					<Ionicons
 					name="person-circle"
 					size={60}
 					color="black"
 				/>
+				)}
+				{this.state.profile != "" && (
+					<Image 
+					source={{uri: this.state.profile}}
+					/>
+				)}
 				</View>
 				<View style={styles.chatContent}>
 				<Text style={styles.chatName}>{this.props.item.name}</Text>
@@ -122,4 +137,8 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Groupchat;
+export default function Groupchat(props) {
+	const { socket } = useGateway();
+	const auth = useAuth();
+	return <_Groupchat {...props} socket={socket} auth={auth} />;
+}
