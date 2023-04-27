@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Button} from "react-native";
 import { AuthProvider } from "./AuthContext";
 import { useAuth } from "./AuthContext";
 import {
@@ -18,8 +18,8 @@ import Profile from "./Components/Profile";
 import ForgotPassword from "./Components/Auth/ForgotPassword";
 import CreatePost from "./Components/BlogPosts/CreatePost";
 import Messaging from "./Components/Messaging";
-import _MessagesPanel from "./Components/Messaging/MessagesPanel";
-import _ChatApp from "./Components/Messaging/index";
+import MessagesPanel from "./Components/Messaging/MessagesPanel";
+import ChatApp from "./Components/Messaging/index";
 import CreateChat from "./Components/Messaging/CreateChat";
 import EditProfile from "./Components/EditProfile"
 //import PrivateRoute from "./Components/PrivateRoute";
@@ -27,9 +27,12 @@ import ExploreScreen from "./Components/BlogPosts/FunctionalExplorer";
 import BlogPage from "./Components/BlogPosts/BlogPage";
 import { GatewayProvider } from "./Gateway";
 import SearchUsers from "./Components/SearchUsers";
+import Following from "./Components/Following"
+import { useNavigation } from "@react-navigation/native";
 
 const CustomRouter = () => {
   const Stack = createStackNavigator();
+  const navigation = useNavigation();
 
   return (
     <AuthProvider>
@@ -87,6 +90,7 @@ const CustomRouter = () => {
           <Stack.Screen name="Chat" component={MessagesPanel} />
           <Stack.Screen name="BlogPage" component={BlogPage} />
           <Stack.Screen name="SearchUsers" component={SearchUsers} />
+          <Stack.Screen name="Following" component={Following} />
         </Stack.Navigator>
       </GatewayProvider>
     </AuthProvider>

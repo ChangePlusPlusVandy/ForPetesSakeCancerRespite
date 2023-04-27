@@ -66,7 +66,7 @@ async function getFeed(req: Request, res: Response) {
 		//console.log(userObjFollowingPostsIDS)
 		const allPosts = await Newsletter.find({_id:{$in:userObjFollowingPostsIDS}}).sort({timePosted: -1})
 		
-		res.status(200).json({ feed: allPosts });
+		res.status(200).json(allPosts);
 
 	} catch (error) {
 		console.error(error);

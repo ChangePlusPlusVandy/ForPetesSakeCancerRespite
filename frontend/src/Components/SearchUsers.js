@@ -44,9 +44,8 @@ const SearchUsersScreen = () => {
     await fetch(url, requestOptions)
       .then((res) => res.json())
       .then((res) => {
-        const results = res.map((user) => ({ id: nextId++, ...user })); // create a new array of objects with the same properties as the original objects
-
-        // .filter((user) => user.username !== authObj.currentUser.username); // TODO filter out the current user
+        // filters out self from the results current user
+        const results = res.map((user) => ({ id: nextId++, ...user })).filter((user) => user._id !== authObj.currentUser._id); 
         setSearchResults(results);
         setRecents([...recents, { id: nextId++, name: text }]);
       })
@@ -110,7 +109,7 @@ const SearchUsersScreen = () => {
                   <Image
                     style={styles.profilePicture}
                     source={{
-                      uri: result_i.profile_picture
+                      uri: CONFIG.URL + `/api/users/profile_picture?id=${result_i._id}`,
                     }}
                   />
                   <View style={styles.userInfoContainer}>

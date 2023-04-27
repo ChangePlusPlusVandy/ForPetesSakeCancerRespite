@@ -18,8 +18,12 @@ const NewsletterSchema = new mongoose.Schema({
     {
       content: String,
       timePosted: Number,
-      author: {type:mongoose.Schema.Types.ObjectId, ref:"User"}
-  }],
+      author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    },
+  ],
+  user: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  },
   images : [{uri:String}]
 });
 

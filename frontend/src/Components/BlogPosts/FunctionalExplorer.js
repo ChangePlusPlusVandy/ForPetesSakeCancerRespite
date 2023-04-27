@@ -5,22 +5,21 @@ import BottomBar from "../BottomBar";
 import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../AuthContext";
+import Config from "../../Config";
+import StateNumbers from "./StateNumbers";
 
 const ExploreScreen = () => {
-  const [followingState, setFollowingState] = useState(false);
+  const [displayState, setDisplayState] = useState(StateNumbers.EXPLORE);
   const authObj = useAuth();
   const navigation = useNavigation();
 
   const handleFollowingButton = () => {
-    if (followingState == false) setFollowingState(true);
-    else setFollowingState(false);
-    // also filter what's being displayed
-  };
-
-  const handleExploreState = () => {
-    if (followingState == true) setFollowingState(false);
-    else setFollowingState(true);
-    // also filter what's being displayed
+    console.log("clicked");
+    if (displayState == StateNumbers.EXPLORE) {
+      setDisplayState(StateNumbers.FEED);
+    } else {
+      setDisplayState(StateNumbers.EXPLORE);
+    }
   };
 
   return (
@@ -28,15 +27,24 @@ const ExploreScreen = () => {
       <View style={styles.headerContainer}>
         <View style={styles.profile}>
           <Image
-            style={{ borderRadius: 120 / 2, height: "95%", width: undefined, aspectRatio: 1 }}
+            style={{
+              borderRadius: 120 / 2,
+              height: "95%",
+              width: undefined,
+              aspectRatio: 1,
+            }}
             source={{
-              uri: authObj.currentUser.profile_picture,
+              uri:
+                Config.URL +
+                `/api/users/profile_picture?id=${authObj.currentUser._id}`,
             }}
           />
           <Text style={styles.title}>Feed</Text>
           <View style={styles.iconContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate("SearchUsers")}>
-              <Icon name="search" color="#888888" size ={35} />
+            <TouchableOpacity
+              onPress={() => navigation.navigate("SearchUsers")}
+            >
+              <Icon name="search" color="#888888" size={35} />
             </TouchableOpacity>
           </View>
         </View>
@@ -44,10 +52,12 @@ const ExploreScreen = () => {
           {(() => {
             var text_style;
             var explore_text_style;
-            if (followingState == true) {
+            if (displayState == StateNumbers.FEED) {
+              // if it's showing who we follow
               text_style = styles.followingTextBlue;
               explore_text_style = styles.followingText;
             } else {
+              // if it's showing explore
               text_style = styles.followingText;
               explore_text_style = styles.followingTextBlue;
             }
@@ -61,7 +71,7 @@ const ExploreScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.exploreButton}
-                  onPress={() => handleExploreState()}
+                  onPress={() => handleFollowingButton()}
                 >
                   <Text style={explore_text_style}>Explore</Text>
                 </TouchableOpacity>
@@ -71,7 +81,7 @@ const ExploreScreen = () => {
         </View>
       </View>
       <View style={styles.exploreContainer}>
-        <BlogDisplay></BlogDisplay>
+        <BlogDisplay state={displayState}></BlogDisplay>
       </View>
       <BottomBar postEnabled={true}></BottomBar>
     </View>
