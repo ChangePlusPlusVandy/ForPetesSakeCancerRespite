@@ -250,8 +250,8 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 120 / 2,
     overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "black",
+    // borderWidth: 1,
+    // borderColor: "black",
   },
   titleText: {
     fontWeight: "bold",
