@@ -28,6 +28,7 @@ const Home = () => {
 			<Link to={{ screen: "Messaging" }}>Messaging</Link>
 			<Link to={{ screen: "Explore" }}>Explore</Link>
 			<Link to={{ screen: "SearchUsers" }}>Search Users</Link>
+			<Link to={{ screen: "Following" }}>Following</Link>
 		</View>
 	);
 };
