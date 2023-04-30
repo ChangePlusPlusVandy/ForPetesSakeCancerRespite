@@ -133,9 +133,6 @@ const CreatePost = () => {
       setFailure(true);
       setError("Invalid input. Input required for both fields.");
     } else {
-      setError("");
-      setFailure(false);
-      setLoading(true);
       await getImageURL();
       postData();
       setLoading(false);
@@ -260,6 +257,7 @@ const CreatePost = () => {
                           editorStyle = {{backgroundColor:"#d9d9d905"}}
                           placeholder='Write here ... Include https:// if you are trying to insert a link'
                           onCursorPosition={handleCursorPosition}
+                          initialHeight={200}
                       />
                     </ScrollView>
 

@@ -42,6 +42,7 @@ const NewsItem = (props) => {
 
   const [likeNumber, setLikeNumber] = useState(props.likeCount);
   const navigation = useNavigation();
+  var regex = /(<([^>]+)>)/ig
   return (
     <View style={styles.newsItem}>
       <View style={styles.newsHeader}>
@@ -73,7 +74,7 @@ const NewsItem = (props) => {
       <Text style={styles.dateText}>{props.timePosted}</Text>
       <View style={styles.newsTitle}>
         <Text style={styles.titleText}>{props.title}</Text>
-        <Text style={styles.bodyText}>{props.body}</Text>
+        <Text style={styles.bodyText}>{props.body.replace(regex, "")}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -263,6 +264,7 @@ const styles = StyleSheet.create({
     width: "100%",
     color: "#4C4E52",
     marginTop: 3,
+    marginBottom: 5
   },
   authorText: {
     alignSelf: "center",
@@ -338,6 +340,7 @@ const styles = StyleSheet.create({
     flex: 1.7,
     width: "90%",
     paddingTop: 10,
+    marginBottom:10
   },
 });
 
