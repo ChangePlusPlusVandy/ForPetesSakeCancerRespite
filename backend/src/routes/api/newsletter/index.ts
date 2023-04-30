@@ -5,6 +5,7 @@ import VerifyToken from "../../../middlewares/VerifyToken";
 import { User } from "../../../models/User";
 import { Request, Response } from "express";
 import { userInfo } from "os";
+import DOMPurify from 'isomorphic-dompurify';
 import { getUser } from "../users/get_user";
 import { parse } from "path";
 
@@ -100,6 +101,7 @@ router.post("/create_newsletter", VerifyToken, async (req, res) => {
     // Parse through the text in here
     var titleText = req.body.title;
     var bodyText = req.body.body;
+	bodyText = DOMPurify.sanitize(bodyText);
     var imageArray = [...req.body.images]
     // var author = req.body.author;
     if(!titleText && !bodyText){
