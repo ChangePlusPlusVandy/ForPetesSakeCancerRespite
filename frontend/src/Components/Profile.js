@@ -55,14 +55,12 @@ const ProfileScreen = ({ route, navigation }) => {
     if (userObject._id == authObj.currentUser._id) return;
     let authHeader = await authObj.getAuthHeader();
     let url;
-    console.log("am i following? " + following);
-    if (following == true){
+    if (following == true) {
       url = CONFIG.URL + "/api/users/remove_follower";
     } else {
       url = CONFIG.URL + "/api/users/add_follower";
     }
     try {
-      // let token = await authObj.getTolken();
       const response = await fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
@@ -75,11 +73,53 @@ const ProfileScreen = ({ route, navigation }) => {
         credentials: "same-origin", // include, *same-origin, omit
         body: JSON.stringify({
           id: userObject._id,
-          // userToken : await authObj.getToken()
         }),
-        // userToken : await authObj.getTolken()
       });
       setFollowing(!following);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const messageUser = async () => {
+    if (userObject._id == authObj.currentUser._id) return;
+    try {
+      let authHeader = await authObj.getAuthHeader();
+      const response = await fetch(CONFIG.URL + "/api/messaging/dm", {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          ...authHeader,
+        },
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        body: JSON.stringify({
+          userToDM: userObject._id,
+        }),
+      });
+      let resJSON = await response.json();
+      let gcID = resJSON.groupchat;
+      console.log(gcID);
+      const res2 = await fetch(
+        CONFIG.URL + "/api/messaging/get_groupchat?id=" + gcID,
+        {
+          method: "GET",
+          mode: "cors", // no-cors, *cors, same-origin
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            ...authHeader,
+          },
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+        }
+      );
+      var json = await res2.json();
+      console.log(json);
+      json = json.groupchat;
+      navigation1.navigate("Chat", { item: json });
     } catch (e) {
       console.log(e);
     }
@@ -99,8 +139,8 @@ const ProfileScreen = ({ route, navigation }) => {
   if (loading == false) {
     var state = 0;
     var id = 0;
-    if(userObject._id == authObj.currentUser._id) state = StateNumbers.SELF;
-    else { 
+    if (userObject._id == authObj.currentUser._id) state = StateNumbers.SELF;
+    else {
       state = StateNumbers.OTHER;
       id = userObject._id;
     }
@@ -162,7 +202,10 @@ const ProfileScreen = ({ route, navigation }) => {
                   >
                     <Text style={styles.buttonTextStyle}>Follow</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.messageButton}>
+                  <TouchableOpacity
+                    style={styles.messageButton}
+                    onPress={() => messageUser()}
+                  >
                     <Text style={styles.buttonTextStyle}>Message</Text>
                   </TouchableOpacity>
                 </View>
@@ -185,20 +228,16 @@ const ProfileScreen = ({ route, navigation }) => {
             }
           })()}
         </View>
-          <View style={styles.blogDisplayContainer}>
-            {(()=> {
-              if(!id){
-                return(
-                  <BlogDisplay state={state}></BlogDisplay>
-                )
-              } else {
-                return(
-                  <BlogDisplay state={state} id={id}></BlogDisplay>
-                )
-              }
-            })()}
-          </View>
-          <BottomBar postEnabled={false}></BottomBar>
+        <View style={styles.blogDisplayContainer}>
+          {(() => {
+            if (!id) {
+              return <BlogDisplay state={state}></BlogDisplay>;
+            } else {
+              return <BlogDisplay state={state} id={id}></BlogDisplay>;
+            }
+          })()}
+        </View>
+        <BottomBar postEnabled={false}></BottomBar>
       </View>
     );
   } else {

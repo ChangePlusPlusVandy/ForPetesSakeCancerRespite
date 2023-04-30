@@ -180,9 +180,7 @@ class _MessagesPanel extends Component {
 								{this.state.messages.length < 10 && (
 									<FlatList
 										style={styles.chatbody}
-										data={this.state.messages.sort((a, b) =>
-											a.name.localeCompare(b.name)
-										)}
+										data={this.state.messages.sort((a, b) => Number(a.timestamp) > Number(b.timestamp))}
 										renderItem={({ item }) => <Message message={item} />}
 									/>
 								)}
