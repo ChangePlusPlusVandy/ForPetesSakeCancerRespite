@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import fpscr_account from "../../../Config";
+import CONFIG from "../../../Config";
 import {
 	auth,
 	getTokenFromReq,
@@ -15,27 +15,29 @@ router.post(
 		try {
 			let user = await getFromUserTokenAndAddIfNotFound(getTokenFromReq(req));
 			// follow FPSCR account
-			if (fpscr_account) {
-				const FPSCR = await User.findById(fpscr_account);
+			if (CONFIG.fpscr_account) {
+				//console.log(CONFIG.fpscr_account)
+				const FPSCR = await User.findById(CONFIG.fpscr_account);
+				const userMongoObject = await User.findById(user._id);
 				// add this id to everyone's else following array
 				
 				if (FPSCR) {
 					// check FPSCR it exists
-					if (user.following.indexOf(FPSCR._id) !== -1) {
+					if (userMongoObject.following.indexOf(FPSCR._id) === -1) {
 						await User.findByIdAndUpdate(
-							{ _id: user._id },
+							{ _id: userMongoObject._id },
 							{ $push: { following: FPSCR._id } }
 						);
 					}
-					if (FPSCR.follower.indexOf(user._id) !== -1) {
+					if (FPSCR.follower.indexOf(userMongoObject._id) === -1) {
 						await User.findByIdAndUpdate(
 							{ _id: FPSCR._id },
-							{ $push: { follower: user._id } }
+							{ $push: { follower: userMongoObject._id } }
 						);
+						
 					}
 				}
 			}
-
 			return res.json(user);
 		} catch (e) {
 			console.error(e);
