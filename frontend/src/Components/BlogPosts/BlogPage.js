@@ -16,7 +16,8 @@ import { useAuth } from "../../AuthContext";
 import BottomBar from "../BottomBar";
 import ImageCarousel from "./imageCarousel";
 import { TextInput } from "react-native-gesture-handler";
-import { useHeaderHeight } from "@react-navigation/elements";import { useWindowDimensions } from 'react-native';
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useWindowDimensions } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 
 
@@ -136,6 +137,7 @@ const BlogPage = ({ route, navigation }) => {
   };
 
   let inputRef = React.useRef();
+  const { width } = useWindowDimensions();
   if (loading == false) {
     let timePosted = newsLetter.timePosted
       ? newsLetter.timePosted.substring(4, 16)
@@ -173,7 +175,7 @@ const BlogPage = ({ route, navigation }) => {
                                     }}>
 
                             <RenderHtml
-                                contentWidth={width}
+                                contentWidth={100}
                                 source={{html:newsLetter.body}}
                             />
                         </View>
