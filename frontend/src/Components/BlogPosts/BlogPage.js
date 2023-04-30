@@ -17,6 +17,8 @@ import BottomBar from "../BottomBar";
 import ImageCarousel from "./imageCarousel";
 import { TextInput } from "react-native-gesture-handler";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { useWindowDimensions } from 'react-native';
+import RenderHtml from 'react-native-render-html';
 import { useNavigation } from "@react-navigation/native";
 import { useWindowDimensions } from 'react-native';
 import RenderHtml from 'react-native-render-html';
@@ -212,28 +214,22 @@ const BlogPage = ({ route, navigation }) => {
               )}
             </View>
 
-                        <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
-                        <View style={{
-                                    flex:1,
-                                    flexDirection: 'row',
-                                    paddingLeft:15, 
-                                    paddingRight:15
-                                    }}>
+              <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
+              <View style={{
+                          flex:1,
+                          flexDirection: 'row',
+                          paddingLeft:15, 
+                          paddingRight:15
+                          }}>
 
-                            <RenderHtml
-                                contentWidth={100}
-                                source={{html:newsLetter.body}}
-                            />
-                        </View>
+                  <RenderHtml
+                      contentWidth={width}
+                      source={{html:newsLetter.body}}
+                  />
+              </View>
 
             <View
-              style={{
-                borderColor: "#efefef",
-                borderTopWidth: 1,
-                marginTop: 15,
-                marginBottom: 15,
-                height: 35,
-              }}
+              style={{ borderTopWidth: 1, marginTop: 15, marginBottom: 15 }}
             >
               <Text
                 style={{
