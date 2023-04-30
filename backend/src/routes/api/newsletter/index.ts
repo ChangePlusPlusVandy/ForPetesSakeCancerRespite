@@ -4,9 +4,12 @@ import Newsletter from "../../../models/Newsletter";
 import VerifyToken from "../../../middlewares/VerifyToken";
 import { User } from "../../../models/User";
 import { Request, Response } from "express";
+import { offical_feed } from "./offical_feed";
 import { userInfo } from "os";
 import { getUser } from "../users/get_user";
 import { parse } from "path";
+
+router.get("/offical_feed", VerifyToken, offical_feed)
 
 router.get("/get_newsletters", VerifyToken, async (req, res) => {
   try {
