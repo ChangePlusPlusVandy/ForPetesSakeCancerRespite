@@ -36,8 +36,15 @@ router.get("/get_newsletter_byID", VerifyToken, async (req, res) => {
     let posts = await Newsletter.findById(blogId);
     var respJSON = {};
     let userObj = await User.findById(posts.user[0]);
+    var postJSON:any = posts.toJSON();
+    for(var i = 0; i < postJSON.comments.length; i++){
+        var current_comment = postJSON.comments[i];
+        var userID = current_comment.author;
+        let user = await User.findById(userID);
+        postJSON.comments[i].username = user.username;
+    }
     respJSON = {
-      ...posts.toJSON(),
+      ...postJSON,
       author: userObj.name,
       username: userObj.username,
     };
@@ -80,6 +87,7 @@ router.put("/create_comment", VerifyToken, async (req, res) => {
   let blogId = req.query.blogId;
   let user = (req as any).user;
   let userId = user._id;
+  commentBody.author = userId;
 
 //   console.log(commentBody);
   // console.log(blogId);
@@ -115,7 +123,7 @@ router.post("/create_newsletter", VerifyToken, async (req, res) => {
             author: user.name,
             timePosted: Date.now(),
             images: imageArray,
-			user: user._id,
+			      user: user._id,
         })
 		await User.findByIdAndUpdate(
 			{ _id: user._id },
