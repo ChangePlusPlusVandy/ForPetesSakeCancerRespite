@@ -180,6 +180,7 @@ const BlogPage = ({ route, navigation }) => {
   };
 
   let inputRef = React.useRef();
+  const { width } = useWindowDimensions();
   if (loading == false) {
     let timePosted = newsLetter.timePosted
       ? newsLetter.timePosted.substring(4, 16)
@@ -217,7 +218,7 @@ const BlogPage = ({ route, navigation }) => {
                                     }}>
 
                             <RenderHtml
-                                contentWidth={width}
+                                contentWidth={100}
                                 source={{html:newsLetter.body}}
                             />
                         </View>

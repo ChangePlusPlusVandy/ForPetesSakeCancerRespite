@@ -258,11 +258,11 @@ const CreatePost = () => {
                           ref={richText}
                           onChange={(e) => setBody(e)}
                           editorStyle = {{backgroundColor:"#d9d9d905"}}
-                          placeholder='Write here ...'
+                          placeholder='Write here ... Include https:// if you are trying to insert a link'
                           onCursorPosition={handleCursorPosition}
                       />
                     </ScrollView>
-                    
+
                     <ScrollView
                       horizontal={"true"}
                       directionalLockEnabled={"true"}
