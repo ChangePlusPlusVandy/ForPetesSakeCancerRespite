@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator
 } from "react-native";
 import PropTypes from "prop-types";
 import { useAuth } from "../AuthContext";
@@ -16,7 +17,7 @@ import CONFIG from "../Config";
 import * as ImagePicker from "expo-image-picker";
 import { parsePhoneNumber } from "libphonenumber-js";
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ route, navigation }) => {
   const authObj = useAuth();
   const [phoneNumber, setPhoneNumber] = useState(
     `${authObj.currentUser.phone}`
@@ -25,9 +26,47 @@ const EditProfileScreen = () => {
   const [bio, setBio] = useState(`${authObj.currentUser.bio}`);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
-  const [pfpUri, setPfpUri] = useState("../../public/defaultProfile.png");
-  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [pfpUri, setPfpUri] = useState(
+    CONFIG.URL + `/api/users/profile_picture?id=${authObj.currentUser._id}`
+  );
+  const navigation1 = useNavigation();
   const [error, setError] = useState("");
+
+  const sendProfilePicture = async () => {
+    try {
+      let authHeader = await authObj.getAuthHeader();
+      let localuri = pfpUri;
+      let fileName = localuri.split("/").pop();
+      // Infer the type of the image
+      let match = /\.(\w+)$/.exec(fileName);
+      let type = match ? `image/${match[1]}` : `image`;
+      const formData = new FormData();
+      formData.append("file", {
+        uri: localuri,
+        name: fileName,
+        type,
+      });
+      const response = await fetch(
+        CONFIG.URL + "/api/users/add_profile_picture",
+        {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+            ...authHeader,
+          },
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          body: formData,
+        }
+      );
+      console.log("response received");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const changeProfilePicture = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,10 +80,15 @@ const EditProfileScreen = () => {
   };
 
   const updateUser = async () => {
+    setLoading(true);
+    if (
+      pfpUri !=
+      CONFIG.URL + `/api/users/profile_picture?id=${authObj.currentUser._id}`
+    )
+      await sendProfilePicture();
     var url = CONFIG.URL + "/api/users/update_user";
     var headers = await authObj.getAuthHeader();
     headers["Content-Type"] = "application/json";
-
     let phoneNum;
     try {
       phoneNum = parsePhoneNumber(phoneNumber, "US");
@@ -55,19 +99,19 @@ const EditProfileScreen = () => {
       setError("Invalid Phone Number");
       return;
     }
-
     phoneNum = phoneNum.formatNational();
-
     const requestOptions = {
       method: "POST",
       headers,
       body: JSON.stringify({ name: name, number: phoneNum, bio: bio }),
     };
-
     await fetch(url, requestOptions)
       .then((res) => res.json())
-      .then(() => {
+      .then(async () => {
+        await authObj.updateCurrentUser();
         setSuccess(true);
+        setLoading(false);
+        navigation1.push("Profile");
       })
       .catch((error) => {
         console.log("There has been a problem updating the user: ", error);
@@ -75,84 +119,88 @@ const EditProfileScreen = () => {
       });
   };
 
-  return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{ x: 0, y: 0 }}
-      contentContainerStyle={styles.container}
-      scrollEnabled={false}
-    >
-      <View style={styles.container}>
-        <View style={styles.topPart}>
-          <Text style={{ color: "red" }}>{error}</Text>
-          <Text style={styles.welcomeText}>
-            Welcome, @{authObj.currentUser.username}!
-          </Text>
-        </View>
-        <Image
-          style={styles.profilePicture}
-          source={{
-            uri: pfpUri,
-          }}
-        />
-        <View style={styles.bottomPart}>
-          <IconButton
-            icon="square-edit-outline"
-            iconColor={"black"}
-            size={30}
-            onPress={() => changeProfilePicture()}
-            style={styles.iconButton}
-          />
-          <Text style={styles.textStyle}> Name </Text>
-          <TextInput
-            style={styles.textInputs}
-            placeholder={authObj.currentUser.name} // TODO should be good when patryck make sures that users are there
-            placeholderTextColor="#474C4D"
-            onChangeText={(e) => setName(e)}
-          />
-          <Text style={styles.textStyle}> Email Address </Text>
-          <TextInput
-            style={styles.textInputs}
-            placeholder={authObj.currentUser.email}
-            placeholderTextColor="#474C4D"
-            editable={false}
-          />
-          <Text style={styles.textStyle}> Phone Number </Text>
-          <TextInput
-            style={styles.textInputs}
-            placeholder={authObj.currentUser.phone}
-            placeholderTextColor="#474C4D"
-            onChangeText={(e) => setPhoneNumber(e)}
-          />
-          <Text style={styles.textStyle}> Bio </Text>
-          <TextInput
-            style={styles.textInputs}
-            placeholder={authObj.currentUser.bio}
-            placeholderTextColor="#474C4D"
-            onChangeText={(e) => setBio(e)}
-          />
-          <TouchableOpacity
-            style={{ alignSelf: "center", marginBottom: 10 }}
-            onPress={() => navigation.navigate("ForgotPassword")}
-          >
-            <Text style={styles.forgot_button}>Forgot Password?</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => updateUser()}
-          >
-            <Text style={styles.buttonTextStyle}>Update</Text>
-          </TouchableOpacity>
-          {!!success && <Text style={styles.successText}>Success!</Text>}
-          {!!failure && (
-            <Text style={styles.failureText}>
-              Failed to update user information.
+  if (loading == false) {
+    return (
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        scrollEnabled={false}
+      >
+        <View style={styles.container}>
+          <View style={styles.topPart}>
+            <Text style={{ color: "red" }}>{error}</Text>
+            <Text style={styles.welcomeText}>
+              Welcome, @{authObj.currentUser.username}!
             </Text>
-          )}
+          </View>
+          <Image
+            style={styles.profilePicture}
+            source={{
+              uri: pfpUri,
+            }}
+          />
+          <View style={styles.bottomPart}>
+            <IconButton
+              icon="square-edit-outline"
+              iconColor={"black"}
+              size={30}
+              onPress={() => changeProfilePicture()}
+              style={styles.iconButton}
+            />
+            <Text style={styles.textStyle}> Name </Text>
+            <TextInput
+              style={styles.textInputs}
+              placeholder={authObj.currentUser.name}
+              placeholderTextColor="#474C4D"
+              onChangeText={(e) => setName(e)}
+            />
+            <Text style={styles.textStyle}> Email Address </Text>
+            <TextInput
+              style={styles.textInputs}
+              placeholder={authObj.currentUser.email}
+              placeholderTextColor="#474C4D"
+              editable={false}
+            />
+            <Text style={styles.textStyle}> Phone Number </Text>
+            <TextInput
+              style={styles.textInputs}
+              placeholder={authObj.currentUser.phone}
+              placeholderTextColor="#474C4D"
+              onChangeText={(e) => setPhoneNumber(e)}
+            />
+            <Text style={styles.textStyle}> Bio </Text>
+            <TextInput
+              style={styles.textInputs}
+              placeholder={authObj.currentUser.bio}
+              placeholderTextColor="#474C4D"
+              onChangeText={(e) => setBio(e)}
+            />
+            <TouchableOpacity
+              style={{ alignSelf: "center", marginBottom: 10 }}
+              onPress={() => navigation1.navigate("ForgotPassword")}
+            >
+              <Text style={styles.forgot_button}>Forgot Password?</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => updateUser()}
+            >
+              <Text style={styles.buttonTextStyle}>Update</Text>
+            </TouchableOpacity>
+            {!!success && <Text style={styles.successText}>Success!</Text>}
+            {!!failure && (
+              <Text style={styles.failureText}>
+                Failed to update user information.
+              </Text>
+            )}
+          </View>
         </View>
-      </View>
-    </KeyboardAwareScrollView>
-  );
+      </KeyboardAwareScrollView>
+    );
+  } else {
+    return <ActivityIndicator size="large" color="#088DA9" />;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -165,14 +213,14 @@ const styles = StyleSheet.create({
   },
   topPart: {
     backgroundColor: "#088DA9",
-    height: "22%",
+    height: "17%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
   bottomPart: {
     backgroundColor: "##fff",
-    marginTop: "14%",
+    marginTop: "16%",
     height: "80%",
     width: "70%",
     justifyContent: "flex-start",
@@ -189,7 +237,7 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     alignSelf: "center",
-    marginBottom: -3,
+    marginBottom: -16,
   },
   textStyle: {
     fontStyle: "normal",
@@ -221,7 +269,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 3,
     position: "absolute",
-    top: "14%",
+    top: "10%",
     borderColor: "black",
   },
   welcomeText: {
@@ -232,7 +280,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "normal",
     textTransform: "capitalize",
-    marginBottom: 10,
+    marginBottom: 35,
   },
   successText: {
     marginTop: 10,
