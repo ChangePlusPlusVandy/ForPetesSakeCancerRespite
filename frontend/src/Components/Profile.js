@@ -46,26 +46,24 @@ const ProfileScreen = ({ route, navigation }) => {
         // userToken : await authObj.getToen()
       });
       var data = await promise.json();
-      console.log(JSON.stringify(data));
       await setUserObject(data.user);
-      if (userObject._id != authObj.currentUser._id) {
-        for (var i = 0; i < authObj.currentUser.following.length; ++i) {
-          if (authObj.currentUser.following[i] == data.user._id) {
-            setFollowing(true);
-            return;
-          }
-        }
-      }
+      setFollowing(data.followingBoolean);
     }
   };
 
   const followUser = async () => {
     if (userObject._id == authObj.currentUser._id) return;
-    if (following == true) return; // TODO , will be unfollow in the future but for now don't want to follow someone twice
+    let authHeader = await authObj.getAuthHeader();
+    let url;
+    console.log("am i following? " + following);
+    if (following == true){
+      url = CONFIG.URL + "/api/users/remove_follower";
+    } else {
+      url = CONFIG.URL + "/api/users/add_follower";
+    }
     try {
-      let authHeader = await authObj.getAuthHeader();
       // let token = await authObj.getTolken();
-      const response = await fetch(CONFIG.URL + "/api/users/add_follower", {
+      const response = await fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         headers: {
@@ -81,7 +79,7 @@ const ProfileScreen = ({ route, navigation }) => {
         }),
         // userToken : await authObj.getTolken()
       });
-      setFollowing(true);
+      setFollowing(!following);
     } catch (e) {
       console.log(e);
     }
@@ -175,10 +173,7 @@ const ProfileScreen = ({ route, navigation }) => {
                 <View style={styles.buttonsContainer}>
                   <TouchableOpacity
                     style={styles.followingButton}
-                    onPress={() => {
-                      // followUser()
-                      //TODO unfollow
-                    }}
+                    onPress={() => followUser()}
                   >
                     <Text style={styles.buttonTextStyle}>Following</Text>
                   </TouchableOpacity>
