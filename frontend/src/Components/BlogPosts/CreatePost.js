@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,6 +20,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
+import {actions, RichEditor, RichToolbar} from "react-native-pell-rich-editor";
 let nextId = 0;
 
 const CreatePost = () => {
@@ -199,6 +200,14 @@ const CreatePost = () => {
     setUriArray(uri_array.filter((link) => link.id !== id));
   };
   if (loading == false) {
+    const richText = React.useRef();
+    const handleHead = ({tintColor}) => <Text style={{color: tintColor}}>H1</Text>
+  
+    const scrollRef = React.useRef();
+    const handleCursorPosition = useCallback((scrollY) => {
+      // Positioning scroll bar
+      this.scrollRef.current.scrollTo({y: scrollY - 30, animated: true});
+    }, []);
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View
@@ -233,18 +242,27 @@ const CreatePost = () => {
                 }
                 return (
                   <>
-                    <TextInput
-                      multiline
-                      allowFontScaling
-                      clearButtonMode="always"
-                      placeholderTextColor="#474C4D"
-                      style={current_style}
-                      textAlign={"left"}
-                      textAlignVertical={"top"}
-                      placeholder="Write here..."
-                      onChangeText={(e) => setBody(e)}
-                      maxLength={1100}
-                    />
+                    <View style={{borderWidth:1, borderColor:"d9d9d905"}}>
+                      <RichToolbar
+                        editor={richText}
+                        actions={[ actions.keyboard, actions.setBold, actions.setItalic, actions.setUnderline,actions.insertLink, actions.heading1 ]}
+                        iconMap={{ [actions.heading1]: handleHead }}
+                      />
+                    </View>
+
+                    <ScrollView style={{minHeight:100, maxHeight:240}} 
+                                useContainer={true} 
+                                ref={scrollRef}
+                                nestedScrollEnabled={true}>
+                        <RichEditor
+                          ref={richText}
+                          onChange={(e) => setBody(e)}
+                          editorStyle = {{backgroundColor:"#d9d9d905"}}
+                          placeholder='Write here ...'
+                          onCursorPosition={handleCursorPosition}
+                      />
+                    </ScrollView>
+                    
                     <ScrollView
                       horizontal={"true"}
                       directionalLockEnabled={"true"}
