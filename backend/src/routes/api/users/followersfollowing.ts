@@ -69,7 +69,7 @@ async function remove_follower(req: Request, res: Response){
 			{ $pull: { following: userIDINFO._id } }
 		);
 
-		// Remove self to person followers NEED TO FIX
+		// Remove self to person followers 
 		await User.findByIdAndUpdate(
 			{ _id: userIDINFO._id },
 			{ $pull: { follower: selfINFO._id } }	
@@ -103,13 +103,13 @@ async function getFeed(req: Request, res: Response) {
 		}
 		//console.log(userObjFollowingPostsIDS)
 		const allPosts: any = await Newsletter.find({_id:{$in:userObjFollowingPostsIDS}}).sort({timePosted: -1})
-		console.log("currentPosts" + allPosts)
+		//console.log("currentPosts" + allPosts)
 
 		// Go through and author and username to the Posts
 		let allPostsNew = []
 		for(let i = 0; i < allPosts.length; i++){
 			const userObjFollowingPostsTemp = await User.findById(allPosts[i].user)
-			console.log(allPosts[i])
+			//console.log(allPosts[i])
 			allPostsNew.push({
 				post: allPosts[i],
 				author: userObjFollowingPostsTemp.name,

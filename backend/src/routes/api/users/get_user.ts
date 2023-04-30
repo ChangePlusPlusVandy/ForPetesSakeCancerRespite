@@ -14,6 +14,7 @@ async function getUser(req: Request, res: Response) {
 		// let userObj = await User.findById(userIDSent);
 		let userObj = await User.findOne({_id: userIDSent}).populate("newsletter");
 
+
 		if (!userObj) {
 			res.status(404).json({ error: "User not found" });
 			return;
@@ -26,7 +27,14 @@ async function getUser(req: Request, res: Response) {
 		}
 
 		userObj = (userObj as any).removeSensitiveData();
-		res.status(200).json({ user: userObj, followingBoolean: followingBoolean });
+
+		let responseJSON: any = userObj
+		for(let i = 0; i < responseJSON.newsletter.length; i++){
+			responseJSON.newsletter[i].name = userObj.name
+			responseJSON.newsletter[i].username = userObj.username
+		}
+
+		res.status(200).json({ user: responseJSON, followingBoolean: followingBoolean });
 
 	} catch (error) {
 		console.error(error);
