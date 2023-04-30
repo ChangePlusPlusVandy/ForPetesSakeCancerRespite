@@ -16,7 +16,9 @@ import { useAuth } from "../../AuthContext";
 import BottomBar from "../BottomBar";
 import ImageCarousel from "./imageCarousel";
 import { TextInput } from "react-native-gesture-handler";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { useHeaderHeight } from "@react-navigation/elements";import { useWindowDimensions } from 'react-native';
+import RenderHtml from 'react-native-render-html';
+
 
 const Comment = (props) => {
   const dateObj = new Date(Number(props.comment.timePosted));
@@ -162,20 +164,20 @@ const BlogPage = ({ route, navigation }) => {
               )}
             </View>
 
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 23,
-                paddingTop: 15,
-                paddingLeft: 15,
-                paddingRight: 15,
-              }}
-            >
-              {newsLetter.title}
-            </Text>
-            <Text style={{ fontSize: 18, paddingLeft: 15, paddingRight: 15 }}>
-              {newsLetter.body}
-            </Text>
+                        <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
+                        <View style={{
+                                    flex:1,
+                                    flexDirection: 'row',
+                                    paddingLeft:15, 
+                                    paddingRight:15
+                                    }}>
+
+                            <RenderHtml
+                                contentWidth={width}
+                                source={{html:newsLetter.body}}
+                            />
+                        </View>
+
 
             <View
               style={{ borderTopWidth: 1, marginTop: 15, marginBottom: 15 }}
