@@ -17,20 +17,66 @@ import BottomBar from "../BottomBar";
 import ImageCarousel from "./imageCarousel";
 import { TextInput } from "react-native-gesture-handler";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { useNavigation } from "@react-navigation/native";
 import { useWindowDimensions } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 
 
 const Comment = (props) => {
   const dateObj = new Date(Number(props.comment.timePosted));
+  const navigation = useNavigation();
 
   return (
-    <View style={styles.comment}>
-      <Text>{props.comment.author}</Text>
-      <Text style={{ fontSize: 18 }}>{props.comment.content}</Text>
-      <Text style={{ fontSize: 10, color: "gray" }}>
-        {dateObj.toDateString()}
-      </Text>
+    <View style={styles.commentBox}>
+      <TouchableOpacity
+        style={styles.profilePicture}
+        onPress={() => {
+          navigation.push("Profile", {
+            username: props.comment.username,
+            userId: props.comment.author,
+          });
+        }}
+      >
+        <Image
+          style={styles.profilePicture}
+          source={{
+            uri:
+              Config.URL +
+              `/api/users/profile_picture?id=${props.comment.author}`,
+          }}
+        />
+      </TouchableOpacity>
+      <View style={{ width: "100%", marginLeft: 3, padding: 5 }}>
+        <View
+          style={{
+            alignSelf: "flex-start",
+            width: "80%",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "bold",
+              alignSelf: "flex-start",
+            }}
+          >
+            {props.comment.username}
+          </Text>
+          <Text
+            style={{
+              fontSize: 10,
+              color: "gray",
+              position: "absolute",
+              right: 5,
+            }}
+          >
+            {dateObj.toDateString()}
+          </Text>
+        </View>
+        <View style={{ width: "78%" }}>
+          <Text style={{ fontSize: 15 }}>{props.comment.content}</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -64,7 +110,7 @@ const BlogPage = ({ route, navigation }) => {
     // } else {
     //   setLikeNumber(newsLetter.postsLiked.length);
     // }
-    if(data.images.length != 0) setNoImage(false);
+    if (data.images.length != 0) setNoImage(false);
     else if (newsLetter.images != undefined) {
       setNoImage(Object.keys(newsLetter.images).length != 0);
     }
@@ -108,13 +154,13 @@ const BlogPage = ({ route, navigation }) => {
           "Content-Type": "application/json",
           ...header,
         },
-        body: JSON.stringify({content:comment, timePosted: Date.now()})
+        body: JSON.stringify({ content: comment, timePosted: Date.now() }),
       }
     );
     fetchData();
   };
 
-  
+
   const likePost = async () => {
     let authHeader = await authObj.getAuthHeader();
     const response = await fetch(
@@ -180,30 +226,32 @@ const BlogPage = ({ route, navigation }) => {
                             />
                         </View>
 
-
             <View
-              style={{ borderTopWidth: 1, marginTop: 15, marginBottom: 15 }}
+              style={{
+                borderColor: "#efefef",
+                borderTopWidth: 1,
+                marginTop: 15,
+                marginBottom: 15,
+                height: 35,
+              }}
             >
               <Text
                 style={{
-                  fontWeight: "600",
-                  fontSize: 18,
+                  fontWeight: "bold",
+                  fontSize: 16,
                   paddingLeft: 15,
+                  paddingTop: 15,
                   paddingRight: 15,
                 }}
               >
-                Comments
+                Comments:
               </Text>
             </View>
 
             <View>
               {newsLetter.comments &&
                 newsLetter.comments.map((comment, i) => {
-                  return (
-                    <View style={styles.commentBox} key={i}>
-                      <Comment comment={comment}></Comment>
-                    </View>
-                  );
+                  return <Comment key={i} comment={comment}></Comment>;
                 })}
             </View>
           </ScrollView>
@@ -216,7 +264,7 @@ const BlogPage = ({ route, navigation }) => {
 
           <TouchableOpacity onPress={() => likePost()}>
             <Image
-              style={{ height: 45, width: 45, aspectRatio: 1, }}
+              style={{ height: 45, width: 45, aspectRatio: 1 }}
               source={require("../../../public/newsletter/LikeButton.png")}
             ></Image>
           </TouchableOpacity>
@@ -252,10 +300,17 @@ const BlogPage = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   commentBox: {
-    flex: 1,
+    width: "100%",
+    minHeight: 75,
+    maxHeight: 175,
+    flexDirection: "row",
+    alignItems: "center",
     borderColor: "gray",
+    // borderBottomWidth: 1,
     borderBottomWidth: 1,
-    paddingBottom: 5,
+    borderTopWidth: 1,
+    borderColor: "#efefef",
+    paddingLeft: 5,
   },
   utilityContainer: {
     // flex:1,
@@ -263,12 +318,16 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor: "#E5E5E550",
+    backgroundColor: "#fff",
     // borderTop
   },
-  comment: {
-    paddingLeft: 15,
-    paddingRight: 15,
+  profilePicture: {
+    width: 63,
+    height: 63,
+    borderRadius: 120 / 2,
+    overflow: "hidden",
+    // borderWidth: 1,
+    // borderColor: "black",
   },
   input: {
     height: 40,
@@ -286,14 +345,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#E5E5E550",
+    backgroundColor: "#fff",
     justifyContent: "flex-start",
     // alignItems:"flex-start",
   },
   newsItem: {
     // flex:1,
-    backgroundColor: "#E5E5E550",
-    borderColor: "#C4C4C470",
+    backgroundColor: "#fff",
+    borderColor: "#efefef",
     justifyContent: "flex-start",
   },
   newsHeader: {

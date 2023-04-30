@@ -146,6 +146,7 @@ const BlogDisplay = (props) => {
   };
 
   async function fetchData() {
+    console.log(props.state);
     if (props.state == StateNumbers.EXPLORE) {
       await getAllNewsLetter(Config.URL + "/api/newsletter/get_newsletters");
     } else if (props.state == StateNumbers.FEED) {
@@ -167,14 +168,12 @@ const BlogDisplay = (props) => {
   }, [props.state]);
 
   const [refreshing, setRefreshing] = React.useState(false);
-  const onRefresh = React.useCallback(
+  const onRefresh = 
     (async () => {
       setRefreshing(true);
       await fetchData();
       setRefreshing(false);
-    }).bind(this),
-    []
-  );
+    }).bind(this);
 
   if (loading == false) {
     if (newsletterData.length != 0) {
@@ -198,7 +197,7 @@ const BlogDisplay = (props) => {
               var d = new Date(Number(item.timePosted));
               date = d.toLocaleDateString();
             }
-            console.log(item);
+            // console.log(item);
             if (item) {
               return (
                 <NewsItem
