@@ -3,7 +3,7 @@ import VerifyToken from "../../../middlewares/VerifyToken";
 import login from "./login";
 import signup from "./signup";
 import update_user from "./update_user";
-import { add_follower,getFeed } from "./followersfollowing";
+import { add_follower, remove_follower, getFeed } from "./followersfollowing";
 import {getUser} from "./get_user"
 import search from "./search";
 import add_profile_picture from "./add_profile_picture";
@@ -16,6 +16,7 @@ router.get("/self", VerifyToken, (req, res) => {
 });
 
 router.post("/add_follower", VerifyToken, add_follower)
+router.post("/remove_follower", VerifyToken, remove_follower)
 router.get("/get_user", VerifyToken, getUser)
 router.get("/feed", VerifyToken, getFeed)
 router.use(login);
