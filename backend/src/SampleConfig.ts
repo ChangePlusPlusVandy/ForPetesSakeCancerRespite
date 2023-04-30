@@ -11,6 +11,7 @@ const CONFIG = {
 		auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
 		client_x509_cert_url: "client_x509_cert_url",
 	},
+	fpscr_account: "<mongodb_id>"
 };
 
 export default CONFIG;
