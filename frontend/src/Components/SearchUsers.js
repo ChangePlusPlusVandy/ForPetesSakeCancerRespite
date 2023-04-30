@@ -7,22 +7,25 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import { useAuth } from "../AuthContext";
 import { Icon } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 import CONFIG from "../Config";
 let nextId = 0;
+let recentId = 0;
 
 const SearchUsersScreen = () => {
   const authObj = useAuth();
   const [searchText, setSearchText] = useState("");
   const [recents, setRecents] = useState([]); // TODO: when we add recents array to the mongo db schema, this would be something fetched from the backend i think
-  const [searchResults, setSearchResults] = useState([]);
-  
+  const [searchResults, setSearchResults] = useState(recents);
+  const navigation = useNavigation();
+
   const handleSubmitSearch = async (text) => {
     // add it to our list of recent searches
-    setRecents([...recents, { id: nextId++, name: text }]);
+    setRecents([...recents, { id: recentId++, name: text }]);
 
     // Do the actual search work here
   };
@@ -41,11 +44,10 @@ const SearchUsersScreen = () => {
     await fetch(url, requestOptions)
       .then((res) => res.json())
       .then((res) => {
-        const results = res.map((user) => ({ id: nextId++, ...user })); // create a new array of objects with the same properties as the original objects
-        
-        // .filter((user) => user.username !== authObj.currentUser.username); // TODO filter out the current user
+        // filters out self from the results current user
+        const results = res.map((user) => ({ id: nextId++, ...user })).filter((user) => user._id !== authObj.currentUser._id); 
         setSearchResults(results);
-        // TODO, ask aryan if this is the right way to do it
+        setRecents([...recents, { id: nextId++, name: text }]);
       })
       .catch((error) => {
         console.log("There has been a problem searching for users: ", error);
@@ -53,7 +55,6 @@ const SearchUsersScreen = () => {
   };
 
   const handleRemoveElement = async (index) => {
-
     setSearchResults(searchResults.filter((element) => element.id !== index));
   };
 
@@ -71,18 +72,26 @@ const SearchUsersScreen = () => {
           placeholder="Search for a user here...."
           returnKeyType="search"
           enablesReturnKeyAutomatically="true"
-          onSubmitEditing={({ nativeEvent: { text, eventCount, target } }) =>
-            handleRenderPreviews(text)
+          onSubmitEditing={({ nativeEvent: { text, eventCount, target } }) => {
+            handleRenderPreviews(text);
+            handleSubmitSearch(text);
+          }
           }
         />
         <View style={styles.iconContainer}>
           <Icon name="search" color="#888888" />
         </View>
-        <TouchableOpacity style={styles.cancelButton} onPress = {() => Keyboard.dismiss()}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => {
+            Keyboard.dismiss(); 
+            navigation.goBack();
+          }}
+        >
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.recentText}>Recent:</Text>
+      <Text style={styles.recentText}>Results:</Text>
       <View style={styles.resultsContainerHasResults}>
         <ScrollView
           directionalLockEnabled={"true"}
@@ -93,24 +102,29 @@ const SearchUsersScreen = () => {
             if (index % 2 == 0) container_style = styles.blueContainer;
             else container_style = styles.whiteContainer;
             return (
-              <View key={index} style={container_style}>
-                <Image
-                  style={styles.profilePicture}
-                  source={require("../../../frontend/public/defaultProfile.png")}
-                />
-                <View style={styles.userInfoContainer}>
-                  <Text style={styles.usernameText}>{result_i.username}</Text>
-                  <Text style={styles.nameText}>{result_i.name}</Text>
-                </View>
-                <View style={styles.removeElementButton}>
-                  <Icon
-                    name="close"
-                    color="#888888"
-                    size={20}
-                    onPress={() => handleRemoveElement(index)}
+                <TouchableOpacity 
+                key = {index}
+                style = {container_style} 
+                onPress={() => navigation.navigate("Profile", {username: result_i.username, userId: result_i._id})}>
+                  <Image
+                    style={styles.profilePicture}
+                    source={{
+                      uri: CONFIG.URL + `/api/users/profile_picture?id=${result_i._id}`,
+                    }}
                   />
-                </View>
-              </View>
+                  <View style={styles.userInfoContainer}>
+                    <Text style={styles.usernameText}>{result_i.username}</Text>
+                    <Text style={styles.nameText}>{result_i.name}</Text>
+                  </View>
+                  <View style={styles.removeElementButton}>
+                    <Icon
+                      name="close"
+                      color="#888888"
+                      size={25}
+                      onPress={() => handleRemoveElement(result_i.id)}
+                    />
+                  </View>
+                </TouchableOpacity>
             );
           })}
         </ScrollView>
@@ -162,16 +176,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#DDF6FA",
     shadowOffset: {
-      width: -6, 
+      width: -6,
       height: -6,
     },
-    shadowOpacity: 0.15, 
+    shadowOpacity: 0.15,
     shadowRadius: 8,
   },
-
   removeElementButton: {
     position: "absolute",
     right: "5%",
+    flex: 1,
   },
   userInfoContainer: {
     flexDirection: "column",

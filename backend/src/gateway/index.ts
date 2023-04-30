@@ -134,7 +134,7 @@ class Gateway {
 		// add saved message to groupchat 
 
 		const addedToGC = await Groupchats.findByIdAndUpdate({_id:newMessage.groupchat[0]},{$push: { messages: newMessage._id } })
-		await this.recievedMessageOnlineUsers(newMessage)
+		await this.recievedMessageOnlineUsers(newMessage, socket)
 		callback({
 			status: "success",
 			message: newMessage.message,
@@ -143,7 +143,7 @@ class Gateway {
 		})
 	}
 
-	async recievedMessageOnlineUsers(message){
+	async recievedMessageOnlineUsers(message, socket){
 		// needs to emit to each online user
 		
 		const groupChat = await Groupchats.findById({_id: message.groupchat[0]})
@@ -153,7 +153,7 @@ class Gateway {
 			const socketID = checkIfUserOnline(user._id.toString())
 			if(socketID){
 				console.log("EMITTING MESSAGE TO " + user._id)
-				this.socketIO.to(socketID).emit("recieved-message-user", {
+				socket.to(socketID).emit("received-message-user", {
 					status: "success",
 					message: message.message,
 					groupchat_id: message.groupchat[0],

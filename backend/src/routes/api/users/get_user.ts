@@ -11,7 +11,9 @@ async function getUser(req: Request, res: Response) {
 		const selfObj = await User.findById(self._id);
 
 
-		let userObj = await User.findById(userIDSent);
+		// let userObj = await User.findById(userIDSent);
+		let userObj = await User.findOne({_id: userIDSent}).populate("newsletter");
+
 		if (!userObj) {
 			res.status(404).json({ error: "User not found" });
 			return;

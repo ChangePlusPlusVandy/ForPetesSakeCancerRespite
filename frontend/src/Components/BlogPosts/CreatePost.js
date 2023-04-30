@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { useAuth } from "../../AuthContext";
 import CONFIG from "../../Config";
@@ -21,16 +22,19 @@ import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 let nextId = 0;
 
-
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const [uri_array, setUriArray] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const navigation = useNavigation();
-  const authObj = useAuth()
+  const authObj = useAuth();
+
+  var urlArray = [];
 
   // GET CAMERA PERMISSIONS HERE
   const permissionFunction = async (param) => {
@@ -46,47 +50,97 @@ const CreatePost = () => {
     }
   };
 
+  const getImageURL = async () => {
+    try {
+      let authHeader = await authObj.getAuthHeader();
+
+      console.log(uri_array.size);
+      for (let idx = 0; idx < uri_array.length; ++idx) {
+        var localuri = uri_array[idx].uri;
+        let fileName = localuri.split("/").pop();
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(fileName);
+        let type = match ? `image/${match[1]}` : `image`;
+
+        const formData = new FormData();
+        formData.append("file", {
+          uri: localuri,
+          name: fileName,
+          type,
+        });
+
+        const response = await fetch(CONFIG.URL + "/api/images/create_image", {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+            ...authHeader,
+          },
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          body: formData,
+        });
+        console.log("response received");
+        var result = await response.json();
+        var link = result.url;
+        // console.log(link)
+        urlArray.push({ uri: link });
+        // console.log(result)
+      }
+      console.log(urlArray);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const postData = async () => {
     try {
       let authHeader = await authObj.getAuthHeader();
       // let token = await authObj.getTolken();
-      const response = await fetch(CONFIG.URL + '/api/newsletter/create_newsletter', 
-      {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          ...authHeader
-        },
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        body: JSON.stringify({title: title, body: body, 
-          // userToken : await authObj.getToken()
-        }),
-        // userToken : await authObj.getTolken()
-      }
+      const response = await fetch(
+        CONFIG.URL + "/api/newsletter/create_newsletter",
+        {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            ...authHeader,
+          },
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          body: JSON.stringify({
+            title: title,
+            body: body,
+            images: urlArray,
+            // userToken : await authObj.getToken()
+          }),
+          // userToken : await authObj.getTolken()
+        }
       );
-      // How to check log for request      
-      // console.log(response.json())
-      // navigation.navigate("Explore")
-      console.log(await response)
+      setError("");
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     // console.log(Date())
-
-		e.preventDefault();
-    if(!title || !body){
-      return;
+    // e.preventDefault();
+    if (!title || !body) {
+      setFailure(true);
+      setError("Invalid input. Input required for both fields.");
     } else {
+      setError("");
+      setFailure(false);
+      setLoading(true);
+      await getImageURL();
       postData();
+      setLoading(false);
       navigation.navigate("Explore");
     }
-	};
+  };
 
   const handleTakePhoto = async () => {
     let permission = await permissionFunction("camera");
@@ -144,138 +198,139 @@ const CreatePost = () => {
   const handleRemovePhoto = async (id) => {
     setUriArray(uri_array.filter((link) => link.id !== id));
   };
-  
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <View
-      style={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "white",
-      }}
-    >
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Create post</Text>
-      </View>
-      <View style={styles.container}>
-        <View style={styles.bigInputContainer}>
-          <TextInput
-            style={styles.title_input}
-            placeholder="Title your post"
-            placeholderTextColor="#474C4D"
-            onChangeText={(e) => setTitle(e)}
-          />
-          {(() => {
-            var current_style;
-            var image_container_style;
-            if (uri_array.length == 0) {
-              current_style = styles.postInputNoImages;
-              image_container_style = styles.imageContainerNoImages;
-            } else {
-              // has images attached
-              current_style = styles.postInput;
-              image_container_style = styles.imageContainer;
-            }
-            return (
-              <>
-                  <TextInput
-                    multiline
-                    allowFontScaling
-                    clearButtonMode="always"
-                    placeholderTextColor="#474C4D"
-                    style={current_style}
-                    textAlign={"left"}
-                    textAlignVertical={"top"}
-                    placeholder="Write here..."
-                    onChangeText={(e) => setBody(e)}
-                    maxLength={1100}
-                  />
-                <ScrollView
-                  horizontal={"true"}
-                  directionalLockEnabled={"true"}
+  if (loading == false) {
+    return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "white",
+          }}
+        >
+          {!!failure && <Text style={styles.failureText}>{error}</Text>}
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleText}>Create post</Text>
+          </View>
+          <View style={styles.container}>
+            <View style={styles.bigInputContainer}>
+              <TextInput
+                style={styles.title_input}
+                placeholder="Title your post"
+                placeholderTextColor="#474C4D"
+                onChangeText={(e) => setTitle(e)}
+              />
+              {(() => {
+                var current_style;
+                var image_container_style;
+                if (uri_array.length == 0) {
+                  current_style = styles.postInputNoImages;
+                  image_container_style = styles.imageContainerNoImages;
+                } else {
+                  // has images attached
+                  current_style = styles.postInput;
+                  image_container_style = styles.imageContainer;
+                }
+                return (
+                  <>
+                    <TextInput
+                      multiline
+                      allowFontScaling
+                      clearButtonMode="always"
+                      placeholderTextColor="#474C4D"
+                      style={current_style}
+                      textAlign={"left"}
+                      textAlignVertical={"top"}
+                      placeholder="Write here..."
+                      onChangeText={(e) => setBody(e)}
+                      maxLength={1100}
+                    />
+                    <ScrollView
+                      horizontal={"true"}
+                      directionalLockEnabled={"true"}
+                    >
+                      {/* so that we can scroll within the box of all rendered images*/}
+                      <View
+                        onStartShouldSetResponder={() => true}
+                        style={styles.testContainer}
+                      >
+                        {uri_array.map((uri_i, index) => {
+                          return (
+                            <View key={index}>
+                              <Image
+                                style={styles.image}
+                                source={{
+                                  uri: uri_i.uri,
+                                }}
+                                resizeMode="cover"
+                              />
+                              <IconButton
+                                icon={(props) => (
+                                  <Icon name="close" {...props} />
+                                )}
+                                color="red"
+                                style={{
+                                  position: "absolute",
+                                  top: 7,
+                                  right: 0,
+                                }}
+                                onPress={() => handleRemovePhoto(uri_i.id)}
+                              />
+                            </View>
+                          );
+                        })}
+                      </View>
+                    </ScrollView>
+                  </>
+                );
+              })()}
+              <IconButton
+                icon={() => <Icon name="image" size={30} />}
+                color={"black"}
+                onPress={() => handleUploadPhoto()}
+                style={{
+                  position: "absolute",
+                  alignSelf: "center",
+                  top: 7,
+                  right: 35,
+                }}
+              />
+              <IconButton
+                icon={() => <Icon name="camera" size={30} />}
+                color={"black"}
+                onPress={() => handleTakePhoto()}
+                style={{
+                  position: "absolute",
+                  alignSelf: "center",
+                  top: 7,
+                  right: 0,
+                }}
+              />
+            </View>
+            <View style={styles.postButtonContainer}>
+              <TouchableOpacity
+                style={styles.postButton}
+                onPress={handleSubmit}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    FontWeight: 500,
+                    fontSize: 20,
+                  }}
                 >
-                  {/* so that we can scroll within the box of all rendered images*/}
-                  <View
-                    onStartShouldSetResponder={() => true}
-                    style={styles.testContainer}
-                  >
-                    {uri_array.map((uri_i, index) => {
-                      return (
-                        <View key={index}>
-                          <Image
-                            style={styles.image}
-                            source={{
-                              uri: uri_i.uri,
-                            }}
-                            resizeMode="cover"
-                          />
-                          <IconButton
-                            icon={(props) => (
-                              <Icon name="close" {...props} />
-                            )}
-                            color="red"
-                            style={{
-                              position: "absolute",
-                              top: 7,
-                              right: 0,
-                            }}
-                            onPress={() => handleRemovePhoto(uri_i.id)}
-                          />
-                        </View>
-                      );
-                    })}
-                  </View>
-                </ScrollView>
-              </>
-            );
-          })()}
-          <IconButton
-            icon={() => <Icon name="image" size={30} />}
-            color={"black"}
-            onPress={() => handleUploadPhoto()}
-            style={{
-              position: "absolute",
-              alignSelf: "center",
-              top: 7,
-              right: 35,
-            }}
-          />
-          <IconButton
-            icon={() => <Icon name="camera" size={30} />}
-            color={"black"}
-            onPress={() => handleTakePhoto()}
-            style={{
-              position: "absolute",
-              alignSelf: "center",
-              top: 7,
-              right: 0,
-            }}
-          />
+                  Post!
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          {!!success && <Text style={styles.successText}>Success!</Text>}
         </View>
-        <View style={styles.postButtonContainer}>
-          <TouchableOpacity style={styles.postButton} onPress={handleSubmit}>
-            <Text
-              style={{
-                color: "white",
-                FontWeight: 500,
-                fontSize: 20,
-              }}
-            >
-              Post!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      {!!success && <Text style={styles.successText}>Success!</Text>}
-      {!!failure && (
-        <Text style={styles.failureText}>
-          Failed to update user information.
-        </Text>
-      )}
-    </View>
-  </TouchableWithoutFeedback>
-    
-  );
+      </TouchableWithoutFeedback>
+    );
+  } else {
+    return <ActivityIndicator size="large" color="#088DA9" />;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -409,7 +464,7 @@ const styles = StyleSheet.create({
   },
   failureText: {
     marginTop: 10,
-    alignSelf: "center",
+    justifyContent: "Center",
     color: "red",
     size: 25,
     FontWeight: 600,
