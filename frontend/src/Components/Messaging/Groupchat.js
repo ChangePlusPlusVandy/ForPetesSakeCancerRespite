@@ -6,14 +6,14 @@ import { useAuth } from "../../AuthContext";
 import { useGateway } from "../../Gateway";
 
 class _Groupchat extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.getProfilePic.bind(this);
 		this.socket = props.socket;
 		this.auth = props.auth;
 		this.state = {
-			profile: ""
-		}
+			profile: "",
+		};
 	}
 
 	componentDidMount() {
@@ -21,38 +21,33 @@ class _Groupchat extends Component {
 		this.getProfilePic();
 	}
 
-	getProfilePic = async() => {
-
-		if(this.props.item.last_message){
-			let user = this.props.item.last_message.user
+	getProfilePic = async () => {
+		if (this.props.item.last_message) {
+			let user = this.props.item.last_message.user;
 			var headers = await this.auth.getAuthHeader();
 
 			var response = await fetch(
-				CONFIG.URL +
-					"/api/users//profile_picture?id=" +
-					user,
-					{method: "GET", mode: "no-cors", headers: headers}
-			)
+				CONFIG.URL + "/api/users//profile_picture?id=" + user,
+				{ method: "GET", mode: "no-cors", headers: headers }
+			);
 			let data = response;
-	
-			this.setState({profile: data.url});
-		}
 
-	}
+			this.setState({ profile: data.url });
+		}
+	};
 
 	render() {
-		if(this.props.item.last_message){
+		if (this.props.item.last_message) {
 			var date = new Date(this.props.item.last_message.timestamp);
 			var today = new Date().getDay();
 			var dateString;
-			if(date.getDay() == today){
+			if (date.getDay() == today) {
 				dateString = date.getHours() + ":" + date.getMinutes();
 			}
 			//check date
-			else if(date.getDate() == today - 1){
+			else if (date.getDate() == today - 1) {
 				dateString = "Yesterday";
-			}
-			else{
+			} else {
 				var year = date.getFullYear();
 				var month = date.getMonth();
 				var day = date.getDay() + 1;
@@ -62,36 +57,37 @@ class _Groupchat extends Component {
 
 		return (
 			<View style={styles.chatComponent}>
-				<View style={{justifyContent: "center", paddingLeft: 10}}>
-				{this.state.profile == "" && (
-					<Ionicons
-					name="person-circle"
-					size={60}
-					color="black"
-				/>
-				)}
-				{this.state.profile != "" && (
-					<Image 
-					source={{uri: this.state.profile}}
-					/>
-				)}
+				<View style={{ justifyContent: "center", paddingLeft: 10 }}>
+					{this.state.profile == "" && (
+						<Ionicons name="person-circle" size={60} color="black" />
+					)}
+					{this.state.profile != "" && (
+						<Image source={{ uri: this.state.profile }} />
+					)}
 				</View>
 				<View style={styles.chatContent}>
-				<Text style={styles.chatName}>{this.props.item.name}</Text>
-				<View style={styles.message}>
-				{this.props.item.last_message && (
+					<Text style={styles.chatName}>{this.props.item.name}</Text>
+					<View style={styles.message}>
+						{this.props.item.last_message && (
 							<>
-							<Text>{this.props.item.last_message.message}</Text>
+								<Text>{this.props.item.last_message.message}</Text>
 							</>
 						)}
+					</View>
 				</View>
-				</View>
-				<View style={{flexDirection: "row", justifyContent: "flex-end", width: "60%", paddingRight: 90}}>
-				{this.props.item.last_message && (
-							<>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "flex-end",
+						width: "60%",
+						paddingRight: 90,
+					}}
+				>
+					{this.props.item.last_message && (
+						<>
 							<Text style={styles.chatDate}>{dateString}</Text>
-							</>
-						)}
+						</>
+					)}
 				</View>
 			</View>
 		);
