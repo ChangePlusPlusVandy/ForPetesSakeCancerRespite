@@ -18,9 +18,11 @@ const Home = () => {
 	return (
 		<View style={styles.container}>
 			<Text>Welcome {authObj.currentUser.name}!</Text>
-			<Text>
+
+			{/* <Text>
 				Current User JSON Data: {JSON.stringify(userDisplayObject, null, 4)}
-			</Text>
+			</Text> */}
+
 			<Link to={{ screen: "Profile" }}>Profile</Link>
 			<Link to={{ screen: "EditProfile" }}>Edit Profile</Link>
 			<Link to={{ screen: "Logout" }}>Logout</Link>

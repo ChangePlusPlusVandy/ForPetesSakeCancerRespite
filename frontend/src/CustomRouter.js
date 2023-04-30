@@ -91,6 +91,7 @@ const CustomRouter = () => {
           <Stack.Screen name="BlogPage" component={BlogPage} />
           <Stack.Screen name="SearchUsers" component={SearchUsers} />
           <Stack.Screen name="Following" component={Following} />
+          <Stack.Screen name="CreateChat" component={CreateChat} />
         </Stack.Navigator>
       </GatewayProvider>
     </AuthProvider>

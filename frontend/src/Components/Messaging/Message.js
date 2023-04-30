@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import CONFIG from "../../Config";
 import { useAuth } from "../../AuthContext";
 import { useGateway } from "../../Gateway";
 
@@ -9,22 +10,53 @@ class _Message extends Component {
 		super(props);
 		this.state = {
 			data: this.props.message,
+			profile: "",
 		};
 		this.socket = props.socket;
 		this.auth = props.auth;
 	}
+
+	componentDidMount() {
+		//loading channels
+		this.getProfilePic();
+	}
+
+	getProfilePic = async () => {
+		let user = this.state.data.user;
+		var headers = await this.auth.getAuthHeader();
+
+		var response = await fetch(
+			CONFIG.URL + "/api/users/profile_picture?id=" + user,
+			{ method: "GET", mode: "no-cors", headers: headers }
+		);
+		let data = response;
+
+		this.setState({ profile: data.url });
+	};
 
 	render() {
 		return (
 			<View>
 				{this.auth.currentUser._id != this.state.data.user && (
 					<View style={{ flexDirection: "row" }}>
-						<Ionicons
-							style={{ paddingTop: 10 }}
-							name="person-circle"
-							size={40}
-							color="black"
-						/>
+						{this.state.profile == "" && (
+							<Ionicons
+								style={{ paddingTop: 10 }}
+								name="person-circle"
+								size={40}
+								color="black"
+							/>
+						)}
+						{this.state.profile != "" && (
+						<Image 
+						style={{
+						 borderRadius: 120 / 2,
+						 height: "10%",
+						 width: "10%",
+						 aspectRatio: 1,
+					   }}
+			 		source={{ uri: this.state.profile }} />
+						)}
 						<View style={styles.messageWrapper}>
 							<View style={styles.message}>
 								{this.state.data && (
@@ -43,12 +75,24 @@ class _Message extends Component {
 								<Text>{this.state.data.message}</Text>
 							</View>
 						</View>
-						<Ionicons
-							style={{ paddingTop: 10}}
-							name="person-circle"
-							size={40}
-							color="black"
-						/>
+						{this.state.profile == "" && (
+							<Ionicons
+								style={{ paddingTop: 10 }}
+								name="person-circle"
+								size={40}
+								color="black"
+							/>
+						)}
+						{this.state.profile != "" && (
+						<Image 
+						style={{
+						 borderRadius: 120 / 2,
+						 height: "10%",
+						 width: "10%",
+						 aspectRatio: 1,
+					   }}
+			 		source={{ uri: this.state.profile }} />
+						)}
 					</View>
 				)}
 			</View>
@@ -72,8 +116,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "#F7F7F7",
 		padding: 15,
 		marginBottom: 2,
-		shadowColor: '#171717',
-		shadowOffset: {width: -2, height: 4},
+		shadowColor: "#171717",
+		shadowOffset: { width: -2, height: 4 },
 		shadowOpacity: 0.2,
 		shadowRadius: 3,
 	},
@@ -83,8 +127,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "#2F80ED",
 		padding: 15,
 		marginBottom: 2,
-		shadowColor: '#171717',
-		shadowOffset: {width: -2, height: 4},
+		shadowColor: "#171717",
+		shadowOffset: { width: -2, height: 4 },
 		shadowOpacity: 0.2,
 		shadowRadius: 3,
 	},
