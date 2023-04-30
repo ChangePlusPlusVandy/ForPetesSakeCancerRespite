@@ -49,7 +49,7 @@ class _MessagesPanel extends Component {
 			var headers = await this.auth.getAuthHeader();
 
 			var response = await fetch(
-				CONFIG.URL + "/api/users//profile_picture?id=" + user,
+				CONFIG.URL + "/api/users/profile_picture?id=" + user,
 				{ method: "GET", mode: "no-cors", headers: headers }
 			);
 			let data = response;
@@ -110,6 +110,9 @@ class _MessagesPanel extends Component {
 		);
 	};
 
+	/*
+	*/
+
 	//this.auth.currentUser._id == messages[i].user
 	//add scroll feature
 	render() {
@@ -142,7 +145,15 @@ class _MessagesPanel extends Component {
 							/>
 						)}
 						{this.state.profile != "" && (
-							<Image source={{ uri: this.state.profile }} />
+						<Image 
+						style={{
+						 borderRadius: 120 / 2,
+						 paddingLeft: 5,
+						 height: "85%",
+						 width: undefined,
+						 aspectRatio: 1,
+					   }}
+			 		source={{ uri: this.state.profile }} />
 						)}
 						<View style={styles.headerRight}>
 							<Text

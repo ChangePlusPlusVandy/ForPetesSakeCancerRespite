@@ -26,33 +26,16 @@ class _Groupchat extends Component {
 			let user = this.props.item.last_message.user;
 			var headers = await this.auth.getAuthHeader();
 
-			var response = await fetch(
-				CONFIG.URL + "/api/users//profile_picture?id=" + user,
-				{ method: "GET", mode: "no-cors", headers: headers }
-			);
-			let data = response;
+			var response = CONFIG.URL + "/api/users/profile_picture?id=" + user
 
-			this.setState({ profile: data.url });
+			this.setState({ profile: response });
 		}
 	};
 
 	render() {
 		if (this.props.item.last_message) {
-			var date = new Date(this.props.item.last_message.timestamp);
-			var today = new Date().getDay();
-			var dateString;
-			if (date.getDay() == today) {
-				dateString = date.getHours() + ":" + date.getMinutes();
-			}
-			//check date
-			else if (date.getDate() == today - 1) {
-				dateString = "Yesterday";
-			} else {
-				var year = date.getFullYear();
-				var month = date.getMonth();
-				var day = date.getDay() + 1;
-				dateString = month + "/" + day + "/" + year;
-			}
+			var date = new Date(Number(this.props.item.last_message.timestamp));
+			date = date.toLocaleDateString();
 		}
 
 		return (
@@ -62,7 +45,14 @@ class _Groupchat extends Component {
 						<Ionicons name="person-circle" size={60} color="black" />
 					)}
 					{this.state.profile != "" && (
-						<Image source={{ uri: this.state.profile }} />
+						<Image 
+						style={{
+						 borderRadius: 120 / 2,
+						 height: "75%",
+						 width: undefined,
+						 aspectRatio: 1,
+					   }}
+			 		source={{ uri: this.state.profile }} />
 					)}
 				</View>
 				<View style={styles.chatContent}>
@@ -85,7 +75,7 @@ class _Groupchat extends Component {
 				>
 					{this.props.item.last_message && (
 						<>
-							<Text style={styles.chatDate}>{dateString}</Text>
+							<Text style={styles.chatDate}>{date}</Text>
 						</>
 					)}
 				</View>

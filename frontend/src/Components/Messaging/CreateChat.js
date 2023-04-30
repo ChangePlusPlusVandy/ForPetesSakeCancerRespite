@@ -29,6 +29,7 @@ class _CreateChat extends Component {
 			groupName: "",
 			searchUsers: [],
 			users: [this.auth.currentUser._id],
+			usersSelected: [this.auth.currentUser.name]
 		};
 	}
 
@@ -51,6 +52,7 @@ class _CreateChat extends Component {
 
 	addUser(user) {
 		this.setState({ users: [...this.state.users, user._id] });
+		this.setState({usersSelected: [...this.state.usersSelected, user.name]})
 		//this.setState({searchUsers: this.state.searchUsers.filter((item) => )})
 	}
 
@@ -65,7 +67,6 @@ class _CreateChat extends Component {
 		});
 	};
 
-	//add keyboard avoiding view
 	render() {
 		return (
 			<View style={{flex: 0.7, width: "100%", height: "50%", flexDirection: "column"}}>
@@ -113,12 +114,22 @@ class _CreateChat extends Component {
 				renderItem = {({item}) => (
 					<Pressable style={this.state.users.includes(item._id) ? styles.itemSelected : styles.item} onPress={() => this.addUser(item)}>
 						{item._id != this.auth.currentUser._id &&
+						<View style={{padding: "2%"}}>
 						<Text style={styles.itemTitle} >{item.name}</Text>
+						</View>
 						}
 					</Pressable>
 				)}
 				/>
 				)}
+				<FlatList style={styles.list__container}
+				data = {this.state.usersSelected}
+				renderItem = {({item}) => (
+						<View style={{padding: "2%"}}>
+						<Text style={styles.itemTitle} >{item}</Text>
+						</View>
+				)}
+				/>
 				</View>
 				<View style={styles.container}>
 				<View style={styles.inputContainer}>
@@ -247,7 +258,7 @@ const styles = StyleSheet.create({
 	},
 	itemSelected: {
 		width: "80%",
-		backgroundColor: "#B9B9B9",
+		backgroundColor: "#90EE90",
 		margin: 5,
 		borderBottomWidth: 2,
 		borderBottomColor: "lightgrey",
