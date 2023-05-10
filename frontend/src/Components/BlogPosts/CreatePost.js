@@ -31,7 +31,6 @@ const CreatePost = () => {
   const [uri_array, setUriArray] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [sending, setSending] = useState(false);
 
   const navigation = useNavigation();
   const authObj = useAuth();
@@ -134,11 +133,9 @@ const CreatePost = () => {
       setFailure(true);
       setError("Invalid input. Input required for both fields.");
     } else {
-      setSending(true)
       await getImageURL();
       postData();
       setLoading(false);
-      setSending(false);
       navigation.navigate("Explore");
     }
   };
@@ -208,157 +205,144 @@ const CreatePost = () => {
       // Positioning scroll bar
       this.scrollRef.current.scrollTo({y: scrollY - 30, animated: true});
     }, []);
-
-    const handleDismissKeyboard = () => {
-      richText.current.blurContentEditor()
-      Keyboard.dismiss()
-    }
-
     return (
-      
-        <TouchableWithoutFeedback onPress={handleDismissKeyboard} accessible={false}>
-          
-          {sending ? <View style={styles.sendingPopup}>
-              <Text style={styles.sendingText}>Message Sending</Text>
-              <ActivityIndicator color="#088DA9" size='large'/>
-            </View> :
-          <View
-            style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: "white",
-            }}
-          >
-            {!!failure && <Text style={styles.failureText}>{error}</Text>}
-            
-            <View style={styles.titleContainer}>
-              <Text style={styles.titleText}>Create post</Text>
-            </View>
-            <View style={styles.container}>
-              <View style={styles.bigInputContainer}>
-                <TextInput
-                  style={styles.title_input}
-                  placeholder="Title your post"
-                  placeholderTextColor="#474C4D"
-                  onChangeText={(e) => setTitle(e)}
-                />
-                {(() => {
-                  var current_style;
-                  var image_container_style;
-                  if (uri_array.length == 0) {
-                    current_style = styles.postInputNoImages;
-                    image_container_style = styles.imageContainerNoImages;
-                  } else {
-                    // has images attached
-                    current_style = styles.postInput;
-                    image_container_style = styles.imageContainer;
-                  }
-                  return (
-                    <>
-                      <View style={{borderWidth:1, borderColor:"d9d9d905"}}>
-                        <RichToolbar
-                          editor={richText}
-                          actions={[ actions.keyboard, actions.setBold, actions.setItalic, actions.setUnderline,actions.insertLink, actions.heading1 ]}
-                          iconMap={{ [actions.heading1]: handleHead }}
-                        />
-                      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "white",
+          }}
+        >
+          {!!failure && <Text style={styles.failureText}>{error}</Text>}
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleText}>Create post</Text>
+          </View>
+          <View style={styles.container}>
+            <View style={styles.bigInputContainer}>
+              <TextInput
+                style={styles.title_input}
+                placeholder="Title your post"
+                placeholderTextColor="#474C4D"
+                onChangeText={(e) => setTitle(e)}
+              />
+              {(() => {
+                var current_style;
+                var image_container_style;
+                if (uri_array.length == 0) {
+                  current_style = styles.postInputNoImages;
+                  image_container_style = styles.imageContainerNoImages;
+                } else {
+                  // has images attached
+                  current_style = styles.postInput;
+                  image_container_style = styles.imageContainer;
+                }
+                return (
+                  <>
+                    <View style={{borderWidth:1, borderColor:"d9d9d905"}}>
+                      <RichToolbar
+                        editor={richText}
+                        actions={[ actions.keyboard, actions.setBold, actions.setItalic, actions.setUnderline,actions.insertLink, actions.heading1 ]}
+                        iconMap={{ [actions.heading1]: handleHead }}
+                      />
+                    </View>
 
-                      <ScrollView style={{minHeight:100, maxHeight:240}} 
-                                  useContainer={true} 
-                                  ref={scrollRef}
-                                  nestedScrollEnabled={true}>
-                          <RichEditor
-                            ref={richText}
-                            onChange={(e) => setBody(e)}
-                            editorStyle = {{backgroundColor:"#d9d9d905"}}
-                            placeholder='Write here ... Include https:// if you are trying to insert a link'
-                            onCursorPosition={handleCursorPosition}
-                            initialHeight={200}
-                        />
-                      </ScrollView>
+                    <ScrollView style={{minHeight:100, maxHeight:240}} 
+                                useContainer={true} 
+                                ref={scrollRef}
+                                nestedScrollEnabled={true}>
+                        <RichEditor
+                          ref={richText}
+                          onChange={(e) => setBody(e)}
+                          editorStyle = {{backgroundColor:"#d9d9d905"}}
+                          placeholder='Write here ... Include https:// if you are trying to insert a link'
+                          onCursorPosition={handleCursorPosition}
+                          initialHeight={200}
+                      />
+                    </ScrollView>
 
-                      <ScrollView
-                        horizontal={"true"}
-                        directionalLockEnabled={"true"}
+                    <ScrollView
+                      horizontal={"true"}
+                      directionalLockEnabled={"true"}
+                    >
+                      {/* so that we can scroll within the box of all rendered images*/}
+                      <View
+                        onStartShouldSetResponder={() => true}
+                        style={styles.testContainer}
                       >
-                        {/* so that we can scroll within the box of all rendered images*/}
-                        <View
-                          onStartShouldSetResponder={() => true}
-                          style={styles.testContainer}
-                        >
-                          {uri_array.map((uri_i, index) => {
-                            return (
-                              <View key={index}>
-                                <Image
-                                  style={styles.image}
-                                  source={{
-                                    uri: uri_i.uri,
-                                  }}
-                                  resizeMode="cover"
-                                />
-                                <IconButton
-                                  icon={(props) => (
-                                    <Icon name="close" {...props} />
-                                  )}
-                                  color="red"
-                                  style={{
-                                    position: "absolute",
-                                    top: 7,
-                                    right: 0,
-                                  }}
-                                  onPress={() => handleRemovePhoto(uri_i.id)}
-                                />
-                              </View>
-                            );
-                          })}
-                        </View>
-                      </ScrollView>
-                    </>
-                  );
-                })()}
-                <IconButton
-                  icon={() => <Icon name="image" size={30} />}
-                  color={"black"}
-                  onPress={() => handleUploadPhoto()}
-                  style={{
-                    position: "absolute",
-                    alignSelf: "center",
-                    top: 7,
-                    right: 35,
-                  }}
-                />
-                <IconButton
-                  icon={() => <Icon name="camera" size={30} />}
-                  color={"black"}
-                  onPress={() => handleTakePhoto()}
-                  style={{
-                    position: "absolute",
-                    alignSelf: "center",
-                    top: 7,
-                    right: 0,
-                  }}
-                />
-              </View>
-              <View style={styles.postButtonContainer}>
-                <TouchableOpacity
-                  style={styles.postButton}
-                  onPress={handleSubmit}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      FontWeight: 500,
-                      fontSize: 20,
-                    }}
-                  >
-                    Post!
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                        {uri_array.map((uri_i, index) => {
+                          return (
+                            <View key={index}>
+                              <Image
+                                style={styles.image}
+                                source={{
+                                  uri: uri_i.uri,
+                                }}
+                                resizeMode="cover"
+                              />
+                              <IconButton
+                                icon={(props) => (
+                                  <Icon name="close" {...props} />
+                                )}
+                                color="red"
+                                style={{
+                                  position: "absolute",
+                                  top: 7,
+                                  right: 0,
+                                }}
+                                onPress={() => handleRemovePhoto(uri_i.id)}
+                              />
+                            </View>
+                          );
+                        })}
+                      </View>
+                    </ScrollView>
+                  </>
+                );
+              })()}
+              <IconButton
+                icon={() => <Icon name="image" size={30} />}
+                color={"black"}
+                onPress={() => handleUploadPhoto()}
+                style={{
+                  position: "absolute",
+                  alignSelf: "center",
+                  top: 7,
+                  right: 35,
+                }}
+              />
+              <IconButton
+                icon={() => <Icon name="camera" size={30} />}
+                color={"black"}
+                onPress={() => handleTakePhoto()}
+                style={{
+                  position: "absolute",
+                  alignSelf: "center",
+                  top: 7,
+                  right: 0,
+                }}
+              />
             </View>
-            {!!success && <Text style={styles.successText}>Success!</Text>}
-          </View>}
-        </TouchableWithoutFeedback>
+            <View style={styles.postButtonContainer}>
+              <TouchableOpacity
+                style={styles.postButton}
+                onPress={handleSubmit}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    FontWeight: 500,
+                    fontSize: 20,
+                  }}
+                >
+                  Post!
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          {!!success && <Text style={styles.successText}>Success!</Text>}
+        </View>
+      </TouchableWithoutFeedback>
     );
   } else {
     return <ActivityIndicator size="large" color="#088DA9" />;
@@ -366,14 +350,6 @@ const CreatePost = () => {
 };
 
 const styles = StyleSheet.create({
-  sendingText: {
-    margin:15
-  },
-  sendingPopup: {
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center'
-  },
   testContainer: {
     flexDirection: "row",
     paddingLeft: 10,
