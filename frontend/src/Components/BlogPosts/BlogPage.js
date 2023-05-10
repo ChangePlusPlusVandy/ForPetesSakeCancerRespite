@@ -19,9 +19,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useWindowDimensions } from 'react-native';
 import RenderHtml from 'react-native-render-html';
-import { useNavigation } from "@react-navigation/native";
-import { useWindowDimensions } from 'react-native';
-import RenderHtml from 'react-native-render-html';
+
 
 
 const Comment = (props) => {
