@@ -212,32 +212,45 @@ const BlogPage = ({ route, navigation }) => {
               )}
             </View>
 
-              <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
-              <View style={{
-                          flex:1,
-                          flexDirection: 'row',
-                          paddingLeft:15, 
-                          paddingRight:15
-                          }}>
+                        <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
+                        <View style={{
+                                    flex:1,
+                                    flexDirection: 'row',
+                                    paddingLeft:15, 
+                                    paddingRight:15
+                                    }}>
 
-                  <RenderHtml
-                      contentWidth={width}
-                      source={{html:newsLetter.body}}
-                  />
-              </View>
+                            <RenderHtml
+                                contentWidth={100}
+                                source={{html:newsLetter.body}}
+                            />
+                        </View>
+
+            <View
+              style={{
+                borderColor: "#efefef",
+                borderTopWidth: 1,
+                marginTop: 15,
+                marginBottom: 15,
+                height: 35,
+              }}
+            >
+              {newsLetter.title}
+            </Text>
+            <Text style={{ fontSize: 18, paddingLeft: 15, paddingRight: 15 }}>
+              {newsLetter.body}
+            </Text>
 
             <View
               style={{ borderTopWidth: 1, marginTop: 15, marginBottom: 15 }}
-            >
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  paddingLeft: 15,
-                  paddingTop: 15,
-                  paddingRight: 15,
-                }}
-              >
+              style={{
+                borderColor: "#efefef",
+                borderTopWidth: 1,
+                marginTop: 15,
+                marginBottom: 15,
+                height: 35,
+              }}>
+              <Text>              
                 Comments:
               </Text>
             </View>
