@@ -19,6 +19,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useWindowDimensions } from 'react-native';
 import RenderHtml from 'react-native-render-html';
+import { useNavigation } from "@react-navigation/native";
 
 
 
@@ -227,22 +228,6 @@ const BlogPage = ({ route, navigation }) => {
                         </View>
 
             <View
-              style={{
-                borderColor: "#efefef",
-                borderTopWidth: 1,
-                marginTop: 15,
-                marginBottom: 15,
-                height: 35,
-              }}
-            >
-              {newsLetter.title}
-            </Text>
-            <Text style={{ fontSize: 18, paddingLeft: 15, paddingRight: 15 }}>
-              {newsLetter.body}
-            </Text>
-
-            <View
-              style={{ borderTopWidth: 1, marginTop: 15, marginBottom: 15 }}
               style={{
                 borderColor: "#efefef",
                 borderTopWidth: 1,
