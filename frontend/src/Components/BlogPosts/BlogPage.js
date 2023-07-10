@@ -17,7 +17,11 @@ import BottomBar from "../BottomBar";
 import ImageCarousel from "./imageCarousel";
 import { TextInput } from "react-native-gesture-handler";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { useWindowDimensions } from 'react-native';
+import RenderHtml from 'react-native-render-html';
 import { useNavigation } from "@react-navigation/native";
+
+
 
 const Comment = (props) => {
   const dateObj = new Date(Number(props.comment.timePosted));
@@ -157,6 +161,7 @@ const BlogPage = ({ route, navigation }) => {
     fetchData();
   };
 
+
   const likePost = async () => {
     let authHeader = await authObj.getAuthHeader();
     const response = await fetch(
@@ -179,6 +184,7 @@ const BlogPage = ({ route, navigation }) => {
   };
 
   let inputRef = React.useRef();
+  const { width } = useWindowDimensions();
   if (loading == false) {
     let timePosted = newsLetter.timePosted
       ? newsLetter.timePosted.substring(4, 16)
@@ -207,20 +213,19 @@ const BlogPage = ({ route, navigation }) => {
               )}
             </View>
 
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 23,
-                paddingTop: 15,
-                paddingLeft: 15,
-                paddingRight: 15,
-              }}
-            >
-              {newsLetter.title}
-            </Text>
-            <Text style={{ fontSize: 18, paddingLeft: 15, paddingRight: 15 }}>
-              {newsLetter.body}
-            </Text>
+                        <Text style={{ fontWeight:'bold', fontSize:23, paddingTop:15,paddingLeft:15, paddingRight:15}}>{newsLetter.title}</Text>
+                        <View style={{
+                                    flex:1,
+                                    flexDirection: 'row',
+                                    paddingLeft:15, 
+                                    paddingRight:15
+                                    }}>
+
+                            <RenderHtml
+                                contentWidth={100}
+                                source={{html:newsLetter.body}}
+                            />
+                        </View>
 
             <View
               style={{
@@ -229,17 +234,8 @@ const BlogPage = ({ route, navigation }) => {
                 marginTop: 15,
                 marginBottom: 15,
                 height: 35,
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  paddingLeft: 15,
-                  paddingTop: 15,
-                  paddingRight: 15,
-                }}
-              >
+              }}>
+              <Text>              
                 Comments:
               </Text>
             </View>
